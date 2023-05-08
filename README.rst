@@ -43,5 +43,4 @@ RTD need to do. This is needed to fix a recent update to  urllib3 which
 is used in docker container and a recent (early May) urllib3 release is
 incompatible with the Ubuntu docker image used by the RTD. 
 See RTD issues on https://github.com/readthedocs/readthedocs.org/issues/10290
-
-
+Info in RTD tutorials is at https://docs.readthedocs.io/en/stable/config-file/v2.html
