@@ -27,6 +27,7 @@ manageable ones. YAML2RPM and our recipes for building 100s of applications are 
    :glob:
    :caption: About Yaml2rpm
 
+   about/principles
    about/preface
    about/architecture
 
