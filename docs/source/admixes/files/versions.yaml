@@ -1,0 +1,17 @@
+!include site.yaml
+---
+cmake: "3.20.5"
+cmake_major: "v3.20"
+curl: "7.66.0"
+foundation: "v7"
+git: "2.23.0"
+pigz: "2.4"
+swig: "4.0.1"
+scons: "3.1.1"
+scons_series: "3"
+ninja: "1.9.0"
+git_lfs: "2.11.0"
+rdiscount: "2.1.8"
+hpricot: "0.8.6"
+mustache: "1.0.1"
+ronn: "0.7.3"

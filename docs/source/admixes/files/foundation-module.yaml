@@ -1,0 +1,23 @@
+# Describes the build for a foundation module for 
+# the  packages installed in /opt/foundation
+!include rcic-package.yaml
+!include rcic-module.yaml
+---
+- package: foundation module
+  category: TOOLS
+  name: foundation
+  versions: !include versions.yaml
+  version: "{{versions.foundation}}"
+  release: 4
+  root: "{{pkg_defaults.foundation}}/{{versions.foundation}}"
+  description: |
+    This module provides access to up-to-date versions of commonly
+    used tools for building software including cmake v.{{versions.cmake}},
+    curl v.{{versions.curl}}, git v.{{versions.git}}, git-lfs v.{{versions.git_lfs}}, ninja v.{{versions.ninja}},
+    and swig v.{{versions.swig}}.
+  module:
+    requires:
+      - rcic-module-support
+    prepend_path:
+      - *Prepend_path
+      - GEM_PATH {{root}}/share/gems
