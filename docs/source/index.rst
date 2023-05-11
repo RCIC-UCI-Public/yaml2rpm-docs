@@ -39,6 +39,7 @@ manageable ones. YAML2RPM and our recipes for building 100s of applications are 
 .. toctree::
    :caption: Admixes
 
+   admixes/layout
    admixes/yaml2rpm
    admixes/gcc
    admixes/admixbuilder
