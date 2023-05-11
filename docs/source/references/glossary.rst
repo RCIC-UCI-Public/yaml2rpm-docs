@@ -5,16 +5,20 @@ This page includes a number of terms that we use in our documentation.
 
 .. glossary::
 
+   admix
+     is a loosely related collection of software packages built for a specific 
+     discipline, for example chemistry, compilers, etc
+
    project home
      https://yaml2rpm.readthedocs.io
 
    github home
-      All repositories for YAML2RPM admixes can be found at
-	  https://github.com/orgs/RCIC-UCI-Public/repositories
+      https://github.com/orgs/RCIC-UCI-Public/repositories
+      holds all repositories for YAML2RPM admixes 
 
    yaml2rpm home
       Top level directory wher all support files for YAMKL2RPM build are
-	  installed. Currently set to **/opt/rcic**.
+      installed. Currently set to **/opt/rcic**.
 
    main script
      The python script ``gen-definitions.py`` is a main processing script and driver

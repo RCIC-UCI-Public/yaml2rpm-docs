@@ -3,8 +3,9 @@ Admixbuilder
 
 .. _admixbuilder:
 
-High-level builder for UCI Admix collection
-An :guilabel:`admix` is a loosely related collection of software packages 
+High-level builder for UCI Admix collection.
+
+An :term:`admix` is a loosely related collection of software packages 
 built for a specific discipline, for example chemistry, compilers, etc
 
 Purpose
