@@ -218,6 +218,19 @@ example samples, etc.   The main install path (exception is a profile file)
 
 1. ``/etc/profile.d/yaml2rpm.sh`` is  a profile file to add environment variables needed during the build
     of software packages RPMs. 
+
+    This file provides environment variables that are used for building RPMs
+    and are used in various Makefiles and packages yaml files:
+
+    - ``YAML2RPM_HOME`` is set to :term:`yaml2rpm home`
+
+    -  ``YAML2RPM_INC`` includes paths to the directories that
+       provide yaml and Makefile templates (see below description of included
+       files) and is set to
+       ``YAML2RPM_INC=$YAML2RPM_HOME/include:$YAML2RPM_HOME/site:$YAML2RPM_HOME/sys``
+
+    - ``PATH`` is prefixed  with ``$YAML2RPM_HOME/bin``
+ 
 2. ``/opt/rcic/README.md`` - info file form the top level of yaml2rpm github repository. 
 
 3. The :term:`main script` ``/opt/rcic/bin/gen-definitions.py``
