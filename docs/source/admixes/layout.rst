@@ -7,7 +7,7 @@ Almost all admixes follow the same layout structure
 Here we describe the general structure and the common files
 and directories.
 
-All admix repositories are stored in our public github 
+All admix repositories are stored in our public github
 on https://github.com/RCIC-UCI-Public
 
 .. raw:: html
@@ -20,7 +20,7 @@ Repository layout
 ------------------
 
 Here we show the admix structure on a real example of **foundation-admix**.
-After clowning of the admix git repo the directory structure is 
+After clowning of the admix git repo the directory structure is
 
 .. code-block:: bash
 
@@ -56,13 +56,13 @@ After clowning of the admix git repo the directory structure is
 |           scons-module.yaml
 |           swig.yaml
 
-Files description 
+Files description
 -----------------
 
 ``.foundation-admix.metadata``
   The file naming schema is *.NAME-metadata* where `NAME` is the admix top-level directory.
 
-  This file provides information about the packages' distribution sources that are used 
+  This file provides information about the packages' distribution sources that are used
   for the builds. All sources are stored in the google drive (added to google drive manually).
   When a command ``make download`` es executed at the top level directory to
   fetch needed sources from the google drive  drive this file provides needed info.
@@ -75,13 +75,13 @@ Files description
   provides  destination directory and the downloaded file name, and the last
   field shows from what google drive URL to fetch (for this display 1st and 3rd
   fields are cut short  to fit in one line)
-  
+
 ``Makefile``
   This is usually a very small standard file that includes one of the top
   level Makefiles:
 
     .. code-block:: make
-     
+
        # Copyright (c) 2000 - 2019 The Regents of the University of California.
        # All rights reserved.
        # This includes the Generic toplevel Makefile - most admixes should
@@ -106,7 +106,7 @@ Reserved yaml files
 
 The two files must always be present in any admix:
 
-1. ``packages.yaml`` - yaml format, describes specifics of 
+1. ``packages.yaml`` - yaml format, describes specifics of
    this admix build.
 
    .. literalinclude:: files/packages.yaml
@@ -122,11 +122,11 @@ The two files must always be present in any admix:
    - **bootstrap** - lists RPMs to be build and immediately installed on the build machine.
      This is needed when a specific software package requires another software
      to be present. The order in this section is important.
-   - **build** - lists RPMs to be build on the build machine. The listing order 
+   - **build** - lists RPMs to be build on the build machine. The listing order
      is not important.
    - **manifest** - lists RPM names  provided by this admix build for installing on
      a target machine. This variable is used in ``make manifest`` command and the
-     output provides a listing of all created RPM names and can be used for the 
+     output provides a listing of all created RPM names and can be used for the
      installation of these RPMs.
 
 2. ``versions.yaml`` - yaml format, usually contains packages names and versions.
@@ -134,8 +134,8 @@ The two files must always be present in any admix:
    .. literalinclude:: files/versions.yaml
       :language: yaml
 
-   Depending on needs additional info can be added. Note, here we include ``site.yaml`` file 
-   (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about 
+   Depending on needs additional info can be added. Note, here we include ``site.yaml`` file
+   (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about
    compilers, OS release, etc used for the build.
 
 
@@ -154,35 +154,35 @@ package requires a newer version. For this reason we add such tools via built
 RPMs in this admix: ``cmake``, ``git``, ``scons``, ``swig``, ``curl``, ``ninja``, and a few ``rubygems``.
 Each package has a corresponding yaml description file.
 
-``foundation-module.yaml`` 
+``foundation-module.yaml``
   This file describes an environment module build for this admix.
-  Since the tools are used mainly during configuration and compilation 
-  we install them in a specific path and provide a single environment module 
+  Since the tools are used mainly during configuration and compilation
+  we install them in a specific path and provide a single environment module
   that enables these tools usage.
 
   .. literalinclude:: files/foundation-module.yaml
      :language: yaml
 
 
-Layout after build 
+Layout after build
 ------------------
 
-After the build commands repository structure changes and includes: 
+After the build commands repository structure changes and includes:
 
 :blue:`BUILD/ RPMS/ SOURCES/ SPECS/ SRPMS/`
 
 These are standard directories created during the ``rpmbuild`` command. The
 command is run via a Makefile target and all prerequisites directory structure
-and spec files are generated via Makefiles targets as well. 
+and spec files are generated via Makefiles targets as well.
 
 In addition, when installing RPMS locally on a development machine for a
-verification  and testing  via 
+verification  and testing  via
 
 .. code-block:: bash
 
    make install-admix
 
-the following directories are created at the top-level of the admix repo 
-to hold the local yum repository from which created RPMS are installed. 
+the following directories are created at the top-level of the admix repo
+to hold the local yum repository from which created RPMS are installed.
 
 :blue:`cache/ localrepo/ yum.conf yum.repos.d/`
