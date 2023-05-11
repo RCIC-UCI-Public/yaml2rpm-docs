@@ -24,7 +24,7 @@ After clowning of the admix git repo the directory structure is
 
 .. code-block:: bash
 
-   git clone https://github.com/RCIC-UCI-Public/gcc-admix.git
+   git clone https://github.com/RCIC-UCI-Public/foundation-admix.git
 
 
 |  :blue:`foundation-admix/`
