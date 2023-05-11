@@ -8,6 +8,14 @@ This page includes a number of terms that we use in our documentation.
    project home
      https://yaml2rpm.readthedocs.io
 
+   github home
+      All repositories for YAML2RPM admixes can be found at
+	  https://github.com/orgs/RCIC-UCI-Public/repositories
+
+   yaml2rpm home
+      Top level directory wher all support files for YAMKL2RPM build are
+	  installed. Currently set to **/opt/rcic**.
+
    main script
      The python script ``gen-definitions.py`` is a main processing script and driver
      that parses yaml files and generates required definitions and files for RPM build.
