@@ -14,9 +14,8 @@ Building HTML locally for testing
 
    .. code-block:: console
 
-      pip install sphinx
-      pip install sphinx_rtd_theme
-
+      pip3 install sphinx
+      pip3 install sphinx_rtd_theme
 
 2. Check out repo and build
 
