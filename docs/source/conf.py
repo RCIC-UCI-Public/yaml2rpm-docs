@@ -3,7 +3,7 @@
 # -- Project information
 
 project = u'YAML2RPM'
-copyright = u'2023, The Research Cyberinfrastructure Center (RCIC) at the University of California, Irvine '
+copyright = u'2019-2023, The Regents of the University of California'
 author = u'RCIC'
 
 release = '0.1'
