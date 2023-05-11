@@ -1,5 +1,5 @@
-Admix structure
-===============
+General structure
+=================
 
 .. _admix_internals:
 
