@@ -61,7 +61,7 @@ Useful info links
 
 - Automatic module documentation with **automodapi** 
   
-    - https://sphinx-automodapi.readthedocs.io/en/latest/automodapi.html
-	- https://sphinx-automodapi.readthedocs.io/en/latest/
+  - https://sphinx-automodapi.readthedocs.io/en/latest/automodapi.html
+  - https://sphinx-automodapi.readthedocs.io/en/latest/
 
 - read the docs build process explanation https://github.com/readthedocs/readthedocs.org/blob/main/docs/user/builds.rst
