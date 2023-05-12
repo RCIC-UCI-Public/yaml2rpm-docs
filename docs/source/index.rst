@@ -8,36 +8,39 @@
 YAML2RPM Documentation
 ======================
 
-Welcome to the documentation for YAML2RPM.
+**YAML2RPM** was developed at the Research Cyberinfrastructure Center (RCIC)
+at the University of California, Irvine.
 
-We developed YAML2RPM to manage the multiple versions, dependencies, and other details of a resilient software deployment.
-**YAML**-formatted specification files are used to describe how to build an application, encode dependencies, and where to install.
-Through programmatic translation via a **custom python program**, the YAML input generates the ingredients to build a 
-RedHat-compatible RPM using the distribution's native **rpmbuild** tool. The full process creates human-recognizable package names,
-supports multiple installed versions, and easily encodes dependencies for repeatable and robust application stacks.
-In a full-stack recompilation, over 2000 individual RPMs are created.
+**YAML2RPM** is s a Generic Methodology for building RPMs and for managing 
+the multiple versions, dependencies, and other details of a resilient software deployment.
 
 The documentation will describe the process, point out many advantages and describe many examples in detail.
-Our approach makes routine packaging of applications very straightforward and reduces difficult builds to 
-manageable ones. YAML2RPM and our recipes for building 100s of applications are open source.
+Our approach makes building and  packaging of applications very straightforward and reduces complex or 
+difficult builds to manageable ones. 
 
-**yaml2rpm** has its documentation hosted on Read The Docs.
+**YAML2RPM** and our recipes for building hundreds of applications are open source
+and are available from our :term:`github home` repositories.
+
 
 .. toctree::
    :glob:
+   :maxdepth: 1
    :caption: About Yaml2rpm
 
-   about/principles
    about/preface
+   about/principles
    about/architecture
 
 .. toctree::
+   :maxdepth: 1
    :caption: Installation
 
    installation/requirements
+   installation/quickstart
    installation/api
 
 .. toctree::
+   :maxdepth: 1
    :caption: Admixes
 
    admixes/layout
@@ -46,6 +49,7 @@ manageable ones. YAML2RPM and our recipes for building 100s of applications are 
    admixes/admixbuilder
 
 .. toctree::
+   :maxdepth: 1
    :caption: Reference
 
    references/glossary
