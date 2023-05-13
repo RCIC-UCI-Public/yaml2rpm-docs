@@ -109,7 +109,7 @@ The two files must always be present in any admix:
 1. ``packages.yaml`` - yaml format, describes specifics of
    this admix build.
 
-   .. literalinclude:: files/packages.yaml
+   .. literalinclude:: files/foundation-admix-packages.yaml
       :language: yaml
 
    There are a few variables  set in this file that have a meaning for
