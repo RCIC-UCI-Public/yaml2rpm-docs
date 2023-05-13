@@ -45,3 +45,21 @@ This page includes a number of terms that we use in our documentation.
      - $HOME/modulefiles
 
      The last item allows users to install their own modules in ``$HOME/modulefiles/``
+
+   yaml variable include 
+     An extension to the standard yaml processing. Used to includd
+     the contents of another yaml file into one variable: 
+
+     ``site: !include name.yaml``
+
+     Then the included file variables can be accessed via their names as  ``{{site.varname}}``
+
+   yaml conditional 
+     An extension to the standard yaml processing. A variable takes a
+     different value depending on the resolution of a conditioal
+     statement of the form :
+
+     ``!ifeq "{{varname}},X,val1,val2"``
+
+     which means `if varname is equal to X the result of the
+     whole expression is val1 otherwise the result is val2`.
