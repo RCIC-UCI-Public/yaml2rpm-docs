@@ -16,6 +16,12 @@ This page includes a number of terms that we use in our documentation.
       https://github.com/orgs/RCIC-UCI-Public/repositories
       holds all repositories for YAML2RPM admixes 
 
+   YAML2RPM
+      Yaml-to-RPM is a Generic Methodology for building and packaging
+      relatively complex software as RPMs from yaml description files.
+      At its core, it creates packages in the RPM format, but without 
+      the pain of manually building and maintaining spec files.
+
    yaml2rpm home
       Top level directory wher all support files for YAMKL2RPM build are
       installed. Currently set to **/opt/rcic**.
