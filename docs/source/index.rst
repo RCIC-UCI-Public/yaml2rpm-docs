@@ -43,7 +43,7 @@ and are available from our :term:`github home` repositories.
    :maxdepth: 1
    :caption: Admixes
 
-   admixes/layout
+   admixes/general
    admixes/yaml2rpm
    admixes/gcc
    admixes/admixbuilder
