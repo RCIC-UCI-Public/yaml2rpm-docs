@@ -1,5 +1,5 @@
-General structure
-=================
+General layout
+==============
 
 .. _admix_internals:
 
@@ -16,8 +16,8 @@ on https://github.com/RCIC-UCI-Public
 
 .. role:: blue
 
-Repository layout
-------------------
+Repository structure
+---------------------
 
 Here we show the admix structure on a real example of **foundation-admix**.
 After clowning of the admix git repo the directory structure is
