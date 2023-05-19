@@ -1,16 +1,15 @@
-Requirements
-=============
-
 .. _requirements:
 
+Requirements
+=============
 
 Quickstart
 ----------
 
-If you want to use prebuilt RPMS for testing on a standard CentOS machine, you can follow what is below. The following was
-tested on the official CentOS 7 Amazon machine image.
+For a quick start testing on a standard CentOS machine 
 
-If you want to build YAML2RPM RPMS and install them from source repo, see Building
+- If you want to use prebuilt RPMS you can follow :doc:`quickstart`
+- If you want to build YAML2RPM RPMS and install them from source repo, see :ref:`building rpm`
 
 Prerequisites
 --------------
