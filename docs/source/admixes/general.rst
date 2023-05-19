@@ -59,6 +59,8 @@ After clowning of the admix git repo the directory structure is
 Files description
 -----------------
 
+**Files at the top level**
+
 ``.foundation-admix.metadata``
   The file naming schema is *.NAME-metadata* where `NAME` is the admix top-level directory.
 
@@ -66,15 +68,17 @@ Files description
   for the builds. All sources are stored in the google drive (added to google drive manually).
   When a command ``make download`` es executed at the top level directory to
   fetch needed sources from the google drive  drive this file provides needed info.
-  The file format is as follows (one line per source distribution):
+  The file is ASCII and the format is as follows (one line per source distribution):
 
-  |  **71861ee4f13a74bfbcdb  sources/cmake-3.22.1.tar.gz 1WmIylB7qKJRu**
-  |  **da46835a76f218adc01e  sources/pigz-2.6.tar.gz     1kgHDuBVBcXzK**
+  .. code-block:: bash
 
-  The first field is the SHA1 sum checksum from ``sha1sum``, the second field
-  provides  destination directory and the downloaded file name, and the last
-  field shows from what google drive URL to fetch (for this display 1st and 3rd
-  fields are cut short  to fit in one line)
+	 71861ee1c487edf05061ab5f7dc4f13a74bfbcdb sources/cmake-3.22.1.tar.gz 1WmIylTiIxD2_GDX
+	 da4683552b2e55ff133bb041bd3a76f218adc01e sources/pigz-2.6.tar.gz     1kgHDuL3vc8IKxXE
+
+  The first field is the SHA1 sum checksum  of the distro file made with  ``sha1sum``,
+  the second field provides destination directory and the downloaded file name, and the third
+  field shows from what google drive URL address to fetch the source distro. For this example the 3rd
+  fields are cut short to fit in one line without wrapping.
 
 ``Makefile``
   This is usually a very small standard file that includes one of the top
@@ -96,62 +100,67 @@ Files description
   Text file describing the admix
 
 
-Files in yamlspecs/
-^^^^^^^^^^^^^^^^^^^
+**Files in yamlspecs/**
 
 This directory has specific packages yaml files that are used for creating RPMs.
+The first two files must always be present in any admix with these exact names:
 
-Reserved yaml files
-~~~~~~~~~~~~~~~~~~~
+``packages.yaml`` 
+  yaml format, describes specifics of this admix build.
 
-The two files must always be present in any admix:
-
-1. ``packages.yaml`` - yaml format, describes specifics of
-   this admix build.
-
-   .. literalinclude:: files/foundation-admix-packages.yaml
+  .. literalinclude:: files/foundation-admix-packages.yaml
       :language: yaml
 
-   There are a few variables  set in this file that have a meaning for
-   different stages of the build.
+  There are a few variables  set in this file that have a meaning for
+  different stages of the build.
 
-   - **site** - includes site-specific yaml file. Needed in this case to
-     differentiate a build for CentOS 7 and CentOS 8.
-   - **system** - lists system RPMs to be installed via yum on the build machine.
-     This is a one time action to add  specific OS provided RPMS to the build host.
-   - **bootstrap** - lists RPMs to be build and immediately installed on the build machine.
-     This is needed when a specific software package requires another software
-     to be present. The order in this section is important.
-   - **build** - lists RPMs to be build on the build machine. The listing order
-     is not important.
-   - **manifest** - lists RPM names  provided by this admix build for installing on
-     a target machine. This variable is used in ``make manifest`` command and the
-     output provides a listing of all created RPM names and can be used for the
-     installation of these RPMs.
+  - **site** - includes site-specific yaml file. Needed in this case to
+    differentiate a build for CentOS 7 and CentOS 8.
+  - **system** - lists system RPMs to be installed via yum on the build machine.
+    This is a one time action to add  specific OS provided RPMS to the build host.
+  - **bootstrap** - lists RPMs to be build and immediately installed on the build machine.
+    This is needed when a specific software package requires another software
+    to be present. The order in this section is important.
+  - **build** - lists RPMs to be build on the build machine. The listing order
+    is not important.
+  - **manifest** - lists RPM names  provided by this admix build for installing on
+    a target machine. This variable is used in ``make manifest`` command and the
+    output provides a listing of all created RPM names and can be used for the
+    installation of these RPMs.
 
-2. ``versions.yaml`` - yaml format, usually contains packages names and versions.
+``versions.yaml`` 
+  yaml format, usually contains packages names and versions.
 
-   .. literalinclude:: files/versions.yaml
-      :language: yaml
+  .. literalinclude:: files/versions.yaml
+     :language: yaml
 
-   Depending on needs additional info can be added. Note, here we include ``site.yaml`` file
-   (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about
-   compilers, OS release, etc used for the build.
+  Depending on needs additional info can be added. Note, here we include ``site.yaml`` file
+  (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about
+  compilers, OS release, etc used for the build.
 
+``Makefile``
+  This is usually a  very small standard file that includes one of the top level Makefiles:
 
-Packages yaml files
-~~~~~~~~~~~~~~~~~~~
+    .. code-block:: make
 
-Specific packages yaml files describe what needs to be done to configure,
-compile and create RPMs with the resulting binaries and libraries. Some
-packages need an addition yaml file that describes how to build an
+       # Copyright (c) 2000 - 2019 The Regents of the University of California.
+       # All rights reserved.
+       # This includes the Generic yaml2rpm Makefile - most packaging should
+       # be able to use this.
+
+       include $(YAML2RPM_HOME)/sys/Makefile
+
+The rest of the files are description yaml files for specific packages. They 
+provide instructions what needs to be done to configure, compile and create RPMs with 
+the resulting binaries and libraries. Some packages need an addition yaml file that describes how to build an
 environment module for it, others do not.
 
 In the **foundation-admix** we are creating RPMs for a few packages that
 provide tools often used when compiling and building other software. While system
 installed RPMs have default versions of these tools, often a particular software
-package requires a newer version. For this reason we add such tools via built
-RPMs in this admix: ``cmake``, ``git``, ``scons``, ``swig``, ``curl``, ``ninja``, and a few ``rubygems``.
+package requires a newer version. For this reason, in this admix we build
+RPMs for needed versions of such tools: ``cmake``, ``git``, ``scons``, ``swig``, ``curl``, ``ninja``,
+plus  a few ``rubygems`` RPMs (needed by ``ruby``).
 Each package has a corresponding yaml description file.
 
 ``foundation-module.yaml``
