@@ -1,5 +1,7 @@
+.. _quickstart:
+
 Quickstart
-----------------
+==========
 
 If you want to use prebuilt RPMs for testing on a standard CentOS machine, you can follow what is below. The following was
 tested on the official CentOS 7 Amazon machine image.
@@ -22,6 +24,8 @@ If you want to build YAML2RPM RPMs and install them from source repo, see Buildi
 3. Install the development RPMs.
    Go to the `Development RPMs <https://github.com/RCIC-UCI-Public/development-RPMS#development-rpms/>`_ repository 
    for the latest prebuilt RPMs and instructions. After following those instructions, you can build your first RPM from source.
+
+.. _building rpm:
 
 Building
 ----------
