@@ -7,14 +7,24 @@ This page includes a number of terms that we use in our documentation.
 
    admix
      is a loosely related collection of software packages built for a specific 
-     discipline, for example chemistry, compilers, etc
+     discipline, for example chemistry, compilers, etc.
+
+   DNF
+     is the  next upcoming major version of YUM, a package manager for RPM-based Linux distributions.
 
    project home
      https://yaml2rpm.readthedocs.io
 
+   RPM 
+     The RPM Package Manager (RPM) is a powerful command line driven
+     package management system capable of installing, uninstalling,
+     verifying, querying, and updating software packages. Each software
+     package consists of an archive of files along with information about
+     the package like its version, a description, etc.
+
    github home
       https://github.com/orgs/RCIC-UCI-Public/repositories
-      holds all repositories for YAML2RPM admixes 
+      holds all repositories for YAML2RPM admixes.
 
    YAML2RPM
       Yaml-to-RPM is a Generic Methodology for building and packaging
@@ -50,7 +60,7 @@ This page includes a number of terms that we use in our documentation.
      - TOOLS
      - $HOME/modulefiles
 
-     The last item allows users to install their own modules in ``$HOME/modulefiles/``
+     The last item allows users to install their own modules in ``$HOME/modulefiles/``.
 
    yaml variable include 
      An extension to the standard yaml processing. Used to includd
@@ -58,7 +68,7 @@ This page includes a number of terms that we use in our documentation.
 
      ``site: !include name.yaml``
 
-     Then the included file variables can be accessed via their names as  ``{{site.varname}}``
+     Then the included file variables can be accessed via their names as ``{{site.varname}}``.
 
    yaml conditional 
      An extension to the standard yaml processing. A variable takes a
