@@ -1,5 +1,5 @@
-YAML2RPM documentation to use with rial
-=======================================
+YAML2RPM documentation to use with RTD 
+======================================
 
 This repo provides YAML2RPM documentation that is
 created with Read The Docs.
