@@ -36,8 +36,6 @@ Initial Setup Notes
 1. The github repo was imported into the RTD per the tutorial:
    https://docs.readthedocs.io/en/stable/tutorial/
 
-   The repo for this tutorial is https://github.com/readthedocs/tutorial-template/
-
 2. Added manual integration of the github repo with Read the Docs (RTD) project
    https://docs.readthedocs.io/en/stable/guides/git-integrations.html
 
