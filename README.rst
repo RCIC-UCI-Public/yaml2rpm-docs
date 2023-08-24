@@ -41,26 +41,27 @@ Initial Setup Notes
 2. Added manual integration of the github repo with Read the Docs (RTD) project
    https://docs.readthedocs.io/en/stable/guides/git-integrations.html
 
-   Note, manual integration involves creating integration in
-   **Console -> Admin -> Integrations**  on RTD console
-   and then adding this info to the github repo in **Settings -> Webhooks**
+   Note, manual integration involves 
 
-   Edit:
+   * creating integration in **Console -> Admin -> Integrations**  on RTD console
+   * and then adding this info to the github repo in **Settings -> Webhooks**
 
-   - Payload URL (http url from RTD)
-   - content type (application/json)
-   - choose enable ssl verification
+     Edit:
 
-   - choose let me select individual events and choose
+     - Payload URL (http url from RTD)
+     - content type (application/json)
+     - choose enable ssl verification
 
-     - branch or tag creation
-     - branch or tag deletion
-     - pull requests
-     - pushes
-     - Activw
+     - choose **let me select individual events** and choose
 
-   Save. After this is set andy changes to the github repo files per above
-   events will trigger a build automatically.
+       - branch or tag creation
+       - branch or tag deletion
+       - pull requests
+       - pushes
+       - Active
+
+     Save. After this is set any changes to the github repo files per above
+     events will trigger a build automatically.
 
    Had to add ``.readthedocs.yaml`` file in order to specify what type of a build
    RTD need to do. This is needed to fix a recent update to  urllib3 which
@@ -69,7 +70,7 @@ Initial Setup Notes
    See RTD issues on https://github.com/readthedocs/readthedocs.org/issues/10290
    Info in RTD tutorials is at https://docs.readthedocs.io/en/stable/config-file/v2.html
 
-3. Useful readthedocs project links
+3. Useful RTD project links
 
    Only maintainer/admin can access  these:
 
@@ -88,7 +89,13 @@ Useful info links
   - https://sphinx-automodapi.readthedocs.io/en/latest/
 
 - read the docs build process explanation https://github.com/readthedocs/readthedocs.org/blob/main/docs/user/builds.rst
+- how to create reproducible builds https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
+  
+  It includes some explanation about ``.readthedocs.yaml`` and
+  other respective config files (conf.py and requirements.txt if this one
+  exists) per recent RTD changes (2023).
 
+- getting started with sphinx https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
 
 Updates
 -------
