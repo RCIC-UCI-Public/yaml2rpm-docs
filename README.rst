@@ -96,6 +96,7 @@ Useful info links
   exists) per recent RTD changes (2023).
 
 - getting started with sphinx https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
+- continuous documentation deployment https://docs.readthedocs.io/en/latest/integrations.html
 
 Updates
 -------
