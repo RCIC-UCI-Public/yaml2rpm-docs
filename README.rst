@@ -130,11 +130,19 @@ A file .readthedocs.yaml  is updated per https://blog.readthedocs.com/migrate-co
    The project yaml2rpm doesn't have a valid webhook set up, commits won't trigger new builds for this project.
    See the project integrations for more information.   
 
-   Attempting to do resync leads to no Secret key generation. 
+   - Attempting to do resync leads to no Secret key generation. 
+   - Delete the old integration 
+     with  payload https://readthedocs.org/api/v2/webhook/yaml2rpm/238314/ 
+   - Add new integration via  Admin -> Integrations -> Add new integration
+     This time there is a secret.
+   - In git repo Settings -> Webhooks choose the existing webhook and once in
+	 "Settings" tab (at the top of the page) update Payload with the new URL
+	 from RTD and update Secret. Click "Update webhook" at the end of the page.
 
-   Delete the old integration, recreate anew. This time a secret shows.
-   Use a new link and the secret in the Git repo  Settings -> Webhooks  to update the existing webhook there.
-   Update Payload with the new URL from RTD and update Secret
+     New  payload https://readthedocs.org/api/v2/webhook/yaml2rpm/255796/ 
+	 Keep Secret separately
 
-   - original payload https://readthedocs.org/api/v2/webhook/yaml2rpm/238314/ 
-   - new  payload https://readthedocs.org/api/v2/webhook/yaml2rpm/255796/ 
+   - Verify that the new webhook is working.  Click on "Recent Deliveries",
+	 choose the top most recent entry and click "redeliver", confirm in pop-up
+	 window. Check the "redelivery" button, should have 200 code for success.
+
