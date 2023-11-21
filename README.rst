@@ -44,6 +44,7 @@ Initial Setup Notes
    * creating integration in **Console -> Admin -> Integrations**  on RTD console
    * and then adding this info to the github repo in **Settings -> Webhooks**
 
+
      Edit:
 
      - Payload URL (http url from RTD)
@@ -99,7 +100,41 @@ Useful info links
 Updates
 -------
 
-2023-08-23
+**2023-08-23**
 
 As of September 2023 RTD migrates projects to version 2.
 A file .readthedocs.yaml  is updated per https://blog.readthedocs.com/migrate-configuration-v2/
+
+**2023-11-21**
+
+1. Received email from RTD about need to update webhook integration:
+
+   Previously, manually configured webhooks from integrations did not have a secret attached to them.
+   In order to improve security, we have deployed an update so that all new integrations will be created
+   with a secret, and we are deprecating old integrations without a secret. You must migrate your
+   integration by January 31, 2024, when they will stop working without a secret.
+
+   We are contacting you because you have at least one integration that does not have a secret set. These integrations are:
+
+   https://readthedocs.org/dashboard/yaml2rpm/integrations/238314/
+
+   https://readthedocs.org/dashboard/rcs3/integrations/248158/
+
+   If you aren't using an integration, you can delete it. Otherwise, we recommend clicking on "Resync webhook"
+   to generate a new secret, and then update the secret in your provider's settings as well. You can check our
+   documentation for more information on how to do this.
+   You can read more information about this in our blog post: https://blog.readthedocs.com/security-update-on-incoming-webhooks/.
+
+2. In RTD console Admin -> Integrations see a message
+
+   The project yaml2rpm doesn't have a valid webhook set up, commits won't trigger new builds for this project.
+   See the project integrations for more information.   
+
+   Attempting to do resync leads to no Secret key generation. 
+
+   Delete the old integration, recreate anew. This time a secret shows.
+   Use a new link and the secret in the Git repo  Settings -> Webhooks  to update the existing webhook there.
+   Update Payload with the new URL from RTD and update Secret
+
+   - original payload https://readthedocs.org/api/v2/webhook/yaml2rpm/238314/ 
+   - new  payload https://readthedocs.org/api/v2/webhook/yaml2rpm/255796/ 
