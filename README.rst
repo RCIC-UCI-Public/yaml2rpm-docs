@@ -146,3 +146,20 @@ A file .readthedocs.yaml  is updated per https://blog.readthedocs.com/migrate-co
 	 choose the top most recent entry and click "redeliver", confirm in pop-up
 	 window. Check the "redelivery" button, should have 200 code for success.
 
+**2023-11-27**
+
+Build are randomly failing without any changes to either git repo or RTD
+settings. All failed builds have the signature ( in RTD console builds info):
+
+.. code-block:: console
+
+   git clone --depth 1 https://github.com/RCIC-UCI-Public/yaml2rpm-docs .
+   git fetch origin --force --prune --prune-tags --depth 50 refs/heads/master:refs/remotes/origin/master
+   fatal: couldn't find remote ref refs/heads/master
+   Command time: 0s Return: 128
+
+All successful builds have no **refs/heads/master:refs/remotes/origin/master**
+in the git fetch command.
+
+To fix, in Admin->Advanced settings  change the *Default branch*  from
+"--------" to "main", and save. The next build is successful
