@@ -45,8 +45,11 @@ and are available from our :term:`github home` repositories.
 
    admixes/general
    admixes/yaml2rpm
-   admixes/gcc
    admixes/admixbuilder
+   admixes/gcc
+   admixes/perl
+   admixes/python
+   admixes/R4
 
 .. toctree::
    :maxdepth: 1
