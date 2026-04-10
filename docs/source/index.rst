@@ -41,9 +41,18 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Admixes
+   :caption: Admix Layout 
 
-   admixes/general
+   yamlformat/overview
+   yamlformat/yaml-package
+   yamlformat/common-and-sets
+   yamlformat/rpm-packaging-directives
+   yamlformat/gen-definitions
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Complex Admixes
+
    admixes/yaml2rpm
    admixes/admixbuilder
    admixes/gcc
