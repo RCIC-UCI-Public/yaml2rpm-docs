@@ -53,6 +53,12 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :caption: Deep Dive 
+
+   deep-dive/packaging
+
+.. toctree::
+   :maxdepth: 1
    :caption: Reference
 
    references/glossary
