@@ -7,7 +7,7 @@ provides YAML2RPM documentation that is created with Read The Docs (RTD).
 The resulting website served at RTD  server as
 
 - https://yaml2rpm.readthedocs.io
-- https://yaml2rpm.rdfd.io  (equivalent shorthand notation)
+- https://yaml2rpm.rtfd.io  (equivalent shorthand notation)
 
 Building HTML locally for testing
 ---------------------------------
