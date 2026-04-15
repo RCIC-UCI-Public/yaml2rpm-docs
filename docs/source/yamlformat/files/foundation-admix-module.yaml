@@ -1,0 +1,28 @@
+# Used for a backward compatibility with previous foundation module
+!include rcic-package.yaml
+!include rcic-module.yaml
+---
+- package: foundation module
+  category: TOOLS
+  name: foundation
+  versions: !include versions.yaml
+  version: "{{versions.foundation}}"
+  release: 6
+  description: |
+    Provides an access to software in /opt/foundation.
+    This module is provided only for a backward compatibility.
+    The software includes cmake, curl, git, git-lfs, ninja, pigz, scons, swig.
+    Each software has its own module which should be used in place of this module.
+  module:
+    prepend_path:
+    setenv:
+    prereq:
+      - cmake/{{versions.cmake}}
+      - curl/{{versions.curl}}
+      - pigz/{{versions.pigz}}
+      - scons/{{versions.scons}}
+      - swig/{{versions.swig}}
+      - ninja/{{versions.ninja}}
+      - git-lfs/{{versions.git_lfs}}
+    requires:
+      - rcic-module-support

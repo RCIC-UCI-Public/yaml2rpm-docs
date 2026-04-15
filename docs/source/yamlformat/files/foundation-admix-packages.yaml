@@ -1,35 +1,31 @@
 ---
 site: !include site.yaml
 system:
-   - gcc 
-   - gcc-c++ 
+   - gcc
+   - gcc-c++
    - gcc-gfortran
    - pcre-devel
    - zlib-devel
    - ruby
    - ruby-devel
+   - rubygems
    - openssl-devel
-   - !ifeq "{{site.os_release}},8,libssh-devel,libssh2-devel"
+   - !ifneq "{{site.os_release}},7,libssh-devel,libssh2-devel"
    - libcurl-devel
+   - gettext
 bootstrap:
-   - git
-   - foundation-module
-   - rubygem-rdiscount
-   - rubygem-hpricot
-   - rubygem-mustache
-   - rubygem-ronn
-build:
-   - cmake
-   - cmake-module
-   - curl
+build0:
    - pigz
+   - pigz-module
    - scons
    - scons-module
    - swig
-   - ninja 
+   - swig-module
    - git-lfs
+   - git-lfs-module
+   - foundation-module
+build:
 manifest:
-   - "{{bootstrap}}"
    - "{{build}}"
 sets:
-   - centos8
+   - "2024"

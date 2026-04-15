@@ -1,0 +1,15 @@
+!include versions.yaml
+!include site.yaml
+!include updates8.yaml
+---
+curl: "7.81.0"
+foundation: "v8"
+pigz: "2.6"
+swig: "4.0.2"
+scons: "4.2.0"
+scons_series: "4"
+ninja: "1.10.2"
+asciidoctor: "2.0.23"
+git: "2.45.1"
+git_lfs: "3.5.1"
+go: "1.22.3"
