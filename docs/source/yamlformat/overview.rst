@@ -209,7 +209,7 @@ Files in yamlspecs/
 This directory has specific packages yaml files that are used for creating RPMs.
 The first three files must always be present in any admix with these exact names:
 
-``packages.yaml`` 
+``packages.yaml`` (required) 
   yaml format, describes specifics of this admix build.
 
   .. literalinclude:: files/gcc-admix-packages.yaml
@@ -225,12 +225,14 @@ The first three files must always be present in any admix with these exact names
   - **bootstrap** - lists RPMs to be build and immediately installed on the build machine.
     This is needed when a specific software package requires another software
     to be present. The order in this section is important.
-  - **build** - lists RPMs to be build on the build machine. The listing order
+  - **build** - lists packages to be build on the build machine. The listing order
     is not important.
-  - **manifest** - lists RPM names  provided by this admix build for installing on
+  - **manifest** - lists package names  provided by this admix build for installing on
     a target machine. This variable is used in ``make manifest`` command and the
     output provides a listing of all created RPM names and can be used for the
     installation of these RPMs.
+  - **sets** - lists the :ref:`logical sets<ov_sets>` of related packages that are built (and installed) together. This
+    admix defines 4 sets.
 
 .. note::
    What does ``!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"`` mean? This is a simple, if-else construct.
@@ -297,6 +299,8 @@ for all packages is 354 lines (including blank/comment lines).  This format is
   * Terse
   * Designed for reuse across different versions
   * Flexible enough to handle the practical build differences among the multiple versions of gcc
+
+.. _ov_sets:
 
 Sets
 ----
