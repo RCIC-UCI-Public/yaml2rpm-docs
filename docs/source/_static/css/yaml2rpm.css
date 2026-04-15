@@ -1,0 +1,55 @@
+/* add colors */
+
+:root{
+--highlightcolor:#e57728; /* Features Orange */
+--sidebarbackground:#efefef; /* toc background */
+--red:#CE4435;  /* for debugging */
+--darkred:#B53C2E; /* dark red for emphasis */
+--paleorange:#ffeecc; /* pale orange */
+--rcicorange:#CE4435;
+--rcicblue: #00579e;
+--paleblue:#e1effa;
+--bluelight: #0E6EB6;
+--gray: #777777;
+--foot: #5E30EB;
+}
+
+/* these colors can be used in roles */
+.cyan { color: cyan; }
+.aqua { color: aqua; }
+.blue { color: blue; }
+.navy { color: navy; }
+.red {color: #CE4435;}
+.darkred {color: #B53C2E;}
+.rcicorange {color: #CE4435;}
+.rcicblue {color: #00579e;}
+.bluelight {color: #0E6EB6;}
+.bluegray {color: #88bfd1;}
+.gray {color: #777777;}
+.foot {color: #5E30EB;}
+
+/* for commands throughout the text */
+.command {
+    color: #0061FF !important;
+    /* background-color: #ffffff !important;  white background */
+    /*border: 1px solid #e1e4e5 !important; */
+
+/* for text */
+.underline {
+	font-weight: bold;
+	font-style: italic;
+	text-decoration: underline;
+}
+
+/* define a word to use for file/directories emphasis */
+.tt {
+  font-size: 90%;
+  font-weight: 600;
+  background-color: #efefff !important;
+
+}
+
+/* add a bit of padding after the image. Otherwise
+   regular text is too close to the image bottom */
+img.addpadding {padding: 0.5em;}
+

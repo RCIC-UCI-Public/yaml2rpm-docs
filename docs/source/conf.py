@@ -35,6 +35,12 @@ templates_path = ['_templates']
 # -- Options for HTML output
 html_theme = 'sphinx_rtd_theme'
 
+# custom dir for storing files
+html_static_path = [ '_static', 'pdfs']
+
+# custom css file relative to custom dir
+html_css_files = [ 'css/yaml2rpm.css']
+
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
 
