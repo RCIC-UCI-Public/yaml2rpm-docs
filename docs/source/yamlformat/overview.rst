@@ -38,15 +38,15 @@ After cloning of the admix git repo the directory structure is
 
 After cloning the git repo, the directory structure is:
 
-|  :blue:`gcc-admix/`
+|  **gcc-admix/**
 |      .gcc-admix.metadata
 |      .rpms.gcc-admix
-|      :blue:`.git/`
+|      **.git/**
 |      .gitignore
 |      CHANGELOG.md
 |      Makefile
 |      README.md
-|      :blue:`yamlspecs/`
+|      **yamlspecs/**
 |             Makefile
 |             annobin-gcc15.yaml
 |             annobin.yaml
@@ -82,127 +82,108 @@ Files description
 Files at the top level
 ~~~~~~~~~~~~~~~~~~~~~~
 
+Standard files and directories present in every admix:
+
 ``.gcc-admix.metadata``
   The file naming schema is *.NAME-metadata* where `NAME` is the admix top-level directory.
 
   This file provides information about the packages' distribution sources that are used
   for the builds. All sources are stored in a publicly-accessible S3-bucket. Source tarballs
-  are added manually and then the admix'es metadata file is updated with a new sha1sum.  
-  When the command ``make download`` is executed at the top level directory, the files
-  named in the .metafile are downloaded. Over the years, we have encountered source 
+  are added manually and then the admix'es metadata file is updated with a new sha1sum signature.  
+  When the command :command:`make download` is executed at the top level directory, the files
+  named in the metadata file are downloaded. Over the years, we have encountered source 
   tarballs that become unavailable (or in extreme cases, changed by the original authors without updating versions).
   This "cache" of source tarballs stored in an S3-compatible bucket freezes at the point-in-time 
   when a particular software source was added to the admix.
 
-  The metadata file is ASCII and the format is as follows (one line per source distribution):
+  The metadata file is ASCII and the format is as follows (one line per source
+  distribution, partial listing here):
 
   .. code-block:: bash
 
-         80bb9891aeaeceee6374a32302c0a918c9e70b67  sources/binutils-2.45.tar.gz
-         4a3781743561d062d7993c97862c6c3fd4a177a5  sources/binutils-2.45.tar.gz.sig
-         ba53f88cc7265f7a9039b8943eb31e7568afc54f  sources/gcc-15.2.0.tar.gz
-         f0f1368673173e28aa80763220e3e43e97026774  sources/gcc-15.2.0.tar.gz.sig
+     d05ee3d63e94162fd1ad51b7d79a0c7a8638f47c  sources/annobin-10.54.tar.xz 1fzy8IIq4eBihNV8nOC6FfK2IKsR5Sqmx
+     80bb9891aeaeceee6374a32302c0a918c9e70b67  sources/binutils-2.45.tar.gz
+     4a3781743561d062d7993c97862c6c3fd4a177a5  sources/binutils-2.45.tar.gz.sig
+     ba53f88cc7265f7a9039b8943eb31e7568afc54f  sources/gcc-15.2.0.tar.gz
+     f0f1368673173e28aa80763220e3e43e97026774  sources/gcc-15.2.0.tar.gz.sig
 
-  .. note::
-     You will see some .metadata files with a third field. These were important when data was
-     stored in Google Drive instead of S3.  They remain for posterity, but are not used
-
-  The first field is the SHA1 sum checksum  of the distro file made with  ``sha1sum``,
+  The first field is the SHA1 sum checksum  of the distro file made with :command:`sha1sum`,
   the second field provides destination directory and the downloaded file name. The third field, if it
   exists, is ignored.
+
+  .. note::
+     You will see some lines in the metadata files with a third field. These were important when data was
+     stored in Google Drive instead of S3.  They remain for posterity, but are not used.
 
 ``Makefile``
   This is usually a very small standard file that includes one of the top
   level Makefiles:
 
-    .. code-block:: make
+  .. code-block:: make
 
-       # Copyright (c) 2000 - 2019 The Regents of the University of California.
-       # All rights reserved.
-       # This includes the Generic toplevel Makefile - most admixes should
-       # be able to use this.
+     # Copyright (c) 2000 - 2019 The Regents of the University of California.
+     # All rights reserved.
+     # This includes the Generic toplevel Makefile - most admixes should
+     # be able to use this.
 
-       include $(YAML2RPM_HOME)/sys/Makefile.toplevel
+     include $(YAML2RPM_HOME)/sys/Makefile.toplevel
 
   The included ``Makefile.toplevel`` is provided by the ``yaml2rpm`` RPM
   and has all standard build-related targets suitable for nearly all of the admixes. This is one
-  example of "unavoidable code replication" 
+  example of "unavoidable code replication".
 
 ``README.md``
-  Text file describing the admix
+  Text file describing the admix and sometimes a few specific notes 
+  to explain the building.
 
-
-**Files in yamlspecs/**
-
-Standard files and directories present in every admix:
-
-  ``.auto-changelog``
-    A standard template to automatically create CHANGELOG.md file.
+``.auto-changelog``
+  A standard template to automatically create CHANGELOG.md file.
   
-    The first field is the SHA1 checksum of the distro file made with ``sha1sum``,
-    the second field provides destination directory and the downloaded file name.
-    The lines in the file are added manually when a new package is built and a
-    new source is initially downloaded from a third-party vendor.
+  The first field is the SHA1 checksum of the distro file made with :command:`sha1sum`,
+  the second field provides destination directory and the downloaded file name.
+  The lines in the file are added manually when a new package is built and a
+  new source is initially downloaded from a third-party vendor.
   
-  ``.git/``
-    Standard git repository directory for all the metadata.
+``.git/``
+  Standard git repository directory for all the metadata.
   
-  ``.gitignore``
-    Files that specify to git  what not to track.
+``.gitignore``
+  Files that specify to git  what not to track.
   
-  ``.rpms.gcc-admix``
-    The file naming schema is *.rpms.ADMIXNAME* where `ADMIXNAME` is the admix name (top-level directory).
+``.rpms.gcc-admix``
+  The file naming schema is *.rpms.ADMIXNAME* where `ADMIXNAME` is the admix name (top-level directory).
   
-    This is a text file recording the sizes of built RPMs for the admix (partial listing):
+  This is a text file recording the sizes of built RPMs for the admix (partial listing):
   
-    .. code-block:: bash
+  .. code-block:: bash
     
-      92381715        gcc_11.2.0-11.2.0-2.x86_64.rpm
-      209354          gcc_11.2.0-annobin-10.54-2.x86_64.rpm
-      3246969         gcc_11.2.0-binutils-2.37-3.x86_64.rpm
-      3179054         gcc_11.2.0-binutils-bootstrap-2.37-3.x86_64.rpm
-      480445          gcc_11.2.0-gmp-6.2.1-2.x86_64.rpm
-      635275          gcc_11.2.0-libiconv-1.16-2.x86_64.rpm
-      8087            gcc_11.2.0-module-11.2.0-4.x86_64.rpm
-      115719          gcc_11.2.0-mpc-1.2.1-2.x86_64.rpm
-      1667322         gcc_11.2.0-mpfr-4.1.0-2.x86_64.rpm
-      126123940       gcc_15.2.0-15.2.0-2.x86_64.rpm
-      321763          gcc_15.2.0-annobin-12.98-2.x86_64.rpm
-      7167773         gcc_15.2.0-binutils-2.45-3.x86_64.rpm
-      7084432         gcc_15.2.0-binutils-bootstrap-2.45-3.x86_64.rpm
-      427349          gcc_15.2.0-gmp-6.3.0-2.x86_64.rpm
-      644718          gcc_15.2.0-libiconv-1.18-2.x86_64.rpm
-      8092            gcc_15.2.0-module-15.2.0-4.x86_64.rpm
-      136476          gcc_15.2.0-mpc-1.3.1-2.x86_64.rpm
-      645882          gcc_15.2.0-mpfr-4.2.2-2.x86_64.rpm
+    92381715        gcc_11.2.0-11.2.0-2.x86_64.rpm
+    209354          gcc_11.2.0-annobin-10.54-2.x86_64.rpm
+    3246969         gcc_11.2.0-binutils-2.37-3.x86_64.rpm
+    3179054         gcc_11.2.0-binutils-bootstrap-2.37-3.x86_64.rpm
+    480445          gcc_11.2.0-gmp-6.2.1-2.x86_64.rpm
+    635275          gcc_11.2.0-libiconv-1.16-2.x86_64.rpm
+    8087            gcc_11.2.0-module-11.2.0-4.x86_64.rpm
+    115719          gcc_11.2.0-mpc-1.2.1-2.x86_64.rpm
+    1667322         gcc_11.2.0-mpfr-4.1.0-2.x86_64.rpm
+    126123940       gcc_15.2.0-15.2.0-2.x86_64.rpm
+    321763          gcc_15.2.0-annobin-12.98-2.x86_64.rpm
+    7167773         gcc_15.2.0-binutils-2.45-3.x86_64.rpm
+    7084432         gcc_15.2.0-binutils-bootstrap-2.45-3.x86_64.rpm
+    427349          gcc_15.2.0-gmp-6.3.0-2.x86_64.rpm
+    644718          gcc_15.2.0-libiconv-1.18-2.x86_64.rpm
+    8092            gcc_15.2.0-module-15.2.0-4.x86_64.rpm
+    136476          gcc_15.2.0-mpc-1.3.1-2.x86_64.rpm
+    645882          gcc_15.2.0-mpfr-4.2.2-2.x86_64.rpm
 
   
-    The file is generated via running a command ``make admixdb`` at the top-level admix repo 
+  The file is generated via running a command :command:`make admixdb` at the top-level admix repo
+  and it needds to be updated when new RPMS are added or older builds are done anew.
   
-  ``CHANGELOG.md``
-    A text file that is generated via running ``auto-changelog`` command (provided by
-    the  nodejs RPM) at the admix top-level directory. 
+``CHANGELOG.md``
+  A text file that is generated via running :command:`auto-changelog` command (provided by
+  the  nodejs RPM) at the admix top-level directory. 
   
-  ``Makefile``
-    This is usually a very small standard file that includes one of the top
-    level Makefiles:
-  
-      .. code-block:: make
-  
-         # Copyright (c) 2000 - 2019 The Regents of the University of California.
-         # All rights reserved.
-         # This includes the Generic toplevel Makefile - most admixes should
-         # be able to use this.
-  
-         include $(YAML2RPM_HOME)/sys/Makefile.toplevel
-  
-    The included ``Makefile.toplevel`` is provided by the ``yaml2rpm`` RPM
-    and has all standard build-related targets suitable for the admix.
-  
-  ``README.md``
-    Text file describing the admix and sometimes a few specific notes 
-    to explain the building.
-
 Files in yamlspecs/
 ~~~~~~~~~~~~~~~~~~~
 
@@ -210,7 +191,7 @@ This directory has specific packages yaml files that are used for creating RPMs.
 The first three files must always be present in any admix with these exact names:
 
 ``packages.yaml`` (required) 
-  yaml format, describes specifics of this admix build.
+  Yaml format, describes specifics of this admix build.
 
   .. literalinclude:: files/gcc-admix-packages.yaml
       :language: yaml
@@ -228,46 +209,42 @@ The first three files must always be present in any admix with these exact names
   - **build** - lists packages to be build on the build machine. The listing order
     is not important.
   - **manifest** - lists package names  provided by this admix build for installing on
-    a target machine. This variable is used in ``make manifest`` command and the
+    a target machine. This variable is used in :command:`make manifest` command and the
     output provides a listing of all created RPM names and can be used for the
     installation of these RPMs.
   - **sets** - lists the :ref:`logical sets<ov_sets>` of related packages that are built (and installed) together. This
     admix defines 4 sets.
 
-.. note::
-   What does ``!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"`` mean? This is a simple, if-else construct.
-   In this case, if os_release is 9, no additional system package is added prior to building gcc. Every
-   other os release will add the gcc-gdb-plugin system package.
-
+  .. note::
+     What does ``!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"`` mean? This is a simple, if-else construct.
+     In this case, if os_release defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
+     other os release will add the *gcc-gdb-plugin* system package.
 
 ``versions.yaml`` (required)
-    Yaml format, usually contains packages names and versions.
+  Yaml format, usually contains packages names and versions.
   
-    .. literalinclude:: files/versions.yaml
-       :language: yaml
+  .. literalinclude:: files/versions.yaml
+     :language: yaml
   
-  Depending on needs, additional info can be added. Some versions.yaml files will include ``site.yaml`` file
+  Depending on needs, additional info can be added. Some ``versions.yaml`` files will include ``site.yaml`` file
   (installed via yaml2rpm RPM) using an include statement and thus provide site-specific info about
   compilers, OS release, etc used for the build.
 
-.. note::
-   This versions.yaml does not define the version of gcc. In this admix, the version of gcc is 
-   in a ``versions-gcc<n>`` file
+  .. note::
+     This ``versions.yaml`` does not define the version of gcc. In this admix, the version of gcc is 
+     defined in corresponding ``versions-gcc<n>.yaml`` files.
   
 ``Makefile`` (required)
-    This is usually a very small standard file that includes one of the top level Makefiles:
+  This is usually a very small standard file that includes one of the top level Makefiles:
   
-      .. code-block:: make
+  .. code-block:: make
   
-         # Copyright (c) 2000 - 2019 The Regents of the University of California.
-         # All rights reserved.
-         # This includes the Generic yaml2rpm Makefile - most packaging should
-         # be able to use this.
-  
-         include $(YAML2RPM_HOME)/sys/Makefile
-  
+     # Copyright (c) 2000 - 2019 The Regents of the University of California.
+     # All rights reserved.
+     # This includes the Generic yaml2rpm Makefile - most packaging should
+     # be able to use this.
 
-
+     include $(YAML2RPM_HOME)/sys/Makefile
 
 .. _ov_gcc_module:
 
@@ -282,10 +259,8 @@ The first three files must always be present in any admix with these exact names
   definitions. Yaml2rpm naturally supports recursively-defined variables.  Recursion in Jinja2 is possible,
   but it takes extra declarations in each Jinja2 block.  For yaml2rpm, all variables are recursive.
 
-
 Other files
 ~~~~~~~~~~~
-
 
 The remaining files are files for specific packages and sets. They 
 provide instructions for what needs to be done to configure, compile and create RPMs with 
@@ -311,7 +286,7 @@ the gcc admix, it's reasonable to examine the gcc8 set
 
 ``set-gcc8.yaml``
   This file describes the packages that need to be built to create the gcc8 compiler and associated 
-  RPMs.  
+  RPMs:  
 
   .. literalinclude:: files/set-gcc8.yaml
      :language: yaml
@@ -331,30 +306,29 @@ the gcc admix, it's reasonable to examine the gcc8 set
 
 .. note::
    Set files almost always include the baseline packages.yaml file. The gcc admix illustrates some of the flexibility
-   that comes with the set + override construction. 
+   that comes with the set plus  override construction. 
 
 ``versions-gcc8.yaml``
-
   This file lists the versions needed by the gcc8 set  
 
   .. literalinclude:: files/versions-gcc8.yaml
      :language: yaml
 
-  This versions file includes the admix'es ``versions.yaml`` file and then adds variables ``gcc``, ``gcc_series``,
-  and ``mpfr``. 
+  This versions file includes the admix'es ``versions.yaml`` file and then adds variables `gcc`, `gcc_series`,
+  and `mpfr`. 
 
-When taken together: gcc.yaml, packages.yaml, versions.yaml, set-gcc8.yaml, and versions-gcc8.yaml are all
-that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).  Exchange set-gcc11.yaml and
-versions-gcc11.yaml and gcc versions 11.2.0 RPMS (another 9) are built.  
+When taken together: ``gcc.yaml``, ``packages.yaml``, ``versions.yaml``, ``set-gcc8.yaml``, and ``versions-gcc8.yaml`` are all
+that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).  Exchange ``set-gcc11.yaml`` and
+``versions-gcc11.yaml`` and gcc versions 11.2.0 RPMS (another 9) are built.  
 
 Layout after build
 ------------------
 
 After the build commands repository structure changes and includes:
 
-  :blue:`BUILD/  RPMS/  SOURCES/  SPECS/  SRPMS/`
+  **BUILD/  RPMS/  SOURCES/  SPECS/  SRPMS/**
 
-These are standard directories created during the ``rpmbuild`` command. The
+These are standard directories created during the :command:`rpmbuild` command. The
 command is run via a Makefile target and all prerequisites directory structure
 and spec files are generated via Makefiles targets as well.
 
@@ -362,19 +336,17 @@ In addition, when installing RPMS locally on a development machine for a
 verification and testing the following directories are created at the top-level of the admix repo
 to hold the local yum repository with created RPMS:
 
-  :blue:`cache/  localrepo/  yum.conf  yum.repos.d/`
+  **cache/  localrepo/  yum.conf  yum.repos.d/**
 
 These  files and directories provide a local to admix yum repository from
 which built RPMS can be installed.
 
 To create a local admix yum repo at the top admix level:
 
-  .. code-block:: bash
-
-     make clean createlocalrepo
+  .. parsed-literal:: 
+     :command:`make clean createlocalrepo`
 
 To install all built RPMs for the admix:
 
-  .. code-block:: bash
-
-     make install-admix
+  .. parsed-literal:: 
+     :command:`make install-admix`
