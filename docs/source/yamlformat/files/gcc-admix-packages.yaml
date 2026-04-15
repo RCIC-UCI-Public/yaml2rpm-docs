@@ -1,0 +1,40 @@
+# System RPMS required to build this admix
+site: !include site.yaml
+system:
+   - glibc-devel.i686
+   - libgcc.i686
+   - libstdc++-devel.i686
+   - ncurses-devel.i686
+   - bison
+   - flex
+   - gmp-devel
+   - libmpc-devel
+   - !ifeq "{{site.os_release}},7,libmpfr-devel,mpfr-devel"
+   - texinfo
+   - binutils-devel
+   - gcc-c++
+   - !ifeq "{{site.os_release}},9,,gcc-gdb-plugin"
+   - libstdc++-devel
+   - rpm-devel
+bootstrap0:
+   - binutils-bootstrap
+bootstrap1:
+   - gcc
+   - gcc-module
+   - binutils
+   - mpfr
+build0:
+   - gmp
+   - libiconv
+   - mpc
+   - "{{build_set_specific}}"
+bootstrap:
+build:
+build_set_specific:
+manifest:
+sets:
+   - gcc6
+   - gcc8
+   - gcc11
+   - gcc15
+

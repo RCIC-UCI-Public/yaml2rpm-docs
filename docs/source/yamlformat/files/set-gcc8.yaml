@@ -1,0 +1,14 @@
+!include packages.yaml
+---
+versions: versions-gcc8.yaml
+build_set_specific:
+   - annobin
+bootstrap:
+   - "{{bootstrap0}}"
+   - "{{bootstrap1}}"
+build:
+   - "{{build0}}"
+manifest:
+   - "{{bootstrap1}}"
+   - "{{build}}"
+

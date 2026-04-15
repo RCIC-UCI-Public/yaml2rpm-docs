@@ -1,0 +1,53 @@
+#%Module1.0
+#####################################################################
+## Date: 2026-04-14
+## Built on: builder-l16.rcic.uci.edu
+## Standard header for invoking autoloading functionality
+##
+source /opt/rcic/include/rcic-module-head.tcl
+
+proc ModulesHelp { } {
+        puts stderr "\tModule: gcc version 11.2.0"
+        puts stderr "\tGNU GCC compiler. Provides GCC/G++/GO/GFORTRAN/OBJC/OBJC++ 11.2.0, gmp v.6.2.1,"
+        puts stderr "\tmpc v.1.2.1, libiconv v.1.16 mpfr v.4.1.0, isl v.0.24."
+        puts stderr "\tSee GCC 11 Release Series changes https://gcc.gnu.org/gcc-11/changes.html\n"
+}
+
+module-whatis "Category_______ COMPILERS"
+module-whatis "Name___________ gcc"
+module-whatis "Version________ 11.2.0"
+module-whatis "Description____ GNU GCC compiler. Provides GCC/G++/GO/GFORTRAN/OBJC/OBJC++ 11.2.0, gmp v.6.2.1,"
+module-whatis "                mpc v.1.2.1, libiconv v.1.16 mpfr v.4.1.0, isl v.0.24."
+module-whatis "                See GCC 11 Release Series changes https://gcc.gnu.org/gcc-11/changes.html"
+module-whatis "Prerequisites__ rcic-module-support"
+module-whatis "                gcc_11.2.0"
+
+setenv	GCC_INSTALL_PREFIX	/opt/apps/gcc/11.2.0
+setenv	CPP	/opt/apps/gcc/11.2.0/bin/cpp
+setenv	CC	/opt/apps/gcc/11.2.0/bin/gcc
+setenv	CXX	/opt/apps/gcc/11.2.0/bin/g++
+setenv	OBJC	/opt/apps/gcc/11.2.0/bin/gcc
+setenv	OBJCXX	/opt/apps/gcc/11.2.0/bin/g++
+setenv	FC	/opt/apps/gcc/11.2.0/bin/gfortran
+setenv	F77	/opt/apps/gcc/11.2.0/bin/gfortran
+setenv	F90	/opt/apps/gcc/11.2.0/bin/gfortran
+prepend-path	PATH	/opt/apps/gcc/11.2.0/bin
+prepend-path	MANPATH	/opt/apps/gcc/11.2.0/share/man
+prepend-path	LD_LIBRARY_PATH	/opt/apps/gcc/11.2.0/lib64
+prepend-path	PKG_CONFIG_PATH	/opt/apps/gcc/11.2.0/lib64/pkgconfig
+prepend-path	LD_LIBRARY_PATH	/opt/apps/gcc/11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0
+prepend-path	LD_LIBRARY_PATH	/opt/apps/gcc/11.2.0/lib
+prepend-path	-d	" " CPPFLAGS "-I/opt/apps/gcc/11.2.0/include -I/opt/apps/gcc/11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0/plugin/include"
+prepend-path	-d	" " LDFLAGS "-L/opt/apps/gcc/11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0 -Wl,-rpath,/opt/apps/gcc/11.2.0/lib/gcc/x86_64-pc-linux-gnu/11.2.0"
+prepend-path	-d	" " LDFLAGS "-L/opt/apps/gcc/11.2.0/lib -Wl,-rpath,/opt/apps/gcc/11.2.0/lib"
+prepend-path	-d	" " LDFLAGS "-L/opt/apps/gcc/11.2.0/lib64 -Wl,-rpath,/opt/apps/gcc/11.2.0/lib64"
+
+#####################################################################
+## Standard tail for invoking autoloading functionality
+##
+source /opt/rcic/include/rcic-module-tail.tcl
+
+if { [ module-info mode load ] } {
+  exec /bin/logger -p local6.notice -t module-hpc $env(USER) gcc/11.2.0
+}
+

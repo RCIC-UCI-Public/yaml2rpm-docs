@@ -1,0 +1,28 @@
+# Builds the module for gcc
+!include gcc.yaml
+!include rcic-module.yaml
+---
+- package: GCC Module
+  category: COMPILERS
+  release: 4
+  module:
+    lib: lib64
+    setenv:
+      - GCC_INSTALL_PREFIX {{root}}
+      - CPP {{root}}/bin/cpp
+      - CC {{root}}/bin/gcc
+      - CXX {{root}}/bin/g++
+      - OBJC {{root}}/bin/gcc
+      - OBJCXX {{root}}/bin/g++
+      - FC  {{root}}/bin/gfortran
+      - F77 {{root}}/bin/gfortran
+      - F90 {{root}}/bin/gfortran
+    prepend_path:
+      - *Prepend_path
+      - LD_LIBRARY_PATH {{root}}/lib/gcc/x86_64-pc-linux-gnu/{{gcc_version}}
+      - LD_LIBRARY_PATH {{root}}/lib
+      - -d " " CPPFLAGS "-I{{root}}/include -I{{root}}/lib/gcc/x86_64-pc-linux-gnu/{{gcc_version}}/plugin/include"
+      - -d " " LDFLAGS "-L{{root}}/lib/gcc/x86_64-pc-linux-gnu/{{gcc_version}} -Wl,-rpath,{{root}}/lib/gcc/x86_64-pc-linux-gnu/{{gcc_version}}"
+      - -d " " LDFLAGS "-L{{root}}/lib -Wl,-rpath,{{root}}/lib"
+      - -d " " LDFLAGS "-L{{root}}/{{module.lib}} -Wl,-rpath,{{root}}/{{module.lib}}"
+

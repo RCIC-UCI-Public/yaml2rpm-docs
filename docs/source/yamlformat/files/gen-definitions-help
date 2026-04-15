@@ -1,0 +1,35 @@
+usage: gen-definitions.py [-h] [-d DFLTS_FILE] [-D] [-m] [-q DOQUERY] [-c] [-i] [-p PARALLEL] [-Q] [-R] [--values]
+                          [-M MAPF] [-V VERSIONS]
+                          yamlfiles [yamlfiles ...]
+
+The definitions parser gen-defintions.py reads the yaml descripton file
+and creates include and module files needed for generating of RPM package
+
+positional arguments:
+  yamlfiles             YAML file(s) with packaging definitions
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DFLTS_FILE, --defaults DFLTS_FILE
+                        specify packaging defaults yaml file to use. If none is provided, use:
+                        (1) specific ./pkg-defaults.yaml in the current yamlspecs/ directory; if exists 
+                        (2) default /opt/rocks/yaml2rpm/sys/pkg-defaults.yaml otherwise 
+  -D, --no-defaults     To skips all defaults reading
+  -m, --module          generate environment modules file
+  -q DOQUERY, --query DOQUERY
+                        query if value exists in the yaml file and  print  the result on stdout. Valid types are the keywords in the
+                        the yaml file: patch, module, source, pkgname, etc. Example: --query=source. If nout found, prints 'False'
+  -c, --category        does a multiquery for requries, provides and category
+  -i, --info            does a multiquery for module name, description and category
+  -p PARALLEL, --parallel PARALLEL
+                        How many yaml files to process in parallel
+  -Q, --quiet           supress output of query processing
+  -R, --raw             Give the raw python str of the query object
+  --values              Flatten and only return values of dict entries
+  -M MAPF, --map MAPF   use mapping to substitute a default file with a replacement. Can use when building multiple versions of the
+                        package. Mapping is  python dictionary, ke is the original file, and the value is the substitute file. For 
+                        example, -map="{'gcc-versions.yaml':'gcc-versions-8.yaml'}" replaces default yaml file with a specific version
+  -V VERSIONS, --versions VERSIONS
+                        replace versions.yaml in any !includes with new file. E.g. --versions=versions8.yaml 
+                        will replace versions.yaml with versions8.yaml. Use either --map or --versions
+
