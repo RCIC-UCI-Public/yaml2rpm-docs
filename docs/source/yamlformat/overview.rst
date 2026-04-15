@@ -38,7 +38,6 @@ After cloning of the admix git repo the directory structure is
 
 After cloning the git repo, the directory structure is:
 
-<<<<<<< HEAD
 |  :blue:`gcc-admix/`
 |      .gcc-admix.metadata
 |      .rpms.gcc-admix
