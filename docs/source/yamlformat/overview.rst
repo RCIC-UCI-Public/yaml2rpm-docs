@@ -237,43 +237,22 @@ The first three files must always be present in any admix with these exact names
    In this case, if os_release is 9, no additional system package is added prior to building gcc. Every
    other os release will add the gcc-gdb-plugin system package.
 
-``versions.yaml`` 
-  yaml format, usually contains packages names and versions.
 
-  .. literalinclude:: files/versions.yaml
-     :language: yaml
-
-  Depending on needs additional info can be added. Some versions.yaml files will include ``site.yaml`` file
-  (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about
+``versions.yaml`` (required)
+    Yaml format, usually contains packages names and versions.
+  
+    .. literalinclude:: files/versions.yaml
+       :language: yaml
+  
+  Depending on needs, additional info can be added. Some versions.yaml files will include ``site.yaml`` file
+  (installed via yaml2rpm RPM) using an include statement and thus provide site-specific info about
   compilers, OS release, etc used for the build.
 
 .. note::
    This versions.yaml does not define the version of gcc. In this admix, the version of gcc is 
    in a ``versions-gcc<n>`` file
-
-``Makefile``
-  This is usually a  very small standard file that includes one of the top level Makefiles:
-
-    .. code-block:: make
-
-       # Copyright (c) 2000 - 2019 The Regents of the University of California.
-       # All rights reserved.
-       # This includes the Generic yaml2rpm Makefile - most packaging should
-       # be able to use this.
-
-       include $(YAML2RPM_HOME)/sys/Makefile
-
-  ``versions.yaml`` (required)
-    Yaml format, usually contains packages names and versions.
   
-    .. literalinclude:: files/foundation-admix-versions.yaml
-       :language: yaml
-  
-    Depending on needs additional info can be added. Note, here we include ``site.yaml`` file
-    (installed via yaml2rpm RPM) via include statement and thus provide site-specific info about
-    compilers, OS release, etc used for the build.
-  
-  ``Makefile`` (required)
+``Makefile`` (required)
     This is usually a very small standard file that includes one of the top level Makefiles:
   
       .. code-block:: make
@@ -285,26 +264,7 @@ The first three files must always be present in any admix with these exact names
   
          include $(YAML2RPM_HOME)/sys/Makefile
   
-  ``foundation-module.yaml``
-    This file describes an environment module build for this admix.
-    Since the tools are used mainly during configuration and compilation
-    we install them in a specific path and provide a single environment module
-    that enables these tools usage.
-  
-    .. literalinclude:: files/foundation-admix-module.yaml
-       :language: yaml
 
-The rest of the files are description yaml files for specific packages and sets. They 
-provide instructions what needs to be done to configure, compile and create RPMs with 
-the software binaries, libraries and other files. Most packages need an additional yaml file that
-describes how to build an environment module for it.
-
-In the **gcc-admix** we are creating RPMs for different versions of gcc.  The ``yamlspecs`` directory 
-when fully interpreted builds 35 RPMs for four different versions of gcc. The total yaml source
-for all packages is 354 lines (including blank/comment lines).  This format is
-
-  * Terse
-  * Designed to for reuse across different versions
 
 
 .. _ov_gcc_module:
@@ -320,6 +280,23 @@ for all packages is 354 lines (including blank/comment lines).  This format is
   definitions. Yaml2rpm naturally supports recursively-defined variables.  Recursion in Jinja2 is possible,
   but it takes extra declarations in each Jinja2 block.  For yaml2rpm, all variables are recursive.
 
+
+Other files
+~~~~~~~~~~~
+
+
+The remaining files are files for specific packages and sets. They 
+provide instructions for what needs to be done to configure, compile and create RPMs with 
+the software binaries, libraries and other files. Most packages need an additional yaml file that
+describes how to build an environment module for it.
+
+In the **gcc-admix**, we are creating RPMs for different versions of gcc.  The ``yamlspecs`` directory 
+when fully interpreted builds 35 RPMs for four different versions of gcc. The total yaml source
+for all packages is 354 lines (including blank/comment lines).  This format is
+
+  * Terse
+  * Designed for reuse across different versions
+  * Flexible enough to handle the practical build differences among the multiple versions of gcc
 
 Sets
 ----
