@@ -28,6 +28,13 @@
 .gray {color: #777777;}
 .foot {color: #5E30EB;}
 
+/* for variables in yaml files */
+.yvars {
+  font-weight: bold;
+  color: #006D8F; 
+  background-color: #efffff ;
+}
+
 /* for commands throughout the text */
 .command {
     color: #0061FF !important;

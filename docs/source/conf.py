@@ -14,6 +14,13 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath('src'))
 
+# for roles creation
+rst_prolog = """
+.. include:: /roles.txt
+.. default-role::
+
+"""
+
 # -- General configuration
 extensions = [
     'sphinx.ext.duration',
