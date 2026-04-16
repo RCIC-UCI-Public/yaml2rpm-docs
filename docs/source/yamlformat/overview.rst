@@ -128,7 +128,7 @@ Standard files and directories present in every admix:
 
      include $(YAML2RPM_HOME)/sys/Makefile.toplevel
 
-  The included ``Makefile.toplevel`` is provided by the ``yaml2rpm`` RPM
+  The included ``Makefile.toplevel`` is provided by the `yaml2rpm` RPM
   and has all standard build-related targets suitable for nearly all of the admixes. This is one
   example of "unavoidable code replication".
 
@@ -216,7 +216,7 @@ The first three files must always be present in any admix with these exact names
     admix defines 4 sets.
 
   .. note::
-     What does ``!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"`` mean? This is a simple, if-else construct.
+     What does :yvars:`!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"` mean? This is a simple, if-else construct.
      In this case, if os_release defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
      other os release will add the *gcc-gdb-plugin* system package.
 
@@ -254,7 +254,7 @@ The first three files must always be present in any admix with these exact names
   .. literalinclude:: files/gcc-module.yaml
      :language: yaml
 
-  You will see references to ``{{root}}`` which is variable. The format is inspired by ansible and
+  You will see references to :yvars:`{{root}}` which is variable. The format is inspired by ansible and
   Jinja2. One of the features that separates yaml2rpm from Jinja2 is the simplicity of recursive 
   definitions. Yaml2rpm naturally supports recursively-defined variables.  Recursion in Jinja2 is possible,
   but it takes extra declarations in each Jinja2 block.  For yaml2rpm, all variables are recursive.
@@ -296,9 +296,9 @@ the gcc admix, it's reasonable to examine the gcc8 set
 
   - **versions:** - which versions file should be used. By convention, set-<setname> goes with
     versions-<setname>. But that is not hard-coded, it is explicitly coded in each set file. 
-  - **bootstrap:** - This is a composite of ``{{bootstrap0}}`` and ``{{bootstrap1}}`` and are the
+  - **bootstrap:** - This is a composite of :yvars:`{{bootstrap0}}` and :yvars:`{{bootstrap1}}` and are the
     packages that need to be built and installed in specific order on the *build host*. In gcc,
-    a bootstrap version of binutils (``{{bootstrap0}}``) is built and installed and then it is rebuilt once the specific
+    a bootstrap version of binutils (:yvars:`{{bootstrap0}}`) is built and installed and then it is rebuilt once the specific
     compiler version is built.  
   - **build_set_specific:** - This is particular to the gcc-admix. Some versions of gcc need annobin, others do not.  
     ``packages.yaml`` defines this variable to be empty. This set includes all the definitions of in packages.yaml
@@ -314,11 +314,11 @@ the gcc admix, it's reasonable to examine the gcc8 set
   .. literalinclude:: files/versions-gcc8.yaml
      :language: yaml
 
-  This versions file includes the admix'es ``versions.yaml`` file and then adds variables `gcc`, `gcc_series`,
-  and `mpfr`. 
+  This versions file includes the admix'es ``versions.yaml`` file and then
+  adds variables :yvars:`gcc`, :yvars:`gcc_series`, and :yvars:`mpfr`. 
 
 When taken together: ``gcc.yaml``, ``packages.yaml``, ``versions.yaml``, ``set-gcc8.yaml``, and ``versions-gcc8.yaml`` are all
-that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).  Exchange ``set-gcc11.yaml`` and
+that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).  Exchange to ``set-gcc11.yaml`` and
 ``versions-gcc11.yaml`` and gcc versions 11.2.0 RPMS (another 9) are built.  
 
 Layout after build
