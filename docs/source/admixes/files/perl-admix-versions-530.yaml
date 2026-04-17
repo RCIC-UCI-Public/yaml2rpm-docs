@@ -1,0 +1,6 @@
+!include versions.yaml
+---
+perl: "5.30.0"
+bioperl_tarsources: "202003"
+metacpan_tarsources: "202004"
+genomics_tarsources: "202011"

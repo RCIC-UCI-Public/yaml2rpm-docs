@@ -1,0 +1,6 @@
+!include perl.yaml
+!include rcic-module.yaml
+---
+- package: Perl module
+  category: LANGUAGES
+  release: 2

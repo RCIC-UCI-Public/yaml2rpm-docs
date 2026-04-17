@@ -1,0 +1,6 @@
+!include packages.yaml
+---
+versions: versions-530.yaml
+bootstrap:
+  - perl
+  - perl-module

@@ -52,6 +52,8 @@ create circular references during the build.
   specific modules for each set can be built only after their dependencies are
   already built and installed. 
 
+  - :yvars:`bootstrap` and :yvars:`build` - empty, no packages in the base
+    set. All build will be in the specific sets.
   - :yvars:`sets` - lists the logical sets of related packages that are built (and installed) together
     just like in any other admix. But here each set is defined as a *serialset*, one for each version of Perl.
     Each *serialset* is a list of sets. These *serialsets* will be build in parallel, but within each
@@ -85,3 +87,64 @@ create circular references during the build.
      |   4   |  530-gen     | 534-gen       |     
      +-------+--------------+---------------+ 
 
+``versions.yaml`` (required)
+  Since there are no packages to build, this file just lists the admix:
+
+  .. literalinclude:: files/perl-admix-versions.yaml
+      :language: yaml
+
+``perl.yaml`` (required)
+  This is a yaml file that provides all the instructions to build base Perl RPM.
+
+  .. literalinclude:: files/perl-admix-perl.yaml
+      :language: yaml
+
+  The variables in the file are as follows:
+
+  - :yvars:`!include` -  specifies what templates to include when parsing this file. 
+    These templates define common variables that are neeed in all builds and
+    using the include directive simplifies the comon code reuse and minimizes
+    the overall code footprint.
+
+    * ``rcic-package.yaml`` defines defaults for the variables used for the buildd.
+
+      :red:`TODO add reference to this file and describe it in full`
+    * ``rpm.yaml`` defines specific RPM directives to use when creating
+      RPM files. These definitions will override what :command:`rpmbuild` uses by default.
+
+      :red:`TODO add reference to this file and describe it in full`
+
+``perl-module.yaml`` (required)
+  This file describes an environment module build for each version of Perl.
+
+  .. literalinclude:: files/perl-admix-perl-module.yaml
+      :language: yaml
+
+  The variables in the file are as follows:
+
+  - :yvars:`!include` -  specifies what templates to include when parsing this file. 
+
+    * ``perl.yaml`` - each package module file always includes the package
+      yaml that provide needed package definitions.
+    * ``rcic-module.yaml`` - this is a default template file that defines
+      generic variables for most module files.
+
+      :red:`TODO add reference to this file and describe it in full`
+  - :yvars:`CATEGORY` - a logical category name to assign this module to.  This
+    will result in adding created module file to a directory specified by
+    this variable, here to ``LANGUAGES`` (once the RPM is installed).
+  - :yvars:`release` - an RPM release number to use. A default is 1. We can
+    increase the release when some changes are done to the yaml file 
+    and when a new RPM is created the release is updated. This allows old and new RPMs
+    to be present in the yum repo without a conflict and yum will use the latest availalbe for
+    the installation or for the update when requested.
+
+``add-filters.sh`` (required)
+  This file  is used to create filters for rewriting Perl RPMs provides/requires
+  Filters are created in the package temporary build directory where building RPM.
+  Naming convention: ``filter-provides-NAME.sh`` and ``filter-requires-NAME.sh``
+  where NAME is a specific perl module name taken from a package yaml file variable :yvars:`name`.
+  For perl package these files will be ``filter-provides-perl.sh`` and
+  ``filter-requires-perl.sh``.
+
+  See the file contents in `perl-admix repository <https://github.com/RCIC-UCI-Public/perl-admix/>`_.

@@ -1,0 +1,30 @@
+!include rcic-package.yaml
+!include rpm.yaml
+---
+- package: Perl Programming Language {{version}} 
+  name: perl
+  versions: !include versions.yaml 
+  version: "{{versions.perl}}"
+  bioperl_tarsources: "{{versions.bioperl_tarsources}}"
+  metacpan_tarsources: "{{versions.metacpan_tarsources}}"
+  genomics_tarsources: "{{versions.genomics_tarsources}}"
+  vendor_source: https://www.cpan.org/src/5.0/{{name}}-{{version}}.{{extension}}
+  description: >
+    Perl Programming Language version {{version}}
+  build:
+    configure: ./Configure
+    configure_args: -des -Dprefix=$(PKGROOT) -Dusethreads -Duseshrplib
+  install:
+    makeinstall: $(MAKE); $(MAKE) DESTDIR=$(ROOT) install 
+  filter_requires:
+    - -e '/perl(s)/d'
+    - -e '/perl(\\s)/d' 
+    - -e '/perl(unicore::Name)/d' 
+    - -e '/perl(VMS::Stdio)/d' 
+    - -e '/perl(VMS::Filespec)/d' 
+    - -e '/perl(Mac::InternetConfig)/d' 
+    - -e '/perl(Mac::BuildTools)/d' 
+  rpmFilters: *filterPerl
+
+  provides:
+    - perl_{{version}}(:VERSION) = {{version}}
