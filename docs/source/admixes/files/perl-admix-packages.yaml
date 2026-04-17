@@ -1,0 +1,38 @@
+---
+site: !include site.yaml
+system:
+  - gdbm-devel
+  - libdb-devel
+  - gd-devel
+  - fontconfig
+  - freetype
+  - libjpeg-turbo-devel
+  - libpng-devel
+  - libX11-devel
+  - libXpm-devel
+  - zlib-devel
+  - libxslt-devel
+  - wget
+  - expat-devel 
+
+bootstrap:
+build:
+manifest:
+  - "{{bootstrap}}"
+  - "{{build}}"
+
+sets:
+  - "{{serialsets.perl530}}"
+  - "{{serialsets.perl534}}"
+
+serialsets:
+   perl530:    
+      - "530"
+      - "530-meta"
+      - "530-bio"
+      - "530-gen"
+   perl534:  
+      - "534"
+      - "534-meta"
+      - "534-bio"
+      - "534-gen"
