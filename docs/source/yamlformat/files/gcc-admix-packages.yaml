@@ -9,7 +9,7 @@ system:
    - flex
    - gmp-devel
    - libmpc-devel
-   - !ifeq "{{site.os_release}},7,libmpfr-devel,mpfr-devel"
+   - mpfr-devel
    - texinfo
    - binutils-devel
    - gcc-c++
