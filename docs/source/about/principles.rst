@@ -1,7 +1,7 @@
 .. _principles:
 
-Principles 
-===========
+Design Principles 
+=================
 
 .. raw:: html
 
@@ -34,8 +34,7 @@ The main design principles are:
   custom built. We wrote a couple of specific yaml processing extensions 
   allow us to use more programmatic concepts in the yaml description files. 
 
-Human-readable package definition files
-  ---------------------------------------
+**Human-readable package definition files**
   Small yaml files are simple and while terse are easily readable without any
   special tools or commands.  They have all the information needed by 
   the :term:`main script` processing.
