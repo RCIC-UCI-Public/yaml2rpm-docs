@@ -1,3 +1,5 @@
+.. _gen-definitions:
+
 Reference gen-definitions.py
 ============================
 
@@ -7,7 +9,6 @@ Reference gen-definitions.py
 
 .. role:: blue
 
-.. _gen_definitions:
 
 The python program, ``gen-definitions.py`` is the workhorse for interpreting yaml-formatted package specifications.
 It is compact, can be inspected and is under 1000 lines with all blanks, comments, and usage statements.  Its 

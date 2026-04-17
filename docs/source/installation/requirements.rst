@@ -14,15 +14,23 @@ For a quick start testing on a standard CentOS machine
 Prerequisites
 --------------
 
-1. Python 2 or 3. Required python modules: ``argparse``, ``socket``, ``datetime``. 
-   There are 4 python modules that will be automatically
+1. Python 3.
+
+   Required Python modules (provided via OS RPMS):
+
+     - ``argparse``
+     - ``socket``
+     - ``datetime``. 
+
+   The following  4 Python modules will be automatically
    built and installed during the building step:
 
-   - ``future``: for compatibility of python 2/3 code
-   - ``ruamel-yaml`` & ruamle-ycml-clib: used by the  main script ``gen-definitions.py``
-   - ``setuptools``: for build python dependent packages.
+     - ``future``: for compatibility of Python 2/3 code
+     - ``ruamel-yaml``: used by the  main script :command:`gen-definitions.py`
+     - ``ruamle-ycml-clib``: used by the  main script :command:`gen-definitions.py`
+     - ``setuptools``: for building Python dependent packages.
 
-2. If you are using a very stripped-down CentOS image (similar to the official CentOS 7 image in Amazon, you will
+#. If you are using a very stripped-down CentOS image (similar to the official CentOS 9 image in Amazon, you will
    want to make certain you have the following packages and package groups installed
 
    .. code-block:: bash
@@ -31,9 +39,7 @@ Prerequisites
       yum install redhat-lsb wget zlib-devel environment-modules
       . /etc/profile.d/modules.sh
 
-3. Install the development RPMS
+#. Install the development RPMS
 
    Go to the `Development RPMS repository <https://github.com/RCIC-UCI-Public/development-RPMS>`_ 
    for the latest prebuilt RPMs and instructions. After following those instructions, you can build your first RPM from source.
-
-

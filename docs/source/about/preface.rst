@@ -10,10 +10,12 @@ regularly require multiple versions to be installed.
 We developed :term:`YAML2RPM` to manage the multiple versions, dependencies, and
 other details of a resilient software deployment. YAML-formatted specification files are used to describe how to build an 
 application, encode dependencies, and where to install. Through programmatic translation via a custom python program, the 
-YAML input generates the ingredients to build a RedHat-compatible RPM using the distribution's native ``rpmbuild`` tool. 
+YAML input generates the ingredients to build a RedHat-compatible RPM using
+the distribution's native :command:`rpmbuild` tool. 
 
 The full process creates human-recognizable package names, supports multiple installed versions, and easily encodes dependencies
-for repeatable and robust application stacks.  In a full-stack recompilation, over 2000 individual RPMs are created.
+for repeatable and robust application stacks.  In a full-stack recompilation, over 4000 individual RPMs are created
+in 14-15 hours.
 
 .. admonition:: Motivation
 
@@ -24,27 +26,28 @@ for repeatable and robust application stacks.  In a full-stack recompilation, ov
 
 :term:`YAML2RPM` is a Generic Methodology for building RPMs
 This software uses the underlying **Rocks methodology** for automatically creating RPM spec
-files to create packages.  Where it differs from Rocks is that a
+files which are used to create RPM packages.  Where it differs from Rocks is that a
 YAML-based specification of a package is used to define the specific details of a
 component, instead of a subdirectory structure for each package 
-(see the `rocksclusters github rolls <https://github.com/rocksclusters/>`_ for many examples of the subdirectory structure)
+(see the `rocksclusters github rolls <https://github.com/rocksclusters/>`_ for many examples).
 
 Most (open-source) software starts with a source tarball, extracts the tarball, 
-configures for the local environment,  executes ``make`` and then executes ``make install``
-In the above, ``make`` might be ``cmake`` or some other software-specific tool. The last step,
-to turn the result of the steps, community-standard, process into an installable package
-is often deemed too time-consuming or difficult. The advantages of creating a package include:
+configures for the local environment,  executes :command:`make` and then executes :command:`make install`.
+In the above, :command:`make` might be :command:`cmake` or some other software-specific tool. The last process,
+to turn the result of the community-standard steps into an installable package
+is often deemed too time-consuming or difficult and is left to *Ad Hoc* scripts. The advantages of creating a package include:
 
-- File system conflicts resulting from different software builds are flagged prior-to-install
-- Software dependency resolution staves off many errors when attempting to remove
-  a key software package that other packages depend upon
-- Binary packages can be `compiled once` and reused in testing, staging, production environments
-- System tools (e.g., ``yum``) can be used a common tool to interrogate the file system for
-  integrity, ownership of specific files and other items.
+  - File system conflicts resulting from different software builds are flagged prior-to-install
+  - Software dependency resolution staves off many errors when attempting to remove
+    a key software package that other packages depend upon
+  - Binary packages can be `compiled once` and reused in testing, staging, production environments
+  - Common system tools (e.g., :command:`yum`) can be used to interrogate the file system for
+    integrity, ownership of specific files and other items.
 
 This software relies on only one Rocks-created software package, but otherwise is completely compatible with Generic CentOS and RedHat. 
 
-A developer who wants to build :term:`YAML2RPM`-generated packages must still have some familiarity with RPM concepts and ``yum``. 
+A developer who wants to build :term:`YAML2RPM`-generated packages must still
+have some familiarity with :term:`RPM` and :term:`DNF` concepts. 
 
 Approach
 ------------
@@ -52,13 +55,13 @@ Approach
 The approach used here is one where programmatic translations are used to progressively create a subdirectory structure that mirrors
 the way Rocks builds RPMS (`an example of building a qrencode RPM <https://github.com/rocksclusters/base/blob/master/src/qrencode/>`_).
 In that structure, an RPM spec file is automatically created and files are put in appropriate 
-places in which `rpmbuild <https://linux.die.net/man/8/rpmbuild/>`_ can success fully build a package.  
+places in which :term:`rpmbuild` can success fully build a package.  
 
-The generated spec file must define a source in a ``%source`` as well as ``%build``, ``%install``, ``%file`` 
-and other RPM-specific directives.  In particular, the ``%source`` is a tarball of this directory in github
-(e.g. base/src/qrencode directory). However, prior to creating the tarball, the upstream tarball 
-(e.g. qrencode-3.4.0.tar.bz2) must be placed in base/src/qrencode directory.  The automatically generated spec file,
-the ``%build`` directive invokes the ``build`` target of the Makefile provided here. In this example the section looks like:
+The generated spec file must define a source in a :yvars:`%source` as well as :yvars:`%build`, :yvars:`%install`, :yvars:`%file` 
+and other RPM-specific directives.  In particular, the :yvars:`%source` is a tarball of this directory in github
+(e.g. ``base/src/qrencode/`` directory). However, prior to creating the tarball, the upstream tarball 
+(e.g. ``qrencode-3.4.0.tar.bz2``) must be placed in ``base/src/qrencode/`` directory.  The automatically generated spec file,
+the :yvars:`%build` directive invokes the :yvars:`build` target of the Makefile provided here. In this example the section looks like:
 
 .. code-block:: make
 

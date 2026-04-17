@@ -196,29 +196,32 @@ The first three files must always be present in any admix with these exact names
   .. literalinclude:: files/gcc-admix-packages.yaml
       :language: yaml
 
-  There are a few variables  set in this file that have a meaning for
-  different stages of the build.
+  There are a few variables in this file that have a meaning for
+  different stages of the build and these variables are standard for all
+  admixes:
 
-  - **site** - includes site-specific yaml file. Needed in this case to
+  - :yvars:`site` - includes site-specific yaml file. Needed in this case to
     differentiate a build for CentOS 8, Rocky 9, and eventually Rocky 10.
-  - **system** - lists system RPMs to be installed via yum on the build machine.
+  - :yvars:`system` - lists system RPMs to be installed via yum on the build machine.
     This is a one time action to add  specific OS provided RPMS to the build host.
-  - **bootstrap** - lists RPMs to be build and immediately installed on the build machine.
+  - :yvars:`bootstrap` - lists RPMs to be build and immediately installed on the build machine.
     This is needed when a specific software package requires another software
     to be present. The order in this section is important.
-  - **build** - lists packages to be build on the build machine. The listing order
+  - :yvars:`build` - lists packages to be build on the build machine. The listing order
     is not important.
-  - **manifest** - lists package names  provided by this admix build for installing on
+  - :yvars:`manifest` - lists package names  provided by this admix build for installing on
     a target machine. This variable is used in :command:`make manifest` command and the
     output provides a listing of all created RPM names and can be used for the
     installation of these RPMs.
-  - **sets** - lists the :ref:`logical sets<ov_sets>` of related packages that are built (and installed) together. This
+  - :yvars:`sets` - lists the :ref:`logical sets<ov_sets>` of related packages that are built (and installed) together. This
     admix defines 4 sets.
 
   .. note::
-     What does :yvars:`!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"` mean? This is a simple, if-else construct.
-     In this case, if os_release defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
-     other os release will add the *gcc-gdb-plugin* system package.
+     | What does :yvars:`!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"` mean?
+     | This is a simple, *if-else* construct to compare two variables and choose the outcome 
+     | based on the comparison result as :yvars:`"var1, var2, outcome-if-true, outcome-if-false"`.
+     | In this case, if os_release defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
+       other os release will add the *gcc-gdb-plugin* system package.
 
 ``versions.yaml`` (required)
   Yaml format, usually contains packages names and versions.
@@ -246,7 +249,15 @@ The first three files must always be present in any admix with these exact names
 
      include $(YAML2RPM_HOME)/sys/Makefile
 
+.. _ov_gcc:
 .. _ov_gcc_module:
+
+Other files
+^^^^^^^^^^^
+
+``gcc.yaml``
+  This file describes how to build a GNU GCC gcc compiler package that includes all
+  needed components such as GCC/G++/GO/GFORTRAN/OBJC/OBJC++, isl.
 
 ``gcc-module.yaml``
   This file describes an environment module build for each version of the gcc compiler.
@@ -258,9 +269,6 @@ The first three files must always be present in any admix with these exact names
   Jinja2. One of the features that separates yaml2rpm from Jinja2 is the simplicity of recursive 
   definitions. Yaml2rpm naturally supports recursively-defined variables.  Recursion in Jinja2 is possible,
   but it takes extra declarations in each Jinja2 block.  For yaml2rpm, all variables are recursive.
-
-Other files
-~~~~~~~~~~~
 
 The remaining files are files for specific packages and sets. They 
 provide instructions for what needs to be done to configure, compile and create RPMs with 
@@ -281,12 +289,12 @@ Sets
 ----
 
 The concepts of sets is very straightforward -- a set of packages are RPMs that are related to one another
-and should be built "together".  Fundamentally, these are versions of software that make sense together. In
-the gcc admix, it's reasonable to examine the gcc8 set
+and should be built together.  Fundamentally, these are versions of software that make sense together. In
+the gcc admix, it's reasonable to examine the *gcc8* set
 
 ``set-gcc8.yaml``
-  This file describes the packages that need to be built to create the gcc8 compiler and associated 
-  RPMs:  
+  This file describes the packages that need to be built to create the GNU GCC
+  series 8 compiler and associated RPMs:  
 
   .. literalinclude:: files/set-gcc8.yaml
      :language: yaml
@@ -294,31 +302,33 @@ the gcc admix, it's reasonable to examine the gcc8 set
   There are a few variables  set in this file that have a meaning for
   different stages of the build.
 
-  - **versions:** - which versions file should be used. By convention, set-<setname> goes with
+  - :yvars:`versions` - which versions file should be used. By convention, set-<setname> goes with
     versions-<setname>. But that is not hard-coded, it is explicitly coded in each set file. 
-  - **bootstrap:** - This is a composite of :yvars:`{{bootstrap0}}` and :yvars:`{{bootstrap1}}` and are the
+  - :yvars:`bootstrap` - This is a composite of :yvars:`{{bootstrap0}}` and :yvars:`{{bootstrap1}}` and are the
     packages that need to be built and installed in specific order on the *build host*. In gcc,
     a bootstrap version of binutils (:yvars:`{{bootstrap0}}`) is built and installed and then it is rebuilt once the specific
     compiler version is built.  
-  - **build_set_specific:** - This is particular to the gcc-admix. Some versions of gcc need annobin, others do not.  
+  - :yvars:`build_set_specific` - This is particular to the gcc-admix. Some versions of gcc need annobin, others do not.  
     ``packages.yaml`` defines this variable to be empty. This set includes all the definitions of in packages.yaml
     and then *overrides* for this specific set.
 
-.. note::
-   Set files almost always include the baseline packages.yaml file. The gcc admix illustrates some of the flexibility
-   that comes with the set plus  override construction. 
+  .. note::
+     Set files almost always include the baseline ``packages.yaml`` file. The gcc admix illustrates some of the flexibility
+     that comes with the set plus override construction. 
 
 ``versions-gcc8.yaml``
-  This file lists the versions needed by the gcc8 set  
+  This file lists the versions needed by the gcc8 set.
 
   .. literalinclude:: files/versions-gcc8.yaml
      :language: yaml
 
-  This versions file includes the admix'es ``versions.yaml`` file and then
-  adds variables :yvars:`gcc`, :yvars:`gcc_series`, and :yvars:`mpfr`. 
+  .. note::
+     Specific versions file almostr always includes the baseline ``versions.yaml`` file and then
+     adds or overrides variables as needed. Here added variables are  :yvars:`gcc`, :yvars:`gcc_series`, and :yvars:`mpfr`. 
 
 When taken together: ``gcc.yaml``, ``packages.yaml``, ``versions.yaml``, ``set-gcc8.yaml``, and ``versions-gcc8.yaml`` are all
-that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).  Exchange to ``set-gcc11.yaml`` and
+that are needed to build the suite of gcc version 8.4.0 RPMS (9 in total).
+Exchange specific set and version files to ``set-gcc11.yaml`` and
 ``versions-gcc11.yaml`` and gcc versions 11.2.0 RPMS (another 9) are built.  
 
 Layout after build

@@ -11,7 +11,7 @@ subdirectory of an admix is a very terse listing of what makes a particular pack
   2. The description of the package
   3. The source tarball of the package
   4. How to build it
-  5. (Optional) directives to rpmbuild to successfully create the rpm version of the software
+  5. (Optional) directives to |rpmb| to successfully create the rpm version of the software
 
 With a large number of packages, common build patterns emerge. For example, many software sources follow
 the pattern
@@ -24,7 +24,7 @@ A ``<pkg>.yaml`` for software that follows this pattern needs only specify the c
 source tarball for code and directory for final installation.
 
 .. tip::
-   Yaml2rpm uses several "transformations" to create a directory infrastucture and rpm spec file so that ``rpmbuild`` 
+   Yaml2rpm uses several "transformations" to create a directory infrastucture and rpm spec file so that |rpmb|
    can successfully create the final rpm package
 
 The next sections provide some detail of the transformations and how the build process shows up on the file system.
@@ -54,7 +54,7 @@ in a specific file system hierarchy
       :align: center
       :alt: Directory Structure for building an RPM binary package
 
-      The Directory structure **required** by an interpreted by ``rpmbuild`` to create an RPM.
+      The Directory structure **required** by an interpreted by |rpmb| to create an RPM.
 
 In :numref:`dd_rpmdirs`,` all source code and patches are placed in the ``SOURCES`` directory. 
 The instructions for building the binary RPM is placed in the ``SPECS`` directory.  
@@ -66,7 +66,7 @@ this RPM directory structure can be anywhere desired. The *output* (binary RPM) 
    part of the build process and is *output*. Nothing in this RPM tree should ever be committed to a source 
    code repository. 
 
-The yaml2rpm build process *must* create this tree and appropriately place files there so that ``rpmbuild`` can
+The yaml2rpm build process *must* create this tree and appropriately place files there so that |rpmb| can
 perform its task. 
 
 
@@ -78,11 +78,11 @@ is a daunting task and did not scale well for a small development group of 2-3 p
 Using a Makefile infrastructure with
 a common (and extensive) set of rules, the definition of a single RPM package was reduced to a single directory.
 
-From this structure, the RPM directory structure needed by ``rpmbuild`` is generated and ``rpmbuild`` is then used
+From this structure, the RPM directory structure needed by |rpmb| is generated and |rpmb| is then used
 to create the binary package.  This rocks-devel directory structure does *not* contain an RPM spec file. 
 Instead, the make-driven process generates a specfile. That specfile invokes the ``build:`` and ``install:`` 
 targets defined in the per-package Makefile.  Any specific instructions (e.g., ``./configure``, ``python setup.py``,
-``R CMD INSTALL``, ...) to compile/install a piece of software are encodeded directly into the Makefile. 
+``R CMD INSTALL``, ...) to compile/install a piece of software are encoded directly into the Makefile. 
 
 This has the distinct advantage where building a software package mostly focuses on the specific compilation
 requirements instead of the arcane aspects of spec files.  The binary RPM is a *byproduct*. 
@@ -107,7 +107,7 @@ There are some key items to note here
     1. There is no *spec* file. The specfile is *generated*. The resulting spec file 
        is placed in the ``SPECS`` directory
     2. The entire directory is tarred and becomes the source for the generated spec file. That tar.gz file 
-       is places in the ``SOURCES`` directory for ``rpmbuild`` to use
+       is places in the ``SOURCES`` directory for |rpmb| to use
     3. Since the entire directory is tarred as the source, it can include patch files, filter files, or other items
        specific to a particular package
     4. Files like ``Defaults.mk``, ``Definitions.mk`` are interpreted by the rocks-devel Makefile structure
@@ -140,7 +140,7 @@ multiple departments at a research university.
      encode
    * Common build *memes* resulted in significant duplication of "Makefile code"
    * An order of magnitude in the number of packages required for a campus-community cluster vs. a lab-cluster (the 
-     Rocks targetted use case), made the rocks-devel process cumbersome
+     Rocks targeted use case), made the rocks-devel process cumbersome
 
 .. tip::
    The yaml2rpm process creates a temporary rocks-devel-compatible directory and then invokes the rocks-devel process
@@ -158,4 +158,4 @@ multiple departments at a research university.
 :numref:`dd_yaml2rpm` illustrates the major steps/transformations that occur to go from yaml-formatted package
 file + source tarball to RPM.
 
-
+.. |rpmb| replace:: :command:`rpmbuild`
