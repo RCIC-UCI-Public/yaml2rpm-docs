@@ -297,11 +297,11 @@ The standard, no change step outline is:
        .. code-block:: text
 
           To install the specified desired perl modules:
-	          Moose
-	          Moose::Role
-	          File::Copy::Recursive
-	          HTML::Template
-	          XML::Simple
+              Moose
+              Moose::Role
+              File::Copy::Recursive
+              HTML::Template
+              XML::Simple
            
           the following packages and their versions will need to be installed:
           File-Copy-Recursive: "0.45"
@@ -367,3 +367,63 @@ The standard, no change step outline is:
        | ``Package-Stash-XS.yaml``
        | ``Moose.yaml``
 
+
+#. Download all source distributions for generated yaml files:
+
+   .. parsed-literal:: 
+      :command:`make desired-download`
+
+#. Build and install RPMS for desired modules:
+
+   .. parsed-literal:: 
+      :command:`make desired-build | tee out 2>&1`
+   
+   If there are errors, check them in order of yaml files being used for build
+   and follow the errors to fix. These are the cases where manual adjustment
+   of the yaml file will be needed to incorporate the fixes.
+
+#. Once the build goes well and you have all the RPMs, need to create new versions
+   and set files and update ``packages.yaml``. For example, we want to call this new set **530-trial**.
+   a new set and its version file can be  created and  the set can be added to packages.yaml.
+
+   * Create ``versions-530-trial.yaml`` with these initial lines:
+
+     .. code-block:: yaml
+
+        !include versions-530.yaml
+        ---
+        baseline_bioperl: "{{versions.perl}}"
+
+     and add the contents of the ``versions-bootstrap.yaml``. See other versions
+     files in the repo for an exact layout.
+
+   * Create ``set-530-trial.yaml`` with these initial lines:
+
+     .. code-block:: yaml
+
+        !include packages.yaml
+        ---
+        versions: versions-530-trial.yaml
+        bootstrap:
+
+     and add the contents of the ``buildorder``. See other set
+     files in the repo for an exact layout.
+
+   * Update the ``packages.yaml`` file and add the :yvars:`530-trial` to the serial set
+     :yvars:`perl530` after the already existing sets:
+
+     .. code-block:: yaml
+
+        serialsets:
+           perl530:
+              - "530"
+              - "530-meta"
+              - "530-bio"
+              - "530-gen"
+              - "530-trial"
+
+
+#. To remove built and installed RPMs
+
+   .. parsed-literal:: 
+      :command:`make desired-erase`
