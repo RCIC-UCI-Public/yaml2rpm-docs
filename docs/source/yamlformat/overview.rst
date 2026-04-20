@@ -79,6 +79,8 @@ After cloning the git repo, the directory structure is:
 Files description
 -----------------
 
+.. _admixrepo_files_top:
+
 Files at the top level
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -184,6 +186,8 @@ Standard files and directories present in every admix:
   A text file that is generated via running :command:`auto-changelog` command (provided by
   the  nodejs RPM) at the admix top-level directory. 
   
+.. _admixrepo_files_yamlspecs:
+
 Files in yamlspecs/
 ~~~~~~~~~~~~~~~~~~~
 
