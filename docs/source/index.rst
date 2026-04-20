@@ -37,7 +37,6 @@ and are available from our :term:`github home` repositories.
 
    installation/requirements
    installation/quickstart
-   installation/api
 
 .. toctree::
    :maxdepth: 1
