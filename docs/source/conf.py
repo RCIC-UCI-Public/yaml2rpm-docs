@@ -3,7 +3,7 @@
 # -- Project information
 
 project = u'YAML2RPM'
-copyright = u'2019-2023, The Regents of the University of California'
+copyright = u'2019-2026, The Regents of the University of California'
 author = u'RCIC'
 
 release = '0.1'
@@ -41,6 +41,13 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 html_theme = 'sphinx_rtd_theme'
+
+html_theme_options = {
+    # use this to show only logo on top of the side bar without home button link
+    #'logo_only': True,
+    # accessibility: this keeps navigation menu opening only to one level
+    'navigation_depth': 3,
+}
 
 # custom dir for storing files
 html_static_path = [ '_static', 'pdfs']
