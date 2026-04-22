@@ -3,49 +3,59 @@
 Perl
 =====
 
+**Table of contents:**
+
 .. contents::
    :local:
 
-The `perl-admix repository <https://github.com/RCIC-UCI-Public/perl-admix/>`_ builds
-multiple versions of Perl. 
+Building
+--------
 
-Perl is relatively complex build and requires local changes to its Makefile to
-accomplish multiple builds for multiple versions.
+The `perl-admix repository <https://github.com/RCIC-UCI-Public/perl-admix/>`_
+is used to build multiple versions of Perl.
 
-| Here is the full process for rebuilding Perl using the `perl-admix repository <https://github.com/RCIC-UCI-Public/perl-admix/>`_.
-| This process will install RPMs as it builds. You should do this on a disposable build system:
+Perl is relatively complex build and requires local changes to its ``Makefile``
+and a few custom scripts to accomplish multiple builds for multiple versions.
 
-.. parsed-literal:: 
+Here is the full process for rebuilding Perl and its associated modules present in the repo.
+This process will install RPMs for two Perl versions (|530| and |534|) as it builds.
+You should do this on a disposable build system:
+
+.. parsed-literal::
    :command:`git clone https://github.com/RCIC-UCI-Public/perl-admix.git
    cd perl-admix
-   make download
-   cd yamlspecs
-   (make bootstrap &> /tmp/bootstrap-gcc.log make &> /tmp/build-gcc.log) &`
+   make buildall-parallel &> buildall.log &`
+
+The following sections provide detailed explanation about repo files,
+build process, and adding new modules step-by-step.
+
+Files
+-----
 
 .. _perl_admix_files_top:
 
-Files at the top level
------------------------
+At the top level
+~~~~~~~~~~~~~~~~~~~~~~
 
-Standard files and directories present in every admix as described in 
+Standard files and directories present in every admix as described in
 :ref:`what files are in yamlspecs <admixrepo_files_yamlspecs>`.
 
 .. _perl_admix_files_yamlspecs:
 
-Files in yamlspecs/
--------------------
+In yamlspecs/
+~~~~~~~~~~~~~
 
 Standard files
-~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^
 
 When building Perl modules we not only need to build different versions of
 Perl itself but also need to have different modules that were requested by the users
-in order to support different types of applications. 
+in order to support different types of applications.
 
 Such modules trigger its own chain of dependent Perl modules that need to be
 installed. We created 3 different groups (names and division into groups are logical)
-to handle such requests for modules related to : 
-  
+to handle such requests for modules related to:
+
   - bio - bioperl applications
   - gen - genomics  applications
   - meta - metagenomics applications
@@ -63,10 +73,10 @@ create circular references during the build.
 
   Most of the variables in this file are standard
   (:yvars:`site`, :yvars:`system`, :yvars:`bootstrap`, :yvars:`build`, :yvars:`manifest`, :yvars:`sets`).
-  There are a few new variables in this file that allow us 
+  There are a few new variables in this file that allow us
   to build multiple versions of Perl in parallel and make sure that the
   specific modules for each set can be built only after their dependencies are
-  already built and installed. 
+  already built and installed.
 
   - :yvars:`bootstrap` and :yvars:`build` - empty, no packages in the base
     set. All build will be in the specific sets.
@@ -75,9 +85,9 @@ create circular references during the build.
     just like in any other admix. But here each set is defined as a *serialset*, one for each version of Perl.
 
   - :yvars:`serialsets` - each *serialset* has a name and is a list of sets for a specific Perl version.
-    These sets describe related packages for each version of Perl that are built serially in order to satisfy modules dependencies. 
+    These sets describe related packages for each version of Perl that are built serially in order to satisfy modules dependencies.
     Here we define two *serialsets* :yvars:`serialsets.perl530` and :yvars:`serialsets.perl534`, one for each version of Perl.
-    In each *serialset* there are 4 sets defined in exact order to be built. 
+    In each *serialset* there are 4 sets defined in exact order to be built.
 
   There are specific dependencies among modules defined in *bio*, *gen* and *meta* groups and it is
   important to build those sets in that exact order. But there are no
@@ -87,23 +97,23 @@ create circular references during the build.
   The parallel build for serialsets :yvars:`serialset.perl530` and :yvars:`serialset.perl534`
   will start at the same time (starting with serial sets :yvars:`530` and :yvars:`534` respectively).
   The next build (in order) will start automatically as soon as the previous one is
-  finished: 
+  finished:
 
   .. table::
      :class: noscroll-table
 
-     +-------+--------------+---------------+ 
+     +-------+--------------+---------------+
      | Build | Perl 530     |  Perl 534     |
      | order | serialset    |  serialset    |
-     +=======+==============+===============+ 
-     |   1   |  530         | 534           | 
-     +-------+--------------+---------------+ 
-     |   2   |  530-meta    | 534-meta      |      
-     +-------+--------------+---------------+ 
-     |   3   |  530-bio     | 534-bio       |     
-     +-------+--------------+---------------+ 
-     |   4   |  530-gen     | 534-gen       |     
-     +-------+--------------+---------------+ 
+     +=======+==============+===============+
+     |   1   |  530         | 534           |
+     +-------+--------------+---------------+
+     |   2   |  530-meta    | 534-meta      |
+     +-------+--------------+---------------+
+     |   3   |  530-bio     | 534-bio       |
+     +-------+--------------+---------------+
+     |   4   |  530-gen     | 534-gen       |
+     +-------+--------------+---------------+
 
 ``versions.yaml`` (required)
   Since there are no packages to build for the base set, this file just lists the admix name:
@@ -117,7 +127,7 @@ create circular references during the build.
   .. literalinclude:: files/perl-admix-perl.yaml
       :language: yaml
 
-  Most variables are standard and are descirbe in :red:`TODO ref`. 
+  Most variables are standard and are descirbe in :red:`TODO ref`.
   The specific variables are as follows:
 
   - include statements specify tempalte files to include when parsing this yaml file.
@@ -125,11 +135,11 @@ create circular references during the build.
     using the include directive simplifies the comon code reuse and minimizes
     the overall code footprint.
 
-    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` tempalte 
+    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` tempalte
       file that defines defaults for the variables used during the build.
 
       :red:`TODO add reference to this file and describe it in full`
-    - :yvars:`!include rpm.yaml` -  include ``rpm.yaml`` template file that 
+    - :yvars:`!include rpm.yaml` -  include ``rpm.yaml`` template file that
       defines specific RPM directives to use when creating RPMs.
       These definitions will override what :command:`rpmbuild` uses by default.
 
@@ -140,14 +150,14 @@ create circular references during the build.
     get uncompressed and untarred to get the individual modules packages
     sources. These 3 files are not used for building perl package
     itself but the names are used in the ``Makefiles`` when running specific targets.
-    For each version of perl a different source distribution file is available 
+    For each version of perl a different source distribution file is available
     and is defined in the corresponding versions file.
 
   - :yvars:`filter_requires` :red:`TODO check if still need`
   - :yvars:`rpmFilters` - here is set to **\*filterPerl**.  The definition is
     in ``rpm.yamls`` template.
   - :yvars:`provides` - specifies what to add to *provides* when RPM is
-    created.  For example, for Perl 5.30.0 RPM package **perl_5.30.0(:VERSION) = 5.30.0**
+    created.  For example, for Perl |530| RPM package **perl_5.30.0(:VERSION) = 5.30.0**
     will be added. This is similar to what system-installed Perl package would
     have for its version.
 
@@ -160,10 +170,10 @@ create circular references during the build.
   The variables are:
 
   - include statements specify tempalte files to include when parsing this yaml file.
-  
-    - :yvars:`!include perl.yaml` -  specifies a package file to include when parsing this file. 
+
+    - :yvars:`!include perl.yaml` -  specifies a package file to include when parsing this file.
       Each package module file always includes the package yaml file to get needed package definitions.
-    - :yvars:`!include rcic-module.yaml` -  specifies a tempalte to include when parsing this file. 
+    - :yvars:`!include rcic-module.yaml` -  specifies a tempalte to include when parsing this file.
       The ``rcic-module.yaml`` is a default template file that defines generic variables for most module files.
 
       :red:`TODO add reference to this file and describe it in full`
@@ -174,20 +184,104 @@ create circular references during the build.
     :red:`TODO add reference to CATEGORY`
   - :yvars:`release` - an RPM release number to use. Default is 1 Or a release
     specified in the included package yaml file (if exists there).
-    We can increase the release when some changes are done to the yaml file 
+    We can increase the release when some changes are done to the yaml file
     so that when a new RPM is created the release is updated. This allows old and new RPMs
     releases to be present in the yum repo without a conflict and yum will use the latest availalbe for
     the installation or for the update when requested.
 
+.. _perl_admix_makefile:
+
+Makefile
+^^^^^^^^
+
+The ``Makefile`` is specific to perl-admix.
+
+* It includes a generic template via :yvars:`include $(YAML2RPM_HOME)/sys/Makefile` directive
+  that provides defaults used for building RPMs;
+* adds targets to override defaults. For example :yvars:`thawyamls`, :yvars:`thawsources`
+  or :yvars:`addfilters`.
+* add specific targets that are defined for the 3 groups of modules of for a
+  creation of additional modules. For example, :yvars:`sysperl`, or any of
+  targets that have *bio*, *meta* or *gen* in their names.
+
+When executing any target defined in ``Makefile`` **always give it a set name
+as an argument**, for example:
+
+   .. parsed-literal::
+      :command:`make bootstrap SET=534-bio`
+      :command:`make -n metaprep SET=534-meta1`
+
+The targets and definitions are grouped per 3 defined groups of modules
+and for creation of additional modules (see names with *desired*)
+and are easy to differentiate via a group name, for example for a **meta** group:
+
+   .. code-block:: make
+
+      # specific to metacpan/ modules
+      BASE_SRCVER = $(shell $(GENERATE) --query=metacpan_tarsources perl.yaml)
+      BASELINE = $(shell cat metacpan/buildorder)
+      BASERPMS = $(addprefix perl_$(PERLVER)-,$(BASELINE)) perl_$(PERLVER)-baseline-metacpan
+
+      ### metacpan targets
+      # Only do real work if the set has meta in the name
+      ifeq ($(findstring meta,$(SET)),meta)
+      metaprep:
+              for name in $(shell cat metacpan/buildorder) baseline-metacpan; do              \
+                  /bin/cp metacpan/$$name.yaml .;                                             \
+              done
+
+The ``Makefile`` needs to change only when a completely new group of
+applications is added, In this case follow the existing definitions schema  in
+the file ( see targets with *bio*, *meta* or *gen* in their names).
+
 .. _perl_admix_sets:
 
-Sets
-~~~~
+Set specific
+^^^^^^^^^^^^
+
+The set files and corresponding versions files enable us to create multiple
+versions of desired modules for multiple versions of Perl.
+
+Here, we have two versions of Perl and 3 groups, plus the *base* set for each
+version.  This results in the following matrix of sets and their corresponding
+versions:
+
+  .. table::
+     :class: noscroll-table
+
+     +---------+-------------------+------------------------+
+     | Perl    | Set               |  Versions              |
+     | version | file              |  file                  |
+     +---------+-------------------+------------------------+
+     | |530|   | set-530.yaml      | versions-530.yaml      |
+     |         |                   |                        |
+     |         | set-530-bio.yaml  | versions-530-bio.yaml  |
+     |         |                   |                        |
+     |         | set-530-gen.yaml  | versions-530-gen.yaml  |
+     |         |                   |                        |
+     |         | set-530-meta.yaml | versions-530-meta.yaml |
+     +---------+-------------------+------------------------+
+     | |534|   | set-534.yaml      | versions-534.yaml      |
+     |         |                   |                        |
+     |         | set-534-bio.yaml  | versions-534-bio.yaml  |
+     |         |                   |                        |
+     |         | set-534-gen.yaml  | versions-534-gen.yaml  |
+     |         |                   |                        |
+     |         | set-534-meta.yaml | versions-534-meta.yaml |
+     +---------+-------------------+------------------------+
+
+Any individual set can be built separately, for example:
+
+   .. parsed-literal::
+      :command:`make bootstrap SET=534-bio`
+
+.. note:: Individual sets for a given Perl version need to be build in order they are
+          listed in ``packages.yaml`` file because of inter-module dependencies.
 
 .. _perl_admix_scripts:
 
 Scripts
-~~~~~~~
+^^^^^^^
 
 There are a few scripts that we created to enable specific tasks.
 See the scripts files contents in `perl-admix repository <https://github.com/RCIC-UCI-Public/perl-admix/>`_.
@@ -210,21 +304,21 @@ All the scripts are specific to perl-admix.
 
   The script will take as an input a list of desired Perl modules, query CPAN
   for the modules availability and their prerequisites and create yaml files for found modules.
-  In some instances, a module will be provided by the `parent` module distribution. 
+  In some instances, a module will be provided by the `parent` module distribution.
   In such cases a mapping from parent to module will be given.
   We can then use the created yaml files to build RPMs.
   See a build example in :ref:`perl_admix_add_modules`.
 
 ``MyConfig.pm.in``
-  This is CPAN.pm's system wide configuration file, it provides
+  This is CPAN's system wide configuration file, it provides
   defaults for CPAN related directories. By default this file
   is generated as ``/root/.cpan/CPAN/MyConfig.pm`` but we need to override
   some definitions.  See a build example in :ref:`perl_admix_add_modules`.
 
 .. _perl_admix_add_modules:
 
-How to add new modules
-----------------------
+Add new modules
+---------------
 
 The steps below outline how one can automate to a large degree creation of the
 additional Perl modules RPMs. Because the Perl modules do not always obey the
@@ -234,17 +328,17 @@ always a case that will need a manual adjustment.
 The adjustment usually involves overwriting requires/provides, or changing the
 package name, or changing the order in a ``buildorder`` file.
 For the requires/provides see examples of the filters in the ``metacpan/Package-Stash.yaml``
-or ``metacpan/ExtUtils-Helpers.yaml`` or other yaml files that contain **filter_requires** or
-**filter_provides** directives.
+or ``metacpan/ExtUtils-Helpers.yaml`` or any other yaml files that contain
+:yvars:`filter_requires` or :yvars:`filter_provides`` directives.
 
 For the ``buildorder`` updates, follow error messages during RPMs build and check for errors in the
-output file, then adjust the ``buildprder`` and rerun build RPM command.
+output file, then adjust the ``buildprder`` (reorder modules in it ) and rerun build RPM command.
 
-The standard, no change step outline is:
+The standard, step-by-step outline to add a new set of perl modules is:
 
 1. Create a file ``desired`` that lists desired Perl modules names  one per line using Perl module name
    schema, foe example:
-   
+
    .. code-block:: text
 
       Moose
@@ -254,30 +348,30 @@ The standard, no change step outline is:
       XML::Simple
 
    Note, here there are  two modules that are related, **Moose** is a parent
-   module and  **Moose::Role** is a child module. 
-#. Before the next step make sure there is ``~/.cpan/CPAN/MyConfig.pm`` file
-   We can generate this file before running any cpan commands via:
+   module and  **Moose::Role** is a child module.
+#. Before the next step make sure there is ``~/.cpan/CPAN/MyConfig.pm`` file.
+   We can generate this file before running any CPAN commands via:
 
-   .. parsed-literal:: 
+   .. parsed-literal::
       :command:`make MyConfig.pm
       mkdir -p  ~/.cpan/CPAN/
       cp MyConfig.pm  ~/.cpan/CPAN/MyConfig.pm`
-  
+
 #. Run a program that will query CPAN for the modules and their prerequisites
    and create yaml files for found modules. In some instances, a module will be provided
-   by the `parent` modules distribution. Use Perl version for which  you are building the
+   by the `parent` module distribution. Use Perl version for which  you are building the
    desired modules. For example, to create the yaml files for modules listed
-   in ``desired`` for Perl 5.30.0:
-   
-   .. parsed-literal:: 
+   in ``desired`` for Perl |530|:
+
+   .. parsed-literal::
       :command:`cd yamspecs/
       make desired-yaml SET=530`
 
-   The stdout output will show the commands that will be executed by ~~make`` and
-   print info on what Perl module it is working. At the end it will list yaml
-   that were written and a mapping info.
+   The stdout output will show the commands that will be executed by ``make`` and
+   print info what Perl module it is working on. At the end it will list
+   written yaml files and a mapping info (from parent to child module if exist).
 
-   In our example, the mapping line is 
+   In our example, the mapping line is
 
    .. code-block:: python
 
@@ -286,13 +380,13 @@ The standard, no change step outline is:
    This means there were two mappings created and they are:
 
      | (1) ``Moose.yaml`` the parent module **Moose** provides **Moose::Role**
-     | (2) ``Scalar-List-Utils.yaml`` parent module  **Scalar::List::Utils** provides  **List::Utils** 
+     | (2) ``Scalar-List-Utils.yaml`` parent module  **Scalar::List::Utils** provides  **List::Utils**
 
    **Output Files**
 
-   After the :command:`make` finishes, there are output files created:
+   After the :command:`make` finishes, there are output files:
 
-     * ``versions-desired`` is the info file with the following content:
+     * ``versions-desired`` is just the info file with the following content:
 
        .. code-block:: text
 
@@ -302,7 +396,7 @@ The standard, no change step outline is:
               File::Copy::Recursive
               HTML::Template
               XML::Simple
-           
+
           the following packages and their versions will need to be installed:
           File-Copy-Recursive: "0.45"
           HTML-Template: "2.97"
@@ -313,7 +407,7 @@ The standard, no change step outline is:
           Module-Runtime-Conflicts: "0.003"
           Package-Stash-XS: "0.30"
           Moose: "2.4000"
-      
+
      * ``versions-bootstrap`` with the following content:
 
        .. code-block:: text
@@ -337,8 +431,6 @@ The standard, no change step outline is:
           Moose: "2.4000"
           Moose_loc: "E/ET/ETHER"
 
-       The contents of this file needs to be added to the ``versions-<SET>.yaml``.
-
      * ``buildorder`` with the following content:
 
        .. code-block:: text
@@ -353,8 +445,6 @@ The standard, no change step outline is:
            - Package-Stash-XS
            - Moose
 
-        The contents of this file needs to be added to the ``set-<SET>.yaml``.
-
      * Yaml file for each module listed in ``buildorder``:
 
        | ``File-Copy-Recursive.yaml``
@@ -368,25 +458,34 @@ The standard, no change step outline is:
        | ``Moose.yaml``
 
 
-#. Download all source distributions for generated yaml files:
+#. Download all source distributions for the generated yaml files:
 
-   .. parsed-literal:: 
-      :command:`make desired-download`
+   .. parsed-literal::
+      :command:`make desired-download SET=530`
+
+   This command will use the :yvars:`vendor_source` in yaml files and
+   download the source distributions.
 
 #. Build and install RPMS for desired modules:
 
-   .. parsed-literal:: 
-      :command:`make desired-build | tee out 2>&1`
-   
-   If there are errors, check them in order of yaml files being used for build
-   and follow the errors to fix. These are the cases where manual adjustment
-   of the yaml file will be needed to incorporate the fixes.
+   .. parsed-literal::
+      :command:`make desired-build SET=530 | tee out 2>&1`
 
-#. Once the build goes well and you have all the RPMs, need to create new versions
-   and set files and update ``packages.yaml``. For example, we want to call this new set **530-trial**.
-   a new set and its version file can be  created and  the set can be added to packages.yaml.
+   If there are errors, check them in order they are built
+   (in ``buildorder``) and follow the errors to fix. These are the cases where manual adjustment
+   of the yaml file will be needed to incorporate the fixes. There is no
+   single recipe, the errors are specific to each module and thehe is usually
+   enough info in the output to figure out what changes are needed.
+   Browse through the module yaml files in repo for existing examples.
 
-   * Create ``versions-530-trial.yaml`` with these initial lines:
+#. Once the build goes well and you have all the RPMs, create new versions
+   and set files and update ``packages.yaml`` (see other versions files in the repo
+   for an exact layout).
+
+   For example, we want to call this newly create collection of modules **trial**
+   and the files and updates are as follows:
+
+   * Create ``versions-530-trial.yaml`` with the initial lines:
 
      .. code-block:: yaml
 
@@ -394,10 +493,9 @@ The standard, no change step outline is:
         ---
         baseline_bioperl: "{{versions.perl}}"
 
-     and add the contents of the ``versions-bootstrap.yaml``. See other versions
-     files in the repo for an exact layout.
+     Add the contents of the ``versions-bootstrap.yaml`` to it.
 
-   * Create ``set-530-trial.yaml`` with these initial lines:
+   * Create ``set-530-trial.yaml`` with the initial lines:
 
      .. code-block:: yaml
 
@@ -406,8 +504,7 @@ The standard, no change step outline is:
         versions: versions-530-trial.yaml
         bootstrap:
 
-     and add the contents of the ``buildorder``. See other set
-     files in the repo for an exact layout.
+     Add the contents of the ``buildorder`` to it.
 
    * Update the ``packages.yaml`` file and add the :yvars:`530-trial` to the serial set
      :yvars:`perl530` after the already existing sets:
@@ -422,8 +519,62 @@ The standard, no change step outline is:
               - "530-gen"
               - "530-trial"
 
+   .. note:: What if the modules are to be added not to a new set but to already
+      existing one, let say **bio**? Instead of creating new versions and set yaml
+      files simply:
+
+        * append the contents of ``versions-bootstrap.yaml`` to ``versions-530-bio.yaml``
+        * append the contents of ``buildorder`` to ``set-530-bio.yaml``
+
+      No changes are needed in ``packages.yaml`` in this case.
+
+   * Update the ``Makefile``. This is by far the most complex. Carefully
+     follow the existing notations for the other groups (*bio*, *meta*, *gen*)
+     and add the new targets and definitions for this new set *trial*.
 
 #. To remove built and installed RPMs
 
-   .. parsed-literal:: 
-      :command:`make desired-erase`
+   .. parsed-literal::
+      :command:`make desired-erase SET=530-trial`
+
+#. Repeat the process for another Perl version.
+
+   Since we usually try to build the same modules for both Perl versions, the
+   above steps need to be repeated for Perl |534|. Because of the Perl version
+   change the versions of the modules and distribution files are usually
+   different and so are the dependencies or additional needed modules.
+
+   Steps:
+
+   * Use the same ``desired`` file
+   * Run script with desired version of Perl
+
+     .. parsed-literal::
+        :command:`cd yamspecs/
+        make desired-yaml SET=534`
+
+   * download the  distro files for new versions:
+
+     .. parsed-literal::
+        :command:`make desired-download SET=530`
+
+   * Examine created files, compare them to
+     the ones that were created for a previosu Perl version and apply
+     similar changes (if there were any manual adjustments).
+
+   * Build and install RPMS:
+
+     .. parsed-literal::
+        :command:`make desired-build SET=530 | tee out 2&>1`
+
+   * Once all RPMs are built without errors, create ``set-534-trial.yaml``,
+     ``versions-534-trial.yaml``, and update ``packages.yaml``.
+
+   * Remove installed and built RPMS for this set
+
+     .. parsed-literal::
+        :command:`make desired-erase SET=534-trial`
+
+
+.. |530| replace:: 5.30.0
+.. |534| replace:: 5.34.1
