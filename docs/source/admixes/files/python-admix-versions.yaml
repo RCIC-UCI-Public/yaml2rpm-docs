@@ -1,0 +1,4 @@
+!include site.yaml
+---
+admix: python-admix
+unique_opts: --enable-loadable-sqlite-extensions --without-ensurepip

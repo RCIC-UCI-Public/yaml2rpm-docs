@@ -1,0 +1,42 @@
+# Note: on RHEL8, the powertools repo must be enabled to get some of the devel packages.
+---
+site: !include site.yaml
+develext: !ifeq "{{site.os_release}},7,-devel,"
+system:
+  - atlas-devel
+  - blas-devel
+  - blas64{{develext}}
+  - lapack-devel
+  - lapack64{{develext}}
+  - libffi-devel
+  - zlib-devel
+  - openssl-devel
+  - tcl-devel
+  - tk-devel
+  - bzip2-devel
+  - ncurses-devel
+  - readline-devel
+  - sqlite-devel
+  - libyaml{{develext}}
+  - xz-devel
+  - cmake
+  - !eval "'{{pillow_libs}}' if {{site.os_release}} >= 8 else ''"
+pillow_libs:
+  - libjpeg-turbo-devel
+  - openjpeg2-devel
+  - libtiff-devel
+  - lcms2-devel
+  - libwebp-devel
+bootstrap:
+build:
+manifest:
+  - "{{bootstrap}}"
+  - "{{build}}"
+parallel:
+  sets: 3
+  pkgs: 4
+sets:
+  - "217"
+  - "380"
+  - "310"
+  - "314"
