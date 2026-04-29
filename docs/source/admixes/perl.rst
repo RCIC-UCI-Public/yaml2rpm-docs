@@ -17,20 +17,25 @@ is used to build multiple versions of Perl.
 Perl is relatively complex build and requires local changes to its ``Makefile``
 and a few custom scripts to accomplish multiple builds for multiple versions.
 
-Here is the full process for rebuilding Perl and its associated modules present in the repo.
-This process will install RPMs for two Perl versions (|530| and |534|) as it builds.
-You should do this on a disposable build system:
+Here is the full process for rebuilding Perl and its associated modules present in the repo:
 
 .. parsed-literal::
    :command:`git clone https://github.com/RCIC-UCI-Public/perl-admix.git
    cd perl-admix
    make buildall-parallel &> buildall.log &`
 
+.. warning::
+   This process will install RPMs for two Perl versions (|530| and |534|) as it builds.
+   You should do this on a 'disposable' build system.
+
+
 The following sections provide detailed explanation about repo files,
 build process, and adding new modules step-by-step.
 
-Files
------
+.. _perl_admix_files:
+
+Files description
+-----------------
 
 .. _perl_admix_files_top:
 
@@ -127,7 +132,7 @@ create circular references during the build.
   .. literalinclude:: files/perl-admix-perl.yaml
       :language: yaml
 
-  Most variables are standard and are descirbe in :red:`TODO ref`.
+  Most variables are standard and are described in :red:`TODO ref`.
   The specific variables are as follows:
 
   - include statements specify tempalte files to include when parsing this yaml file.
