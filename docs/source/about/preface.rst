@@ -3,6 +3,23 @@
 What is YAML2RPM?
 =================
 
+:term:`YAML2RPM` 
+  is s a Generic Methodology for building RPMs and for managing
+  the multiple versions, dependencies, and other details of a resilient software deployment.
+  Our approach makes building and  packaging of applications very straightforward and reduces complex or
+  difficult builds to manageable ones.
+
+  This software uses the underlying **Rocks methodology** for automatically creating RPM spec
+  files which are used to create RPM packages.  It relies on a single Rocks-created software package,
+  but otherwise is completely compatible with Generic CentOS, RedHat and Rocky Linux.
+  Where it differs from Rocks is that a YAML-based specification of a package is used to define the
+  specific details of a component, instead of a subdirectory structure for each package 
+  (see the `rocksclusters github rolls <https://github.com/rocksclusters/>`_ for many examples).
+
+  Our recipes for building hundreds of applications are open source and are available from our :term:`github home` repositories.
+  This documentation will describe the process, point out many advantages and describe many examples in detail.
+
+YAML2RPM was developed at the Research Cyberinfrastructure Center (RCIC) at the University of California, Irvine.
 At UCI we run a campus-accessible, shared-use, high-performance computing cluster with hundreds of domain-specific applications.
 The applications need to be compiled and installed, often with updated toolchains (prerequisites and dependencies). Users 
 regularly require multiple versions to be installed.  
@@ -24,12 +41,6 @@ in 14-15 hours.
    format, but without the pain of manually building  and maintaining spec
    files.*
 
-:term:`YAML2RPM` is a Generic Methodology for building RPMs
-This software uses the underlying **Rocks methodology** for automatically creating RPM spec
-files which are used to create RPM packages.  Where it differs from Rocks is that a
-YAML-based specification of a package is used to define the specific details of a
-component, instead of a subdirectory structure for each package 
-(see the `rocksclusters github rolls <https://github.com/rocksclusters/>`_ for many examples).
 
 Most (open-source) software starts with a source tarball, extracts the tarball, 
 configures for the local environment,  executes :command:`make` and then executes :command:`make install`.
@@ -44,7 +55,6 @@ is often deemed too time-consuming or difficult and is left to *Ad Hoc* scripts.
   - Common system tools (e.g., :command:`yum`) can be used to interrogate the file system for
     integrity, ownership of specific files and other items.
 
-This software relies on only one Rocks-created software package, but otherwise is completely compatible with Generic CentOS and RedHat. 
 
 A developer who wants to build :term:`YAML2RPM`-generated packages must still
 have some familiarity with :term:`RPM` and :term:`DNF` concepts. 
