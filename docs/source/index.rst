@@ -1,30 +1,17 @@
+
+YAML2RPM Documentation
+======================
+
 .. note::
    This project is under active development.
 
 .. warning::
    The documentaion pages are currently a template
 
-
-YAML2RPM Documentation
-======================
-
-**YAML2RPM** was developed at the Research Cyberinfrastructure Center (RCIC)
-at the University of California, Irvine.
-
-**YAML2RPM** is s a Generic Methodology for building RPMs and for managing 
-the multiple versions, dependencies, and other details of a resilient software deployment.
-
-The documentation will describe the process, point out many advantages and describe many examples in detail.
-Our approach makes building and  packaging of applications very straightforward and reduces complex or 
-difficult builds to manageable ones. 
-
-**YAML2RPM** and our recipes for building hundreds of applications are open source
-and are available from our :term:`github home` repositories.
-
-
 .. toctree::
    :glob:
    :maxdepth: 1
+   :numbered:
    :caption: About Yaml2rpm
 
    about/preface
@@ -33,6 +20,7 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
    :caption: Installation
 
    installation/requirements
@@ -40,6 +28,7 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
    :caption: Admix Layout 
 
    yamlformat/overview
@@ -50,6 +39,7 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
    :caption: Complex Admixes
 
    admixes/yaml2rpm
@@ -61,6 +51,7 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
    :caption: Deep Dive 
 
    deep-dive/packaging
@@ -68,6 +59,7 @@ and are available from our :term:`github home` repositories.
 
 .. toctree::
    :maxdepth: 1
+   :numbered:
    :caption: Reference
 
    references/glossary
