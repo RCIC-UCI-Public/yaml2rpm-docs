@@ -19,6 +19,19 @@ Essential baseline software components on the "hardware" that hosts containers
   4. Git 
 
 
+ZFS Setup
+---------
+
+ZFS is used in these examples to provide the writable *overlay* file system for a build. The singularity
+container setup described that follows is a read-only baseline. In practice, if multiple developers are
+on the same physical system, each would reference the same baseline container, but have a separate overlay file
+system for every build instance. 
+
+Snapshots are very practical when debugging/porting a full build of all admixes from one version of the OS
+to another.  As an admix is completed, the *overlay* can be snapshotted to save a known, good, partial build state. 
+As the next admix is being debugged/ported and inevitable build issues show up, snapshot reversion is a practical and 
+simple method to improve developer time efficiency.
+
 The baseline container
 ----------------------
 
@@ -65,3 +78,58 @@ A helpful aliases  can be defined to start the container and provide a prompt.
  .. code-block:: bash
 
       alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
+
+
+Practical Modifications after first boot
+----------------------------------------
+
+If you have followed the above to build and start the container. There are a number of items that we routinely add
+(show up in the overlay) and then take a snapshot as "baseline" for a particular build.
+
+* Developer's private ssh key for committing changes to git
+* A .gitconfig for the root user
+* An rclone configuration for adding new tarballs
+* A simple, simple shell script that starts ssh-agent
+
+Using ``/export/repositories`` as the directory, it's useful to copy in the following files
+
+1. A modified .gitconfig that reflects the name of the person who might commit changes
+   .. code-block:: bash
+
+   # This is Git's per-user configuration file.
+   [user]
+   # Please adapt and uncomment the following lines:
+   name = Peter the Anteater
+   email = panteater@uci.edu
+
+2. The developers private ssh-key (used for committing git changes) as `id_<username>`
+
+3. The following very trivial shell script
+   .. code-block:: bash
+
+   #!/bin/bash
+   pushd /export/repositories
+   cp .gitconfig /root
+   eval $(ssh-agent)
+   ssh-add id*
+   popd
+
+4. (Optional) rclone.conf to add new tarballs (must have write priv on the remote S3 container)
+
+
+Optional but Recommended
+------------------------
+
+One the builder physical system, mirror the appropriate Rocky and EPEL yum repos. Then modify the
+``/etc/yum.repos.d/xxx.repo`` definitions to pull from these local mirrors. There are two distinct advantages:
+
+  1. Reproducibility. "Freezing" these repos at a particular point in time enables finer control for 
+     reproducible builds.
+  2. Speed. The repos are referred to frequently during a complete build
+
+
+.. note::
+
+   When you have completed this above customizations. Take a ZFS snapshot as new baseline that represents
+   the container baseline + these customizations. Do this prior to adding the yaml2rpm building infrastucture.
+
