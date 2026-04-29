@@ -64,6 +64,7 @@ and are available from our :term:`github home` repositories.
    :caption: Deep Dive 
 
    deep-dive/packaging
+   deep-dive/singularity
 
 .. toctree::
    :maxdepth: 1
