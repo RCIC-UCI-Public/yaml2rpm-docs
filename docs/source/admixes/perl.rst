@@ -214,7 +214,7 @@ as an argument**, for example:
 
    .. parsed-literal::
       :command:`make bootstrap SET=534-bio`
-      :command:`make -n metaprep SET=534-meta1`
+      :command:`make metaprep SET=534-meta1`
 
 The targets and definitions are grouped per 3 defined groups of modules
 and for creation of additional modules (see names with *desired*)
