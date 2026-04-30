@@ -186,7 +186,7 @@ create circular references during the build.
   .. literalinclude:: files/python-admix-common.yaml
       :language: yaml
 
-  Here we define allt he common varialbes that are resued for every package
+  Here we define all the common varialbes that are reused for every package
 
   - :yvars:`buildtype`  - a value is defined for each version of Python in its
     versions file.  Depending on what is in versions file, either
@@ -343,8 +343,7 @@ The :yvars:`bootstrap` entries must be built and immediately installed in the
 listed order. For the entries in :yvars:`build` the order is not important
 and the resulting built RPMs are not immediately installed. 
 
-The versions files define each package version and any additional additional
-variables:
+The versions files define each package version and any additional variables:
 
   .. code-block:: yaml
 
@@ -389,7 +388,7 @@ All the scripts are specific to python-admix.
   left in requires and they satisfy the package needs. 
 
 ``site.cfg.template``
-  This is a template config file that is added to the build
+  This is a template configuration file that is added to the build
   directory when building RPMs for ``scipy.yaml`` and ``numpy.yaml``.
   The template simply lists specific directories paths for OpenBLAS to use during
   the configuration step (the names are defined by the developers). 
