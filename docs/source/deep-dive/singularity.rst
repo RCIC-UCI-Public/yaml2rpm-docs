@@ -127,9 +127,62 @@ One the builder physical system, mirror the appropriate Rocky and EPEL yum repos
      reproducible builds.
   2. Speed. The repos are referred to frequently during a complete build
 
+Here is a sample customization of ``/etc/yum.repos.d/rocky.repo`` (only the changed sections are included and 
+are from the Rocky 10 version). The mirrolist url is commented and the baseurl is copied, uncommented,
+and then edited to look to the local host.
+
+If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file uses https.
+
+   .. code-block:: bash
+
+       [baseos]
+       name=Rocky Linux $releasever - BaseOS
+       #mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&repo=BaseOS-$releasever$rltype
+       #baseurl=http://dl.rockylinux.org/$contentdir/$releasever/BaseOS/$basearch/os/
+       baseurl=http://127.0.0.1/$contentdir/$releasever/BaseOS/$basearch/os/
+       gpgcheck=1
+       enabled=1
+       countme=1
+       metadata_expire=6h
+       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-10
+       
+       [appstream]
+       name=Rocky Linux $releasever - AppStream
+       #mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&repo=AppStream-$releasever$rltype
+       #baseurl=http://dl.rockylinux.org/$contentdir/$releasever/AppStream/$basearch/os/
+       baseurl=http://127.0.0.1/$contentdir/$releasever/AppStream/$basearch/os/
+       gpgcheck=1
+       enabled=1
+       countme=1
+       metadata_expire=6h
+       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-10
+       
+       [crb]
+       name=Rocky Linux $releasever - CRB
+       #mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&repo=CRB-$releasever$rltype
+       #baseurl=http://dl.rockylinux.org/$contentdir/$releasever/CRB/$basearch/os/
+       baseurl=http://127.0.0.1/$contentdir/$releasever/CRB/$basearch/os/
+       gpgcheck=1
+       enabled=1
+       countme=1
+       metadata_expire=6h
+       gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-10
+   
 
 .. note::
 
-   When you have completed this above customizations. Take a ZFS snapshot as new baseline that represents
+   For Rocky 9/10 customize ``rocky.repo`` and ``epel.repo``.  For Rocky 10, also customize
+   ``rocky-extras.repo``.  This assumes that you have mirrored on the physical host and it will serve the
+   URLs properly.
+  
+   When you have completed the customizations. Take a ZFS snapshot as new baseline that represents
    the container baseline + these customizations. Do this prior to adding the yaml2rpm building infrastucture.
 
+Build yaml2rpm
+--------------
+
+   Follow the :ref:`Quickstart<quickstart>` instructions to build yaml2rpm. Then create another snapshot of 
+   your build environment.  
+
+   At this point, you have a generic environment that can then be used to build the entire admix collection of
+   applications.

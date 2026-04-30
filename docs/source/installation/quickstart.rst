@@ -3,68 +3,43 @@
 Quickstart
 ==========
 
-If you want to use prebuilt RPMs for testing on a standard CentOS machine, you can follow what is below. The following was
-tested on the official Rocky 9 machine image.
+Yaml2rpm is best built directly from the git repository.  Part of that build process will create RPMs
+that can be installed on other machines. On a reasonable system with good network connectivity (or locally-mirrored
+repositories) it takes roughly 2 minutes to set up a system to build RPMS using yaml2rpm. We **highly
+recommend** that you prepare and build in a :ref:`singularity container<dd_container>`. Like many builds,
+the build system itself is modified. In this case, numerous system-level RPMs are added as are newly created RPMs.
+Building inside of container protects the physical system from this inevitable change.
 
-If you want to build YAML2RPM RPMs and install them from source repo, see Building section.
+Building Yaml2rpm
+-----------------
 
-**Prerequisites**
-
-1. Python 3 modules
-
-   Required modules are provided by the ``python3-libs`` RPM:
-
-     - ``argparse``
-     - ``socket``
-     - ``datetime`` 
-
-2. Rocky 9 packages and groups
-
-   If you are using a very stripped-down CentOS image (similar to the official Rocky Linux 9 image in Amazon, you will
-   want to make certain you have the following packages and package groups installed
-   
-     .. parsed-literal::
-        :command:`yum groupinstall "Development Tools"`
-        :command:`yum install wget zlib-devel environment-modules`
-        :command:`. /etc/profile.d/modules.sh`
-
-3. Install the development RPMs
-
-   Go to the `Development RPMs <https://github.com/RCIC-UCI-Public/development-RPMS#development-rpms/>`_ repository 
-   for the latest prebuilt RPMs and instructions. After following those instructions, you can build your first RPM from source.
-
-.. _building rpm:
-
-Building
-----------
-
-You may want to build the YAML2RPM RPMs and install them from the source git repository.
-Do the following in the top-level directory
-You will need to set DISPLAY prior to doing this so that Firefox can ask for your permission to read public data.
 
    .. parsed-literal::
+
+      :command:`git clone https://github.com/RCIC-UCI-Public/yaml2rpm`
+      :command:`cd yaml2rpm`
       :command:`./first-build.sh`
 
-After this step is complete the following RPMs are built and installed:
 
-  * Needed Python modules for your default system Python install:
+When the above has completed, you will see the following line of output
+   .. code-block:: bash
 
-    | ``python-future`` for Python 2/3 compatibility
-    | ``python-setuptools`` for building Python packages
-    | ``python-ruamel-yaml`` specific YAML parser
-    | ``python-ruamel-yaml-clib`` specific YAML parser library
- 
-  * These RPMS provide all the building structure and support files for
-    the packages builds. They include a couple of profiles files that are added to the ``/etc/profile.d``.
-
-    | ``rcic-module-support``
-    | ``rcic-module-path``
-    | ``yaml2rpm``
+      === First Build completed ===
+      Start a new bash shell or logout/login to make certain all profile.d scripts
 
 
+As of Rocky 10, 18 RPMs are added to the system during the first-build. Of these, the following
+RPMs are built (the rest are OS- or EPEL-supplied packages). The information can be discovered using
+``yum history``.
 
-In order to proceed with next steps simply execute the following profiles scripts 
-(for future logins they will be automatically sourced by the login shell):
+    * ``rocks-devel`` core Makefile structure generate spec files 
+    * ``python-ruamel-yaml`` specific YAML parser
+    * ``python-ruamel-yaml-clib`` specific YAML parser library
+    * ``rcic-module-support``
+    * ``rcic-module-path``
+    * ``yaml2rpm``
+
+If you don't want to exit the shell, but instead want source profile.d scripts, then do the following
 
    .. parsed-literal::
       :command:`. /etc/profile.d/rcic-modules.sh`
