@@ -94,25 +94,27 @@ If you have followed the above to build and start the container. There are a num
 Using ``/export/repositories`` as the directory, it's useful to copy in the following files
 
 1. A modified .gitconfig that reflects the name of the person who might commit changes
+
    .. code-block:: bash
 
-   # This is Git's per-user configuration file.
-   [user]
-   # Please adapt and uncomment the following lines:
-   name = Peter the Anteater
-   email = panteater@uci.edu
+      # This is Git's per-user configuration file.
+      [user]
+      # Please adapt and uncomment the following lines:
+      name = Peter the Anteater
+      email = panteater@uci.edu
 
 2. The developers private ssh-key (used for committing git changes) as `id_<username>`
 
 3. The following very trivial shell script
+
    .. code-block:: bash
 
-   #!/bin/bash
-   pushd /export/repositories
-   cp .gitconfig /root
-   eval $(ssh-agent)
-   ssh-add id*
-   popd
+      #!/bin/bash
+      pushd /export/repositories
+      cp .gitconfig /root
+      eval $(ssh-agent)
+      ssh-add id*
+      popd
 
 4. (Optional) rclone.conf to add new tarballs (must have write priv on the remote S3 container)
 

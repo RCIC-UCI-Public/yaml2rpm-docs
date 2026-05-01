@@ -22,6 +22,7 @@ Building Yaml2rpm
 
 
 When the above has completed, you will see the following line of output
+
    .. code-block:: bash
 
       === First Build completed ===
