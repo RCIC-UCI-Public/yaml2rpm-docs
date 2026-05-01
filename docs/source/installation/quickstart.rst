@@ -46,39 +46,72 @@ If you don't want to exit the shell, but instead want source profile.d scripts, 
       :command:`. /etc/profile.d/yaml2rpm.sh`
 
 
-A simple test build
-^^^^^^^^^^^^^^^^^^^
+First RPM Build 
+^^^^^^^^^^^^^^^
 
 :red:`TODO: remove this section, outdated`
 
-For a very simple build of an RPM, create a working directory *workdir*. And then
-download the source tarball into the workdir/sources directory. Then create the RPM for ``cmake``,
-it will be placed in *workdir/RPMS/x86_64*:
+Yaml2rpm was built to create collections of similar software that we term **admixes**.
+Here, the buildtools-admix is used as an example. The complete admix has several versions of software, but
+this sections highlights just one, *curl*.
+
+The usual way to build an entire admix is, at the top-level execute 
+``make buildall`` (or ``make buildall-parallel``).  Instead, these examples break down some of the things
+that happen. The first is adding an os-supplied packages, via yum, that are required to build software in the admix.
+
+Cloning and then *prepping the build environment with additional os packages*
 
 .. code-block:: bash
 
-   mkdir -p workdir/yamlspecs
-   cd workdir/yamlspecs; cp /opt/rocks/yaml2rpm/samples/* .
-   make download PKG=cmake
-   make download PKG=scons
-   make
+   git clone https://github.com/RCIC-UCI-Public/buildtools-admix
+   cd buildtools-admix/yamlspecs
+   gen-definitions.py --query=system packages.yaml | xargs yum -y install
 
-At the end of the process, you should have 4 RPMs in *workdir/RPMS/x86_64/*. You could install them on the local machine
-and have an updated version of ``cmake`` and ``scons``, and corresponding environment modules. 
-For example, the module for ``cmake`` can be loaded in order to use ``cmake``:
+Curl is in a set of software (named '2024' in this example). The source tarball for the particular version
+defined in the set needs to be downloaded, and then the package itself needs to be created 
 
 .. code-block:: bash
 
-   module load cmake
-   which cmake
+   make SET=2024 PKG=curl download
+   make SET=2024 curl.pkg
 
-
-The version of ``cmake`` is defined in the ``versions.yaml`` file, if you wanted to update the version, you could edit that file,
-download the new source tarball directly from the source website and then rebuild a new package via
+You could also create the enviroment module that goes with this version of curl
 
 .. code-block:: bash
 
-   make download PKG=cmake
-   make cmake.pkg
-   make cmake-module.pkg
+   make SET=2024 curl-module.pkg
 
+With the steps above, two rpms have been created and can be installed on any system. These are
+the *products* of the process.  You can list the rpms to see similar output as below
+
+.. parsed-literal:: 
+
+   :blue:`ls -l ../RPMS/x86_64/`
+   total 949
+   -rw-r--r--. 1 root root 992780 May  1 11:11 curl_7.81.0-7.81.0-1.x86_64.rpm
+   -rw-r--r--. 1 root root   7744 May  1 11:15 curl_7.81.0-module-7.81.0-1.x86_64.rpm
+
+Dependencies *are* encoded in the RPMs. For example, if you attempt to install just the module above with
+
+.. code-block:: bash
+ 
+   yum install ../RPMS/x86_64/curl_7.81.0-module-7.81.0-1.x86_64.rpm
+
+Errors similar to the following are expected
+
+.. parsed-literal::
+
+    Last metadata expiration check: 0:10:43 ago on Fri May  1 11:09:09 2026.
+    Error:
+     Problem: conflicting requests
+      - nothing provides curl_7.81.0 needed by curl_7.81.0-module-7.81.0-1.x86_64 from @commandline
+    (try to add '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+
+All admixes have a "createlocalrepo" make target when executed from the top-level of the admix, 
+followed by a yum install. When both the curl and the curl-module rpms are available in a yum repository, the
+dependency will be resolved.
+
+.. parsed-literal::
+
+   make createlocalrepo
+   yum -c yum.conf install curl_7.81.0-module
