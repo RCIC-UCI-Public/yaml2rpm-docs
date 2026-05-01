@@ -8,15 +8,14 @@ of an entire stack. This is especially useful when bringing forward an applicati
 release to another or to a major OS release.
 
 Fundamentally, a complete set of admixes relies on system (Rocky) and EPEL packages. These packages can
-change names or behaviour from release to release. There is no magic, one just has to sort through the various
-issues. It was the interative nature the catalyzed building inside of a container. 
+change names or behavior from release to release. There is no magic, one just has to sort through the various
+issues. It was the iterative nature the catalyzed building inside of a container. 
 
-Essential baseline software components on the "hardware" that hosts containers
-
-  1. ZFS or another file system that supports snapshots 
-  2. Singularity/Apptainer on a building node 
-  3. Fuse/Fuse-overlayfs 
-  4. Git 
+Essential baseline software components on the "hardware" that hosts containers:
+  - ZFS or another file system that supports snapshots 
+  - Singularity/Apptainer on a building node 
+  - Fuse/Fuse-overlayfs 
+  - Git 
 
 
 ZFS Setup
@@ -28,7 +27,7 @@ on the same physical system, each would reference the same baseline container, b
 system for every build instance. 
 
 Snapshots are very practical when debugging/porting a full build of all admixes from one version of the OS
-to another.  As an admix is completed, the *overlay* can be snapshotted to save a known, good, partial build state. 
+to another.  As an admix is completed, the snapshot of the *overlay* can be made to save a known, good, partial build state. 
 As the next admix is being debugged/ported and inevitable build issues show up, snapshot reversion is a practical and 
 simple method to improve developer time efficiency.
 
@@ -38,19 +37,18 @@ The baseline container
 The `admixbuilder git repository <https://github.com/RCIC-UCI-Public/admixbuilder>`_ has detailed instructions about
 how to build the baseline container. See the ``container`` subdirectory.
 
-In addition, there are several useful scripts that can be helpful in streamling process. This section provides examples
+In addition, there are several useful scripts that can be helpful in streamlining process. This section provides examples
 of those scripts that are in use at UCI
 
 Bash environment setup
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Since developement/testing of RPM builds is person intensive, these instructions focus on that aspect.
+Since development/testing of RPM builds is person intensive, these instructions focus on that aspect.
 It's also convenient to be able to have multiple build environments on the same physical machine
 
 The following script could be *sourced* to set all variables for a Rocky 10.1 container built above 
 and installed in the referenced container directory. It will setup a ZFS file system if it doesn't already
-exist.  That file system is used as an overlay/writable system when the container is started 
-
+exist.  That file system is used as an overlay/writable system when the container is started.
 
   .. code-block:: bash
 
@@ -69,7 +67,6 @@ exist.  That file system is used as an overlay/writable system when the containe
           sudo zfs create $ZFSSLICE
       fi
 
-
 Starting the Container
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -77,23 +74,23 @@ A helpful aliases  can be defined to start the container and provide a prompt.
 
  .. code-block:: bash
 
-      alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
-
+    alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
 
 Practical Modifications after first boot
 ----------------------------------------
 
-If you have followed the above to build and start the container. There are a number of items that we routinely add
+If you have followed the above to build and start the container you now can
+add a few files that will help with the future container starts from the
+overlay.
+
+There are a number of items that we routinely add
 (show up in the overlay) and then take a snapshot as "baseline" for a particular build.
 
-* Developer's private ssh key for committing changes to git
-* A .gitconfig for the root user
-* An rclone configuration for adding new tarballs
-* A simple, simple shell script that starts ssh-agent
+Using ``/export/repositories`` as the destination directory, it's useful to copy in the following files:
 
-Using ``/export/repositories`` as the directory, it's useful to copy in the following files
+1. A ``.gitconfig`` for the root user (when a container starts you are a root user).
 
-1. A modified .gitconfig that reflects the name of the person who might commit changes
+   A modified ``.gitconfig`` that reflects the real name of the person who might commit changes
 
    .. code-block:: bash
 
@@ -103,9 +100,9 @@ Using ``/export/repositories`` as the directory, it's useful to copy in the foll
       name = Peter the Anteater
       email = panteater@uci.edu
 
-2. The developers private ssh-key (used for committing git changes) as `id_<username>`
+2. The developers private ssh-key (used for committing git changes) as ``id_<username>``.
 
-3. The following very trivial shell script
+3. A simple, very trivial  shell script that starts ssh-agent.
 
    .. code-block:: bash
 
@@ -116,8 +113,10 @@ Using ``/export/repositories`` as the directory, it's useful to copy in the foll
       ssh-add id*
       popd
 
-4. (Optional) rclone.conf to add new tarballs (must have write priv on the remote S3 container)
+4. An rclone configuration for adding new tarballs
 
+   This is an optional ``rclone.conf`` to add new tarballs (must have write
+   privilege on the remote S3 container).
 
 Optional but Recommended
 ------------------------
@@ -125,12 +124,12 @@ Optional but Recommended
 One the builder physical system, mirror the appropriate Rocky and EPEL yum repos. Then modify the
 ``/etc/yum.repos.d/xxx.repo`` definitions to pull from these local mirrors. There are two distinct advantages:
 
-  1. Reproducibility. "Freezing" these repos at a particular point in time enables finer control for 
+  1. **Reproducibility** - "freezing" these repos at a particular point in time enables finer control for 
      reproducible builds.
-  2. Speed. The repos are referred to frequently during a complete build
+  2. **Speed** - the repos are referred to frequently during a complete build.
 
 Here is a sample customization of ``/etc/yum.repos.d/rocky.repo`` (only the changed sections are included and 
-are from the Rocky 10 version). The mirrolist url is commented and the baseurl is copied, uncommented,
+are from the Rocky 10 version). The *mirrolist* url is commented and the *baseurl* is copied, uncommented,
 and then edited to look to the local host.
 
 If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file uses https.
@@ -169,7 +168,6 @@ If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file
        countme=1
        metadata_expire=6h
        gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-10
-   
 
 .. note::
 
@@ -177,14 +175,19 @@ If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file
    ``rocky-extras.repo``.  This assumes that you have mirrored on the physical host and it will serve the
    URLs properly.
   
-   When you have completed the customizations. Take a ZFS snapshot as new baseline that represents
-   the container baseline + these customizations. Do this prior to adding the yaml2rpm building infrastucture.
+Baseline snapshot
+-----------------
+
+When you have completed the customizations, exit from the container and
+on a physical host take a ZFS snapshot as new baseline that represents
+the **container baseline + customizations** (from previous 2 sections).
+Do this prior to adding the building yaml2rpm.
 
 Build yaml2rpm
 --------------
 
-   Follow the :ref:`Quickstart<quickstart>` instructions to build yaml2rpm. Then create another snapshot of 
-   your build environment.  
+Follow the :ref:`Quickstart<quickstart>` instructions to build yaml2rpm. Then create another snapshot of 
+your build environment.  
 
-   At this point, you have a generic environment that can then be used to build the entire admix collection of
-   applications.
+At this point, you have a generic environment that can then be used to build
+the entire admixes collection of applications.
