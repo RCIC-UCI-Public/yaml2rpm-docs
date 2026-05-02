@@ -1,31 +1,342 @@
+.. _R4c-admix:
+
 R4
 ===
 
-.. _R4c-admix:
+**Table of contents:**
 
-The `R4-admix repository <https://github.com/RCIC-UCI-Public/R4-admix/>`_ uses **YAML2RPM** to build 
-multiple versions of R4 and Rstido. 
+.. contents::
+   :local:
 
+Building
+--------
+
+The `R4-admix repository <https://github.com/RCIC-UCI-Public/R4-admix/>`_ 
+is used to build multiple versions of R4 and Rstido. 
 R4 is relatively complex build and requires local changes to its Makefile to
 accomplish multiple builds.
 
-.. warning:: 
-  
-  This process will install RPMs as it builds. You should do this on a
-  'disposable' build system. It takes hours to compile multiple versions of R4.
+Here is the full process for rebuilding R4 and its associated modules present in the repo:
 
-Here is the full process for building R4 using the  `R4-admix repository <https://github.com/RCIC-UCI-Public/R4-admix/>`_
-
-.. code-block:: bash
-
-   git clone https://github.com/RCIC-UCI-Public/R4-admix.git
+.. parsed-literal::
+   :command:`git clone https://github.com/RCIC-UCI-Public/R4-admix.git
    cd R4-admix
-   make download
-   cd yamlspecs
-   (make bootstrap &> /tmp/bootstrap-gcc.log; make &> /tmp/build-gcc.log) &
+   make buildall-parallel &> buildall.log &`
 
+.. warning:: 
+   This process will install RPMs as it builds. You should do this on a 'disposable' build system.
 
-Build details
--------------
+When building packages for Python modules we use native R tools 
+and modules such as command ``R CMD INSTALL`` or **miniCRAN** module logic to
+get packages recursive dependency resolution.
+
+The following sections provide detailed explanation about repo files,
+build process, and adding new modules step-by-step.
+
+Files
+-----
+
+.. _R4_admix_files_top:
+
+At the top level
+~~~~~~~~~~~~~~~~~~~~~~
+
+Standard files and directories present in every admix as described in
+:ref:`what files are in yamlspecs <admixrepo_files_yamlspecs>`.
+
+.. _R4_admix_files_yamlspecs:
+
+In yamlspecs/
+~~~~~~~~~~~~~
+
+Standard files
+^^^^^^^^^^^^^^
+
+When building R4 modules we not only need to build different versions of
+R4 itself but also need to have different modules that were requested by the users
+in order to support different types of applications.
+Such modules trigger its own chain of dependent R4 modules that need to be installed. 
+
+We create a set of modules to install for each version of R. 
+While we try to keep the sets contents the same, sometimes it is not possible
+as the specific modules dependencies change.
+There is a specific order when in the set a module can be built. Some needs to
+be build and installed before others can be compiled. Others need their
+dependencies only during the module install.
+We have to handle such dependencies carefully so that we do not
+create circular references during the build.
+
+``packages.yaml`` (required)
+  Yaml format, describes specifics of this admix build.
+
+  .. literalinclude:: files/R4-admix-packages.yaml
+      :language: yaml
+
+  Most of the variables in this file are standard
+  (:yvars:`site`, :yvars:`system`, :yvars:`bootstrap`, :yvars:`build`, :yvars:`manifest`, :yvars:`sets`).
+  There are a few new variables in this file that allow us
+  to  define a list of system RPMS to be added only when building for a specific OS.
+
+  - :yvars:`bootstrap` - lists two separate bootstrap variables. The
+    :yvars:`bootstrap0` is basically defined via :yvars:`basebuild`: R, R-module,
+    rstudio, rstudio-module plus a couple other basic R modules. The
+    :yvars:`bootstrap0` can be redefined for eash set. 
+    The :yvars:`bootstrap1` is defined from the desired modules. 
+
+  - :yvars:`!ifeq "{{site.os_release}},7,icu-devel,libicu-devel"` was
+    evaluated to *icu-devel* on OS 7 and to *libicu-devel* on any later OS.
+    This gives us flexibility via this logic to use a single line or file
+    instead of rewriting them for a different OS.
+
+  - :yvars:`!eval "'libgit2-devel' if {{site.os_release}} == 8 else ''"`
+    is similar to :yvars:`!ifeq` statement. Here on OS 8 *libgit2-devel* RPM will be
+    added on the build host before any packages are built.
+
+  - :yvars:`bootstrap` and :yvars:`build` - empty, no builds in the base
+    set. All builds are in the specific sets.
+
+  - :yvars:`sets` - lists the sets to be built. Here for a set name we use a short hand
+    notation of a R version (452 for R 4.5.2, etc).
+  - :yvars:`parallel` -  says build all 6 sets in parallel.
+
+``versions.yaml`` (required)
+  Since there are no packages to build for the base set, this file lists the admix name
+  and *libgit2* version that was used for multiple sets (we include
+  ``versions.yaml`` in each specific set version file to inherit common variables).
+
+  .. literalinclude:: files/R4-admix-versions.yaml
+      :language: yaml
+
+``R.yaml`` (required)
+  This yaml file provides all the instructions to build base R RPM.
+
+  .. literalinclude:: files/R4-admix-R.yaml
+      :language: yaml
+
+  Most variables are standard and are described in :red:`TODO ref`.
+  The specific variables are as follows:
+
+  - include statements specify tempalte files to include when parsing this yaml file.
+    :red:`TODO add reference`
+
+  - :yvars:`tarsources`: specifies a combined sources file to use when
+    building for a specific set. 
+
+  - :yvars:`build.tzcode` - now is a legacy varabile. We had to use different
+    build options when building R 3 serires. Left here for a reference.
+
+``R-module.yaml`` (required)
+  This file describes an environment module build for each version of Python.
+
+  .. code-block:: yaml 
+     
+     !include R.yaml
+     !include rcic-module.yaml
+     ---
+     - package: R module
+       category: LANGUAGES
+       module:
+         lib: lib64
+
+  The variables are:
+
+  - include statements specify tempalte files to include when parsing this yaml file.
+
+    - :yvars:`!include python.yaml` -  specifies a package file to include when parsing this file.
+      Each package module file always includes the package yaml file to get needed package definitions.
+    - :yvars:`!include rcic-module.yaml` - specifies a tempalte to include when parsing this file.
+      The ``rcic-module.yaml`` is a default template file that defines generic variables for most module files.
+
+      :red:`TODO add reference to this file and describe it in full`
+  - :yvars:`CATEGORY` - a logical category name to assign this module to.  This
+    will result in adding created module file to a directory specified by
+    this variable, here to ``LANGUAGES`` (once the RPM is installed).
+
+    :red:`TODO add reference to CATEGORY`
+  - :yvars:`module` - defines :yvars:`lib` to  override a default from included
+    ``rcic-module.yaml``. R uses ``lib64`` subdirectory for its build libraries.
+
+Makefile
+^^^^^^^^
+
+The ``Makefile`` is specific to R4-admix.
+
+* It includes a generic template via :yvars:`include $(YAML2RPM_HOME)/sys/Makefile` directive
+  that provides defaults used for building RPMs;
+* Adds targets to override defaults. For example :yvars:`thaw`, :yvars:`copyset`, :yvars:`thawyamls`, :yvars:`thawsources`.
+* Adds specific targets used for a :ref:`creation of additional modules <R4_admix_add_modules>`.
+  For example :yvars:`prep`, :yvars:`builddeps.yaml`, :yvars:`buildorder`,
+  :yvars:`outversions.yaml`, :yvars:`freeze`, :yvars:`cleanset`. 
+
+When executing any target defined in ``Makefile`` **always give it a set name
+as an argument**, for example:
+
+  .. parsed-literal::
+     :command:`make bootstrap SET=442`
+     :command:`make manifest SET=452`
+
+``common.yaml``
+  A template that provides a set of variables for build that is used for
+  every R module: 
+
+  .. literalinclude:: files/R4-admix-common.yaml
+      :language: yaml
+
+  Here we define all the common varialbes that are reused for every package
+  and others that can be overwritten (notably :yvars:`requires`) in a given package yaml file when needed.
+
+| ``rstudio.yaml`` 
+| ``rstudio-module.yaml``
+|   Used to build *Rstudio* and its module.
+
+| ``abseil-cpp.yaml``
+| ``abseil-cpp-module.yaml``
+|   Used to build *abseil-cpp* and its module, they are prerequisites for *s2* R module.
+
+| ``GenomeInfoDbData.yaml``
+| ``seurat-data.yaml``
+| ``tmvnsim.yaml``
+|   Used to build a few specific R module packages.
+
+.. _R4_admix_sets:
+
+Set specific
+^^^^^^^^^^^^
+
+The set files and corresponding versions files enable us to create multiple
+versions of desired modules for multiple versions of Python:
+
+  .. table::
+     :class: noscroll-table
+
+     +---------+---------------+-------------------+
+     | Python  | Set           |  Versions         |
+     | version | file          |  file             |
+     +---------+---------------+-------------------+
+     | 4.0.4   | set-404.yaml  | versions-404.yaml |
+     |         |               |                   |
+     | 4.1.2   | set-412.yaml  | versions-412.yaml |
+     |         |               |                   |
+     | 4.2.2   | set-422.yaml  | versions-422.yaml |
+     |         |               |                   |
+     | 4.3.3   | set-433.yaml  | versions-433.yaml |
+     |         |               |                   |
+     | 4.4.2   | set-442.yaml  | versions-442.yaml |
+     |         |               |                   |
+     | 4.5.2   | set-452.yaml  | versions-452.yaml |
+     +---------+---------------+-------------------+
+
+Any individual set can be built separately, for example:
+
+   .. parsed-literal::
+      :command:`make buildall SET=452`
+
+Sets define individual packages for each R version.
+For example ``set-452.yaml`` (partial listing):
+
+  .. code-block:: yaml
+
+     !include packages.yaml
+     ---
+     versions: versions-452.yaml
+     bootstrap0:
+       - R
+       - R-module
+       - GenomeInfoDbData
+       - rstudio
+       - rstudio-module
+       - abseil-cpp
+       - abseil-cpp-module
+     # contents from buildorder
+     bootstrap1:
+       - BayesCombo
+       - cli
+       - magrittr
+       - Rcpp
+       - rlang
+       ...
+
+The :yvars:`bootstrap0` entries are basic packages for this set and they must be built
+and immediately installed in the listed order. The entries in
+:yvars:`bootstrap1` were created via a special process
+(:ref:`see below <R4_admix_add_modules>`) and they
+too must be built and installed in the listed order.
+
+The versions files define each package version and any additional variables
+needed for building. For example, ``versions-452.yaml`` (partial listing):
+
+  .. code-block:: yaml
+
+     !include versions.yaml
+     !include site97.yaml
+     ---
+     R: "4.5.2"
+     Rmajor: "4"
+     Rminor: "5"
+     tarsources: "20260130"
+     addonsources:
+     rstudio: "2026.01.0.392"
+     rstudio_dist: "2026.01.0-392"
+     rstudio_os: "rhel9"
+     rstudio_site: "electron"
+     rstudio_layout: "new"
+     abseil_cpp: "20250814.0"
+     OpenBLAS: "0.3.31"
+     gdal: "3.12.1"
+     geos: "3.14.1"
+     proj: "9.7.1"
+     fftw: "3.3.10"
+     glpk: "5.0"
+     hdf5: "2.0.0"
+     libgit2: "1.8.5"
+     GenomeInfoDbData: "1.2.15"
+     seurat_data: "0.2.1"
+     ## from outversions.yaml
+     BayesCombo: "1.0"
+     cli: "3.6.5"
+     magrittr: "2.0.4"
+     Rcpp: "1.1.1"
+     ...
+     robustbase_subversion: "6"
+     robustbase: "0.99"
+
+Variables :yvars:`gdal`, :yvars:`geos`, and similar provide versions of the
+dependent software packages (outside of R4-admix) that are needed for
+compilation of some R modules. 
+
+Any variable with :yvars:`_subversion` shows a specific portion of the
+package version.  Using it allows us to keep a single :yvars:`vendor_source`
+line for multiple versions of each package. There is no single naming schema
+how developers name their packages or create distro files. 
+
+.. _R4_admix_scripts:
+
+Scripts
+^^^^^^^
+
+There are a few scripts that we created to enable specific tasks.
+See the scripts files contents in `R4-admix repository <https://github.com/RCIC-UCI-Public/R4-admix/>`_.
+All the scripts are specific to R4-admix.
+
+``depend.py``
+  This bash script is used to parse requires during the ``rpmbuild`` run  for
+  ``scipy.yaml`` and removes some third party hard-coded  versions of
+  *libquadmath* libraries. As a result only OS-installed libraries names are
+  left in requires and they satisfy the package needs. 
+
+``site.cfg.template``
+  This is a template config file that is added to the build
+  directory when building RPMs for ``scipy.yaml`` and ``numpy.yaml``.
+  The template simply lists specific directories paths for OpenBLAS to use during
+  the configuration step (the names are defined by the developers). 
+  When building for a different Python version  a different OpenBLAS
+  version will be used and the paths in the template are updated to
+  the correct ones for the loaded OpenBLAS environment module.
+
+.. _R4_admix_add_modules:
+
+Add new modules
+---------------
 
 TODO
+
