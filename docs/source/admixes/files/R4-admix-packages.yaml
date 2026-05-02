@@ -1,0 +1,64 @@
+---
+site: !include site.yaml
+system:
+  - bzip2-devel
+  - curl-devel
+  - freetype-devel
+  - java-1.8.0-openjdk-devel
+  - libjpeg-turbo-devel
+  - libpng-devel
+  - libX11-devel
+  - libX11-devel
+  - libxml2-devel
+  - libXt-devel
+  - mariadb-devel
+  - mesa-libGLU-devel
+  - postgresql-devel
+  - readline-devel
+  - unixODBC-devel
+  - xorg-x11-server-devel
+  - xz-devel
+  - icu
+  - !ifeq "{{site.os_release}},7,icu-devel,libicu-devel"
+  - gsl-devel
+  - tcl-devel
+  - tk-devel
+  - !ifeq "{{site.os_release}},7,v8-devel,"
+  - pcre2-devel
+  - perl-Unicode-Map
+  - perl-Jcode
+  - perl-Spreadsheet-WriteExcel
+  - cairo-devel
+  - pango-devel
+  - !eval "'libgit2-devel' if {{site.os_release}} == 8 else ''"
+  - freetype-devel
+  - fribidi-devel
+  - harfbuzz-devel
+
+basebuild:
+  - R
+  - R-module
+  - rstudio
+  - rstudio-module
+  - GenomeInfoDbData
+  - tmvnsim
+bootstrap0:
+bootstrap1:
+bootstrap:
+  - "{{bootstrap0}}"
+  - "{{bootstrap1}}"
+build:
+manifest:
+  - "{{bootstrap}}"
+  - "{{build}}"
+
+parallel:
+  sets: 6
+
+sets:
+  - "404"
+  - "412"
+  - "422"
+  - "433"
+  - "442"
+  - "452"

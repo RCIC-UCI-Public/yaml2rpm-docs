@@ -1,0 +1,36 @@
+!include rcic-package.yaml
+!include rpm.yaml
+---
+- package: R statistics
+  name: R
+  release: 2
+  versions: !include versions.yaml
+  version: "{{versions.R}}"
+  tarsources: "{{versions.tarsources}}"
+  compiler: "{{versions.compiler.name}}"
+  compiler_version: "{{versions.compiler.version}}"
+  vendor_source: https://cran.r-project.org/src/base/R-{{versions.Rmajor}}/R-{{version}}.{{extension}}
+  description: |
+    R is a freely available language and environment for statistical computing and graphics.
+    It provides a wide variety of statistical and graphical techniques including linear and
+    nonlinear modeling, statistical tests, time series analysis,
+    classification, clustering, etc. Please see R project homepage
+    https://www.r-project.org for further information
+  builddir: build
+  build:
+    modules:
+      - OpenBLAS/{{versions.OpenBLAS}}
+      - java/{{versions.java}}
+      - "{{compiler}}/{{compiler_version}}"
+    tzcode: !eval "'--with-internal-tzcode' if {{versions.Rmajor}} == 4 and {{versions.Rminor}} >= 3 else ''"
+    configure: ./configure
+    configure_args: >
+      --enable-R-shlib
+      --with-blas
+      {{build.tzcode}}
+      --prefix={{root}}
+  install:
+     makeinstall: >
+       make DESTDIR=$(ROOT) install;
+       (cd src/nmath/standalone; make; make DESTDIR=$(ROOT) install)
+     installextra: $(INSTALL) -m 644  README* COPYING AUTHORS $(ROOT){{root}}
