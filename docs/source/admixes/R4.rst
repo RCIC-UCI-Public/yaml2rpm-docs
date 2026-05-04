@@ -26,7 +26,7 @@ Here is the full process for rebuilding R4 and its associated modules present in
 .. warning:: 
    This process will install RPMs as it builds. You should do this on a 'disposable' build system.
 
-When building packages for Python modules we use native R tools 
+When building packages for R modules we use native R tools 
 and modules such as command ``R CMD INSTALL`` or **miniCRAN** module logic to
 get packages recursive dependency resolution.
 
@@ -126,7 +126,7 @@ create circular references during the build.
     build options when building R 3 serires. Left here for a reference.
 
 ``R-module.yaml`` (required)
-  This file describes an environment module build for each version of Python.
+  This file describes an environment module build for each version of R.
 
   .. code-block:: yaml 
      
@@ -180,7 +180,7 @@ as an argument**, for example:
   every R module: 
 
   .. literalinclude:: files/R4-admix-common.yaml
-      :language: yaml
+     :language: yaml
 
   Here we define all the common varialbes that are reused for every package
   and others that can be overwritten (notably :yvars:`requires`) in a given package yaml file when needed.
@@ -198,33 +198,100 @@ as an argument**, for example:
 | ``tmvnsim.yaml``
 |   Used to build a few specific R module packages.
 
+``hdf5r.patch``
+  Used to patch specific versions of *hdf5* distribution series *1*. Reference to a
+  patch is in the respective  ``hdf5r.yaml`` files in *freeze* directories.
+  The patch updates *configure.ac* and *m4* files of the source distro.
+
+``hdf5r-1.3.12.patch``
+  Used to patch specific versions of *hdf5* distribution series *2*. Reference to a
+  patch is in the respective  ``hdf5r.yaml`` files in *freeze* directories.
+  This a patch for *hdf5r* adds compiler flags to downgrade errors to
+  warnings. This comes from using gcc compiler series v.15 which has much
+  stricter checking.
+
+``NAME.yaml.append``
+  Any files with this naming schema are created by hand based on what a
+  specific module yaml files needs to include for a successful build.
+  While we generate nearly all module yaml files automatically, a few have
+  specific build needs that are not possible to address programmatically
+  just via using CPAN tools, so they are enabled via creating an append file. 
+  The append files are created individually based on specific module
+  compilation, patching needs or updates to provides/requires.
+
+  For example, an auto-generated file for *hdf5r* module looks like this:
+
+  .. code-block:: yaml 
+
+     !include common.yaml
+     ---
+     - package: R module hdf5r
+       name: hdf5r
+       rpkgname: hdf5r
+       version: "{{versions.hdf5r}}"
+       baseurl: https://cran.r-project.org/src/contrib
+       src_tarball: "{{rpkgname}}_{{version}}.{{extension}}"
+       vendor_source: "{{baseurl}}/{{rpkgname}}_{{version}}.{{extension}}"
+       requires:
+         - R_{{Rversion}}
+         - R_{{Rversion}}-R6
+         - R_{{Rversion}}-bit64
+         - R_{{Rversion}}-bit
+
+  However this  does not have patching info, or compiler directives update
+  info. Those are coming from ``hdf5r.yaml.append``:
+
+  .. literalinclude:: files/R4-admix-hdf5r.yaml.append
+     :language: yaml
+
+  The resulting ``hdf5r.yaml`` file is a concatenation of the two files above
+  and can be found in *freeze* directories.
+
+``modules.bootstrap``
+  Listing of a few packages for **R** and **rstudio** that are built initially 
+  in the :yvars:`bootstrap0` phase. We need to reference this listing a few
+  times when building packages for different sets, using a simple file simplifies the tracking.
+
+``modules.desired``
+  Listing of R modules (names one per line)  that we want to install. This is a base template that
+  was used initially for building modules for each set. Once a set is built
+  a (sometimes modified per final build outcome) file is saved in each *freeze* directory.
+
 .. _R4_admix_sets:
 
 Set specific
 ^^^^^^^^^^^^
 
 The set files and corresponding versions files enable us to create multiple
-versions of desired modules for multiple versions of Python:
+versions of desired modules for multiple versions of R:
 
   .. table::
      :class: noscroll-table
 
-     +---------+---------------+-------------------+
-     | Python  | Set           |  Versions         |
-     | version | file          |  file             |
-     +---------+---------------+-------------------+
-     | 4.0.4   | set-404.yaml  | versions-404.yaml |
-     |         |               |                   |
-     | 4.1.2   | set-412.yaml  | versions-412.yaml |
-     |         |               |                   |
-     | 4.2.2   | set-422.yaml  | versions-422.yaml |
-     |         |               |                   |
-     | 4.3.3   | set-433.yaml  | versions-433.yaml |
-     |         |               |                   |
-     | 4.4.2   | set-442.yaml  | versions-442.yaml |
-     |         |               |                   |
-     | 4.5.2   | set-452.yaml  | versions-452.yaml |
-     +---------+---------------+-------------------+
+     +---------+---------------+-------------------+------------+
+     | R       | Set           |  Versions         | Freeze     |
+     | version | file          |  file             | directory  |
+     +---------+---------------+-------------------+------------+
+     | 4.0.4   | set-404.yaml  | versions-404.yaml | freeze-404 |
+     |         |               |                   |            |
+     | 4.1.2   | set-412.yaml  | versions-412.yaml | freeze-412 |
+     |         |               |                   |            |
+     | 4.2.2   | set-422.yaml  | versions-422.yaml | freeze-422 |
+     |         |               |                   |            |
+     | 4.3.3   | set-433.yaml  | versions-433.yaml | freeze-433 |
+     |         |               |                   |            |
+     | 4.4.2   | set-442.yaml  | versions-442.yaml | freeze-442 |
+     |         |               |                   |            |
+     | 4.5.2   | set-452.yaml  | versions-452.yaml | freeze-452 |
+     +---------+---------------+-------------------+------------+
+
+When we create specific R modules for a given set we try to keep the listing
+consistent but this is not always possible. A new version of a given module
+may have different prerequisites for a different set and this results in a
+different content of the yaml file for a specific module or a slightly
+different set of files. This is why after we create the yaml files for sets 
+of modules we save them in *freeze* directories, one directory per set so that there is
+no conflict.
 
 Any individual set can be built separately, for example:
 
@@ -318,20 +385,36 @@ There are a few scripts that we created to enable specific tasks.
 See the scripts files contents in `R4-admix repository <https://github.com/RCIC-UCI-Public/R4-admix/>`_.
 All the scripts are specific to R4-admix.
 
-``depend.py``
-  This bash script is used to parse requires during the ``rpmbuild`` run  for
-  ``scipy.yaml`` and removes some third party hard-coded  versions of
-  *libquadmath* libraries. As a result only OS-installed libraries names are
-  left in requires and they satisfy the package needs. 
+| ``filter-requires-RPostgreSQL.sh``
+| ``filter-requires-rstudio.sh``
+| ``filter-requires-styler.sh``
+|   These bash scripts are used to parse requires during the ``rpmbuild`` run for
+    named packages. They remove some third party hard-coded erroneous
+    requirements (such as references to /usr/local or system supplied libraries
+    at a specific version that does not exist).
+    As a result only OS-installed libraries names are left in requires and they satisfy the package needs.
 
-``site.cfg.template``
-  This is a template config file that is added to the build
-  directory when building RPMs for ``scipy.yaml`` and ``numpy.yaml``.
-  The template simply lists specific directories paths for OpenBLAS to use during
-  the configuration step (the names are defined by the developers). 
-  When building for a different Python version  a different OpenBLAS
-  version will be used and the paths in the template are updated to
-  the correct ones for the loaded OpenBLAS environment module.
+``deps.R``
+  This R script reads the files ``modules.desired``  and ``modules.bootstrap`` to generate a single yaml file
+  ``builddeps.yaml`` of all R packages dependencies for the desired modules list. It uses the *miniCRAN*
+  R module, which does recursive dependency resolution.
+  The ``builddeps.yaml`` file can then be processed to determine the build/bootstrap order
+  of R RPMs, it can also be used to place dependencies in R module RPMs.
+
+``depend.py``
+  This Python script is called from the ``Makefile`` when there is a need to create some new modules
+  for the existing groups or add a new group of modules for a new set. This script was used to create 
+  all yaml files for the modules in *freeze* directories.
+
+  The script will take as an input created modules dependency ``builddeps.yaml`` and
+  bootstrap list  of modules from ``modules.bootstrap``  and create R modules
+  yaml files, ``buildorder`` and ``outversions.yaml`` files.
+
+``downloadpkg.py``
+  This Python script reads created ``builddeps.yaml`` and downloads listed
+  packages sources distributions.
+
+For details how to use these scripts when adding new modules see the following section. 
 
 .. _R4_admix_add_modules:
 
