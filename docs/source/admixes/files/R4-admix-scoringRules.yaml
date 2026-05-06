@@ -1,0 +1,18 @@
+!include common.yaml
+---
+- package: R module scoringRules
+  name: scoringRules
+  rpkgname: scoringRules
+  version: "{{versions.scoringRules}}"
+  baseurl: https://cran.r-project.org/src/contrib
+  src_tarball: "{{rpkgname}}_{{version}}.{{extension}}"
+  vendor_source: "{{baseurl}}/{{rpkgname}}_{{version}}.{{extension}}"
+  requires:
+    - R_{{Rversion}}
+    - R_{{Rversion}}-Rcpp
+    - R_{{Rversion}}-knitr
+    - R_{{Rversion}}-RcppArmadillo
+    - R_{{Rversion}}-evaluate
+    - R_{{Rversion}}-highr
+    - R_{{Rversion}}-xfun
+    - R_{{Rversion}}-yaml

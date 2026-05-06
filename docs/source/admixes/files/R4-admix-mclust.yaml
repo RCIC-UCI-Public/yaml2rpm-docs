@@ -1,0 +1,11 @@
+!include common.yaml
+---
+- package: R module mclust
+  name: mclust
+  rpkgname: mclust
+  version: "{{versions.mclust}}"
+  baseurl: https://cran.r-project.org/src/contrib
+  src_tarball: "{{rpkgname}}_{{version}}.{{extension}}"
+  vendor_source: "{{baseurl}}/{{rpkgname}}_{{version}}.{{extension}}"
+  requires:
+    - R_{{Rversion}}

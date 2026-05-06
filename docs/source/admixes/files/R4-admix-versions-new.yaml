@@ -1,0 +1,24 @@
+!include versions.yaml
+!include site97.yaml
+---
+R: "4.5.2"
+Rmajor: "4"
+Rminor: "5"
+tarsources:
+addonsources:
+rstudio: "2026.01.0.392"
+rstudio_dist: "2026.01.0-392"
+rstudio_os: "rhel9"
+rstudio_site: "electron"
+rstudio_layout: "new"
+OpenBLAS: "0.3.31"
+gdal: "3.12.1"
+geos: "3.14.1"
+proj: "9.7.1"
+fftw: "3.3.10"
+glpk: "5.0"
+hdf5: "2.0.0"
+libgit2: "1.8.5"
+GenomeInfoDbData: "1.2.15"
+seurat_data: "0.2.1"
+## from outversions.yaml
