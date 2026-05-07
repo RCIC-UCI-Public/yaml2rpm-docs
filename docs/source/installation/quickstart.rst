@@ -3,16 +3,17 @@
 Quickstart
 ==========
 
+Make sure the :ref:`requirements` are met.
+
 Yaml2rpm is best built directly from the git repository.  Part of that build process will create RPMs
 that can be installed on other machines. On a reasonable system with good network connectivity (or locally-mirrored
 repositories) it takes roughly 2 minutes to set up a system to build RPMS using yaml2rpm.
 
-We **highly recommend** that you prepare and build in a :ref:`singularity container<dd_container>`. Like many builds,
-the build system itself is modified. In this case, numerous system-level RPMs are added as are newly created RPMs.
-Building inside of container protects the physical system from this inevitable change.
-
 Building Yaml2rpm
 -----------------
+
+Run the following commands to checkout the admic repo and to build
+all its RPMs:
 
    .. parsed-literal::
 
@@ -25,20 +26,21 @@ When the above has completed, you will see the following line of output
    .. code-block:: bash
 
       === First Build completed ===
-      Start a new bash shell or logout/login to make certain all profile.d scripts
+      Start a new bash shell or logout/login to make certain all scripts from /etc/profile.d are sourced
 
 
 As of Rocky 10, 18 RPMs are added to the system during the first-build. Of these, the following
-RPMs are built (the rest are OS- or EPEL-supplied packages).
+RPMs are built (the rest are OS- or EPEL-supplied packages):
 
-    * ``rocks-devel`` core Makefile structure generate spec files 
-    * ``python-ruamel-yaml`` specific YAML parser
-    * ``python-ruamel-yaml-clib`` specific YAML parser library
-    * ``rcic-module-support``
-    * ``rcic-module-path``
-    * ``yaml2rpm``
+    * **rocks-devel** - core Makefile structure generate spec files 
+    * **python-ruamel-yaml** - specific YAML parser
+    * **python-ruamel-yaml-clib** - specific YAML parser library
+    * **rcic-module-support** - provides support and common code for the environment modules
+    * **rcic-module-path** - support and common code for updating system modules path
+    * **yaml2rpm** - main code and tools
 
-The information about what exact RPMS were added can be discovered using ``yum history``.
+| See the detailed RPMs description in :ref:`yaml2rpm`.
+| The information about what exact RPMS were added can be discovered using ``yum history``.
 
 If you don't want to exit the shell, but instead want to source profile.d
 scripts that were added by RPMs, then do the following:
@@ -50,19 +52,20 @@ scripts that were added by RPMs, then do the following:
 Any subsequent container start from the same overlay will do sourcing automatically. 
 
 First RPM Build 
-^^^^^^^^^^^^^^^
+---------------
 
 Yaml2rpm was built to create collections of similar software that we term **admixes**.
-Here, the **buildtools-admix** is used as an example. The complete admix has several versions of software, but
-this section highlights just one, *curl*.
+Here, the **buildtools-admix** is used as an example. The complete admix has
+several packages at different versions of software, but this section highlights just one, *curl*
+that we use to build a specific RPM.
 
-The usual way to build an entire admix is, at the top-level execute:
+.. The usual way to build an entire admix is, at the top-level execute:
    .. parsed-literal::
       :command:`make buildall`
       or alternatively when we do parallel build
       :command:`make buildall-parallel`
 
-Instead, these following steps to build *curl* RPM break down some of the things
+These following steps to build *curl* RPM break down some of the things
 that happen. The first is adding via ``yum`` OS-supplied packages that are required to build software in the admix.
 
 1. Clone the repo
