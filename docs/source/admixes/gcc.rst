@@ -1,7 +1,7 @@
+.. _gcc-admix:
+
 GCC
 ==========
-
-.. _gcc-admix:
 
 The `gcc-admix repository <https://github.com/RCIC-UCI-Public/gcc-admix/>`_ uses **YAML2RPM** to build an
 updated version of gcc, a module file, and some compatible libraries.  Those packages can then be installed

@@ -1,8 +1,7 @@
-YAML2RPM 
-=========
-
 .. _yaml2rpm:
 
+YAML2RPM
+========
 
 Purpose
 -------
