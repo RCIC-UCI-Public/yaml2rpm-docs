@@ -25,10 +25,7 @@ Here is the full process for rebuilding Python and its associated modules presen
    make buildall-parallel &> buildall.log &`
 
 .. warning:: 
-   This process will install RPMs as it builds. You should do this on a 'disposable' build system.
-
-When building packages for Python modules we use native Python tools ``pip` 
-or ``python setup.py`` as each package specifies in its configuration.
+   This process will install RPMs as it builds. You should do this on a *disposable* build system.
 
 The following sections provide detailed explanation about repo files,
 build process, and adding new modules step-by-step.
@@ -52,29 +49,29 @@ In yamlspecs/
 Standard files
 ^^^^^^^^^^^^^^
 
-When building Python modules we not only need to build different versions of
-Python itself but also need to have different modules that were requested by the users
-in order to support different types of applications.
+We create a set of modules to install for each version of Python.
+The sets usually include most commonly used  or specifically requested by
+users modules. 
 
-Such modules trigger its own chain of dependent Python modules that need to be
-installed. 
+When building RPMs for Python modules we use native Python tools
+``pip`` or ``python setup.py`` as each package specifies in its configuration.
 
-We create a set of modules to install for each version of Python. 
-While we try to keep the sets contents the same, sometimes it is not possible
-as the specific modules dependencies change.
-There is a specific order when in the set a module can be built. Some needs to
-be build and installed before others can be compiled. Others need their
-dependencies only during the  module use.
+Many modules trigger their own chain of dependent Python modules that need to be
+installed.  Because of the dependencies there is an order when in the set a 
+specific module can be built. Some needs to be build and installed before others
+can be compiled. Others need their dependencies only during the run time.
 We have to handle such dependencies carefully so that we do not
 create circular references during the build.
+
+While we try to keep the sets contents the same, sometimes it is not possible
+as the specific modules dependencies change.
 
 ``packages.yaml`` (required)
   Yaml format, describes specifics of this admix build.
 
   .. literalinclude:: files/python-admix-packages.yaml
       :language: yaml
-
-  Most of the variables in this file are standard
+Most of the variables in this file are standard
   (:yvars:`site`, :yvars:`system`, :yvars:`bootstrap`, :yvars:`build`, :yvars:`manifest`, :yvars:`sets`).
   There are a few new variables in this file that allow us
   to  define a list of system RPMS to be added only when building for a specific OS.
