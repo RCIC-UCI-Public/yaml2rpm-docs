@@ -66,6 +66,10 @@ exist.  That file system is used as an overlay/writable system when the containe
           echo "ZFS overlay filesystem $ZFSSLICE does not exist. Creating"
           sudo zfs create $ZFSSLICE
       fi
+      if [ ! -d ${HOME}/import ]; then
+          echo "${HOME}/import does not exist. Creating"
+          mkdir ${HOME}/import
+      fi    
 
 Starting the Container
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -74,23 +78,25 @@ A helpful aliases  can be defined to start the container and provide a prompt.
 
  .. code-block:: bash
 
-    alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
+    alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse,${HOME}/import:import:ro --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
 
 Practical Modifications after first boot
 ----------------------------------------
 
-If you have followed the above to build and start the container you now can
-add a few files that will help with the future container starts from the
-overlay.
+If you have followed the above to build and start the container, it's useful to add some files to
+to ``${HOME}/import`` directory on the physical system and modify some yum repo defintions.
 
-There are a number of items that we routinely add
-(show up in the overlay) and then take a snapshot as "baseline" for a particular build.
+There are a number of items that we routinely want available when operating withing the container's file
+system space. The usual mode is to create, on the physical system, the directory ``${HOME}/import``.
+Inspect the alias above, and you will see that the contents of this directory or made available to every container
+started. 
 
-Using ``/export/repositories`` as the destination directory, it's useful to copy in the following files:
+Copy/create the following in this "import" directory
 
-1. A ``.gitconfig`` for the root user (when a container starts you are a root user).
+1. A ``.gitconfig`` for the container's root user (when a container starts you are a root user), that identifies you
+   for git commits.
 
-   A modified ``.gitconfig`` that reflects the real name of the person who might commit changes
+   A modified ``.gitconfig`` should reflect the real name of the person who might commit changes
 
    .. code-block:: bash
 
@@ -102,15 +108,20 @@ Using ``/export/repositories`` as the destination directory, it's useful to copy
 
 2. The developers private ssh-key (used for committing git changes) as ``id_<username>``.
 
-3. A simple, very trivial  shell script that starts ssh-agent.
+3. A simple, very trivial  shell script that starts ssh-agent. This can be named anything you
+   desire, simply source the script each time you start the container.  A name like
+   ``getset.sh`` (as in "Ready. Get set. Go") intimates its purpose: set up the container so that
+   normal development work can occur. 
 
    .. code-block:: bash
 
       #!/bin/bash
-      pushd /export/repositories
+      pushd /import
       cp .gitconfig /root
       eval $(ssh-agent)
-      ssh-add id*
+      for id in id*; do 
+          ssh-add $id
+      done
       popd
 
 4. An rclone configuration for adding new tarballs
@@ -121,15 +132,25 @@ Using ``/export/repositories`` as the destination directory, it's useful to copy
 Optional but Recommended
 ------------------------
 
-One the builder physical system, mirror the appropriate Rocky and EPEL yum repos. Then modify the
+On the builder physical system, mirror the appropriate Rocky and EPEL yum repos. Then modify the
 ``/etc/yum.repos.d/xxx.repo`` definitions to pull from these local mirrors. There are two distinct advantages:
 
   1. **Reproducibility** - "freezing" these repos at a particular point in time enables finer control for 
      reproducible builds.
   2. **Speed** - the repos are referred to frequently during a complete build.
 
+
+**Start the Container**
+
+.. tip::
+   On every container start, execute ``source /import/getset.sh``. This will prep your shell session to
+   enable git push.
+
+Yum repo customization
+~~~~~~~~~~~~~~~~~~~~~~
+
 Here is a sample customization of ``/etc/yum.repos.d/rocky.repo`` (only the changed sections are included and 
-are from the Rocky 10 version). The *mirrolist* url is commented and the *baseurl* is copied, uncommented,
+are from the Rocky 10 version). The *mirrolist* url is commented out and the *baseurl* is copied, uncommented,
 and then edited to look to the local host.
 
 If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file uses https.
@@ -172,16 +193,16 @@ If any urls reference ``https``, change them to ``http``. The ``epel.repo`` file
 .. note::
 
    For Rocky 9/10 customize ``rocky.repo`` and ``epel.repo``.  For Rocky 10, also customize
-   ``rocky-extras.repo``.  This assumes that you have mirrored on the physical host and it will serve the
-   URLs properly.
+   ``rocky-extras.repo``.  This assumes that you have mirrored the repos on the physical host and it will 
+   serve the URLs properly.
   
 Baseline snapshot
 -----------------
 
 When you have completed the customizations, exit from the container and
-on a physical host take a ZFS snapshot as new baseline that represents
-the **container baseline + customizations** (from previous 2 sections).
-Do this prior to adding the building yaml2rpm.
+on a physical host take a ZFS snapshot as a new baseline that represents
+the **container baseline + customizations**.
+Do this prior to adding  and building yaml2rpm.
 
 Build yaml2rpm
 --------------
@@ -190,4 +211,4 @@ Follow the :ref:`Quickstart<quickstart>` instructions to build yaml2rpm. Then cr
 your build environment.  
 
 At this point, you have a generic environment that can then be used to build
-the entire admixes collection of applications.
+the entire collection of admixes and associated applications.
