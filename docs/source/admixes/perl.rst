@@ -19,10 +19,10 @@ and a few custom scripts to accomplish multiple builds for multiple versions.
 
 Here is the full process for rebuilding Perl and its associated modules present in the repo:
 
-.. parsed-literal::
-   :command:`git clone https://github.com/RCIC-UCI-Public/perl-admix.git
-   cd perl-admix
-   make buildall-parallel &> buildall.log &`
+  .. parsed-literal::
+     :command:`git clone https://github.com/RCIC-UCI-Public/perl-admix.git
+     cd perl-admix
+     make buildall-parallel &> buildall.log &`
 
 .. warning::
    This process will install RPMs for two Perl versions (|530| and |534|) as it builds.
@@ -57,20 +57,18 @@ When building Perl modules we not only need to build different versions of
 Perl itself but also need to have different modules that were requested by the users
 in order to support different types of applications.
 
-Such modules trigger its own chain of dependent Perl modules that need to be
-installed. We created 3 different groups (names and division into groups are logical)
-to handle such requests for modules related to:
+| Such modules trigger its own chain of dependent Perl modules that need to be
+  installed. We created 3 different groups (names and division into groups are
+  logical but somewhat arbitrary) to handle such requests for modules related to:
+|     *bio* - bioperl applications
+|     *gen* - genomics  applications
+|     *meta* - metagenomics applications
 
-  - bio - bioperl applications
-  - gen - genomics  applications
-  - meta - metagenomics applications
-
-The division of modules into these three groups is somewhat arbitrary.
 There is a specific order when each group can be built because of
 so many dependencies. We have to handle such dependencies carefully so that we do not
 create circular references during the build.
 
-``packages.yaml`` (required)
+``packages.yaml``
   Yaml format, describes specifics of this admix build.
 
   .. literalinclude:: files/perl-admix-packages.yaml
@@ -120,13 +118,13 @@ create circular references during the build.
      |   4   |  530-gen     | 534-gen       |
      +-------+--------------+---------------+
 
-``versions.yaml`` (required)
+``versions.yaml``
   Since there are no packages to build for the base set, this file just lists the admix name:
 
   .. literalinclude:: files/perl-admix-versions.yaml
       :language: yaml
 
-``perl.yaml`` (required)
+``perl.yaml``
   This yaml file provides all the instructions to build base Perl RPM.
 
   .. literalinclude:: files/perl-admix-perl.yaml
@@ -166,7 +164,7 @@ create circular references during the build.
     will be added. This is similar to what system-installed Perl package would
     have for its version.
 
-``perl-module.yaml`` (required)
+``perl-module.yaml``
   This file describes an environment module build for each version of Perl.
 
   .. literalinclude:: files/perl-admix-perl-module.yaml
