@@ -56,6 +56,7 @@ YAML2RPM Documentation
 
    deep-dive/packaging
    deep-dive/singularity
+   deep-dive/parallel
 
 .. toctree::
    :maxdepth: 1

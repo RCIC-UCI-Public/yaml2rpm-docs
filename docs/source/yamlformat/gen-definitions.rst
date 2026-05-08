@@ -38,22 +38,22 @@ As some examples, refer to the :ref:`gcc admix layout <ov_gcc_admix>` for the fi
 
 Here are some example queries
 
-   .. code-block:: bash
+  .. parsed-literal::
 
-|    :blue:`gen-definitions.py --versions=versions-gcc15.yaml --query=gcc_version gcc.yaml`
-|      15.2.0
-|    :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=gcc_version gcc.yaml`
-|      1.2.0
-|    :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=gcc_version gcc.yaml`
-|      8.4.0
-|    :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=pkgname gmp.yaml`
-|      gcc_8.4.0-gmp
-|    :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=pkgname gmp.yaml`
-|      gcc_11.2.0-gmp
-|    :blue:`gen-definitions.py --query=gcc versions-gcc8.yaml`
-|      8.4.0
-|    :blue:`gen-definitions.py --query=annobin versions-gcc8.yaml`
-|      10.54
+       :blue:`gen-definitions.py --versions=versions-gcc15.yaml --query=gcc_version gcc.yaml`
+         15.2.0
+       :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=gcc_version gcc.yaml`
+         1.2.0
+       :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=gcc_version gcc.yaml`
+         8.4.0
+       :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=pkgname gmp.yaml`
+         gcc_8.4.0-gmp
+       :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=pkgname gmp.yaml`
+         gcc_11.2.0-gmp
+       :blue:`gen-definitions.py --query=gcc versions-gcc8.yaml`
+         8.4.0
+       :blue:`gen-definitions.py --query=annobin versions-gcc8.yaml`
+         10.54
 
 .. note::
    Notice the naming of the gmp packages when ``pkgname`` is the query argument.  This is standard
