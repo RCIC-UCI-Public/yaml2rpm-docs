@@ -927,8 +927,8 @@ As an example we show how we built a set for R v.4.5.2.
    - update ``s2.yaml`` file to include dependency on *abseil-cpp*.
    - update ``set-452.yaml`` and ``versions-452.yaml``  files to include *abseil-cpp*
 
-   Rerun the build RPMs untill all are built. 
-   This may take a few iterations for a new set. 
+   .. warning:: Rerun the build RPMs untill all are built. 
+      This may take a few iterations for a new set. 
 
    If there are no errors from RPM installation, the package dependencies are
    most likely correct. There are a few instances when a package requires a
