@@ -69,8 +69,8 @@ Modify ``set-2025.yaml`` to have contents
      - dorado-module
      - gatk
      - gatk-module
-     :darkred:`- vcftools`
-     :darkred:`- vcftools-module`
+     - vcftools
+     - vcftools-module
 
 You also need to modify the `versions-2025.yaml` to include the updated vcftools version
 
@@ -81,8 +81,7 @@ You also need to modify the `versions-2025.yaml` to include the updated vcftools
    ---
    dorado: "0.9.1"
    gatk: "4.6.2.0"
-   :darkred:`vcftools: "0.1.17"`
-
+   vcftools: "0.1.17"
 
 .. note::
    Most entries in versions files are simple key-value pairs. Inspect the *versions.yaml* file in this admix
