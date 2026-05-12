@@ -126,7 +126,7 @@ Verify that this a good web reference and then **download the source tarball**.
 
 Build
 -----
-It's time to build the package and module
+It's time to build the package and module:
 
 .. parsed-literal::
 
