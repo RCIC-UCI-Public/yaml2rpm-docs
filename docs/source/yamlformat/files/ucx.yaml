@@ -1,0 +1,36 @@
+!include rcic-package.yaml
+---
+- package: ucx 
+  name: ucx
+  versions: !include versions.yaml
+  version: "{{versions.ucx.version}}"
+  release: "{{versions.ucx.rel}}"
+  vendor_source: https://github.com/openucx/ucx/archive/v{{version}}.{{extension}}
+  compiler: "{{versions.compiler_sys.name}}"
+  compiler_version: "{{versions.compiler_sys.version}}"
+  description: |
+    Unified Communication X (UCX) provides an optimized communication
+    layer for Message Passing (MPI), PGAS/OpenSHMEM libraries and RPC/data-centric
+    applications. UCX utilizes high-speed networks for inter-node communication, and
+    shared memory mechanisms for efficient intra-node communication
+  shortdescription: |
+    Unified Communication X (UCX) provides an optimized communication
+    layer for MPI applications. Configured with {{build.configure_args}}.
+  add_config_args: --disable-logging --disable-debug --disable-assertions --disable-params-check
+  opts: !ifeq "{{versions.ucx.confargs}},yes,{{add_config_args}},"
+  addfile: mpiconfig.sh
+  build:
+    preconfigure: ./autogen.sh
+    ## Need an older compiler to build version 1.8.0
+    ucxcompiler: !ifeq "{{version}},1.8.0,module load {{versions.ucx.compiler}};,"
+    configure: "{{build.ucxcompiler}} CFLAGS='-fPIC' ../mpiconfig.sh"
+    configure_args: >   
+       --prefix={{root}}
+       --with-rc
+       --with-ud
+       --with-dc
+       --with-ib-hw-tm
+       --with-dm
+       {{opts}}
+  install:
+    makeinstall: $(MAKE) DESTDIR=$(ROOT) install
