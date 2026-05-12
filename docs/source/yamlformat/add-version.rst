@@ -42,7 +42,7 @@ There are numerous sets already existing in the biotools admix.
 Since vcftools is only defined in the base, it's simplest to add to
 an existing set.  For this example, extending set *2025* makes sense. The contents of set-2025 are:
 
-.. parsed-literal::
+.. code-block:: yaml
 
    !include packages.yaml
    ---
@@ -58,7 +58,7 @@ Notice that the versions file used for this set is ``versions-2025.yaml``. The v
 file, but convention is to use *versions-<set name>.yaml*, as in this example. Vcftools has both a module and program. 
 Modify ``set-2025.yaml`` to have contents
 
-.. parsed-literal::
+.. code-block:: yaml
 
    !include packages.yaml
    ---
@@ -74,7 +74,7 @@ Modify ``set-2025.yaml`` to have contents
 
 You also need to modify the `versions-2025.yaml` to include the updated vcftools version
 
-.. parsed-literal::
+.. code-block:: yaml
 
    !include versions.yaml
    !include updates8.yaml
