@@ -35,6 +35,7 @@ YAML2RPM Documentation
    yamlformat/yaml-package
    yamlformat/common-and-sets
    yamlformat/rpm-packaging-directives
+   yamlformat/add-version
    yamlformat/gen-definitions
 
 .. toctree::
