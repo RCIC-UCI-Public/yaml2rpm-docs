@@ -133,12 +133,12 @@ create circular references during the build.
   Most variables are standard and are described in :red:`TODO ref`.
   The specific variables are as follows:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
-    These templates define common variables that are neeed in all builds and
-    using the include directive simplifies the comon code reuse and minimizes
+  - include statements specify template files to include when parsing this yaml file.
+    These templates define common variables that are need in all builds and
+    using the include directive simplifies the common code reuse and minimizes
     the overall code footprint.
 
-    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` tempalte
+    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` template
       file that defines defaults for the variables used during the build.
 
       :red:`TODO add reference to this file and describe it in full`
@@ -172,11 +172,11 @@ create circular references during the build.
 
   The variables are:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
+  - include statements specify template files to include when parsing this yaml file.
 
     - :yvars:`!include perl.yaml` -  specifies a package file to include when parsing this file.
       Each package module file always includes the package yaml file to get needed package definitions.
-    - :yvars:`!include rcic-module.yaml` -  specifies a tempalte to include when parsing this file.
+    - :yvars:`!include rcic-module.yaml` -  specifies a template to include when parsing this file.
       The ``rcic-module.yaml`` is a default template file that defines generic variables for most module files.
 
       :red:`TODO add reference to this file and describe it in full`
