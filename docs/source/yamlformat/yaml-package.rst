@@ -43,9 +43,10 @@ Some variable here are standard for all, others are software specific.
 
     Here, a ``rcic-package.yaml`` is a standard template file that defines
     defaults for the variables used during the build. This is the most common
-    file included in the packages yaml files.  Other files to include can be 
-    specific common files defined for an admix and these common files in turn would
-    include ``rcic-packages.yaml``.
+    template included in the packages yaml files. Other files to include can be:
+
+	- specific common files defined for an admix and these common files in turn would include ``rcic-packages.yaml``.
+	- ``rpm.yaml`` a template that defines variables for RPM specs. 
 
   - :yvars:`package` - a short package name description. Very short usually one-two words. 
   - :yvars:`name` - a package name that will be used in the RPM name. Try to
