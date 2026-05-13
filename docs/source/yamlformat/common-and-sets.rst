@@ -76,8 +76,7 @@ packages.yaml
   different depending on the  variables values comparison.
   These constructs can be used for any variable definition. 
 
-  :yvars:`!ifeq`
-     This is a simple, *if-else* construct to compare two values for
+  1. :yvars:`!ifeq` - this  is a simple, *if-else* construct to compare two values for
      equality and choose the outcome based on the comparison result. The
      :yvars:`!ifeq "var1, var2, outcome-if-true, outcome-if-false"` means
 
@@ -92,8 +91,7 @@ packages.yaml
      is 9, no additional system package is added prior to building gcc. Every
      other OS release will add the *gcc-gdb-plugin* system package.
 
-  :yvars:`!eval`
-     This construct can compare two variables for a few other
+  #. :yvars:`!eval` - this construct can compare two variables for a few other
      conditions (==, <, <=, >,  >=). The 
      :yvars:`!eval "outcome-if-true if var1 COMPARES var2 else outcome-if-false"` means
 
@@ -108,16 +106,12 @@ packages.yaml
      in `fileformats-admix repository <https://github.com/RCIC-UCI-Public/fileformats-admix/>`_
      in ``packages.yaml`` file evaluates to *antlr-tool* if the OS is 9 or later, and is empty otherwise.
 
-  Another special construct allows an extension (in our parser) to load
-  additional files and parse their entries. 
+  #. :yvars:`!include` - another special construct allows an extension (in our parser) to load
+     additional files and parse their entries. 
 
-  :yvars:`!include`
-    This construct followed by a site file name is a special directive
-    to load the specified site file and to interpret its entries.
-
-    A line  **!include site.yaml** means that at the read time of
-    ``packages.yaml`` the default system ``site.yaml`` file will be included
-    for parsing and any variables defined there will be available as :yvars:`site.VARNAME`.
+     A line  **!include site.yaml** means that at the read time of
+     ``packages.yaml`` the default system ``site.yaml`` file will be included
+     for parsing and any variables defined there will be available as :yvars:`site.VARNAME`.
 
 **Set-related variables**
   In addition to the standard :yvars:`sets` variable there are a few set-related ones.
@@ -156,7 +150,7 @@ packages.yaml
     each parallel build  respective serial sets will be built one after
     another in the listed order.
    
-    Currently, we use serialsets only in *perl-admix*.
+    Currently, we use *serialsets* only in *perl-admix*.
 
 .. _versions_yaml:
 
@@ -168,6 +162,8 @@ versions.yaml
   It is located in ``yamlspecs/`` and usually contains packages names, their versions and
   other related info. This file is almost always included in set versions files
   and is always included in packages yaml files.
+
+  Variables defined in this file are used in the packages yaml files.
 
   An example ``versions.yaml`` from `gcc-admix repository <https://github.com/RCIC-UCI-Public/gcc-admix/>`_:
    
@@ -181,17 +177,22 @@ versions.yaml
     what other yaml files to include. Can be none or can be a few
 
 **Admix-specific variables**
-  Most commonly these are  packages names and their versions. In this example:
+  Most entries in versions files are simple key-value pairs for packages names
+  and versions that are used in packages yaml files. In this example:
 
-  :yvars:`gmp` - has version "6.1.2"
-  :yvars:`gmp_ext` - defines *tar.xz*  extension to use for the source distribution file (used in ``gmp.yaml``).
+  - :yvars:`gmp` - has version "6.1.2"
+  - :yvars:`gmp_ext` - defines tarball extension for the source distribution.
 
-  Other examples of variables can be found in the other admixes repositories. 
-  A few examples of variables from different ``verions.yaml`` files:
+  These variables are referenced in respective ``gmp.yaml`` file as
+  :yvars:`{{versions.gmp}}` (resolves here to "6.1.2") and :yvars:`{{versions.gmp_ext}}` 
+  (resolves here to "tar.xz")
 
-  - from `biotools-admix repository <https://github.com/RCIC-UCI-Public/biotools-admix/>`_:
+  .. note:: Sometimes key-values pairs are not sufficient, in these cases we use *dictionary* values.
 
-    specify a compiler and its version (If want different from  defaults in ``site.yaml``)
+  A few examples of dictionary variables from different ``verions.yaml`` files:
+
+  - From `biotools-admix repository <https://github.com/RCIC-UCI-Public/biotools-admix/>`_.
+    Specify a compiler and its version:
 
     .. code-block:: yaml
 
@@ -199,12 +200,12 @@ versions.yaml
          name: gcc
          version: "8.4.0"
 
-    The variables for the compiler can be accessed in packages yaml files as
-    :yvars:`versions.compier.name` (here gcc) and :yvars:`versions.compiler_version` (here 8.4.0)
+    The elements of the dictionary can be accessed in packages yaml files as
+    :yvars:`versions.compier.name` (resolves here to  "gcc") and :yvars:`versions.compiler_version`
+    (resolves here to 8.4.0)
 
-  - from `buildlibs-admix repository <https://github.com/RCIC-UCI-Public/buildlibs-admix/>`_:
-
-    specify values for *ucx* build 
+  - From `buildlibs-admix repository <https://github.com/RCIC-UCI-Public/buildlibs-admix/>`_.
+    Specify values for *ucx* build:
 
     .. code-block:: yaml
 
@@ -215,12 +216,14 @@ versions.yaml
          confargs:
          compiler:
 
-    The variables for multiple *ucx* builds are accessed as 
-    :yvars:`versions.ucx.version` (here "1.12.0"), :yvars:`versions.ucx.rel` (here "2") and so on.
-    The :yvars:`confargs` and :yvars:`compiler` are empty here and are defaults for the base
-    version. When we build multiple versions of *ucx* we have to set these
-    variables differently depending on the *ucx* version, so these can be
-    overwritten in respective set version file.
+    The dictionary variables for multiple *ucx* builds are accessed  in ``ucx.yaml`` as
+    :yvars:`{{versions.ucx.version}}` (resolves to "1.12.0" here), :yvars:`{{versions.ucx.rel}}`
+    (resolves to "2" here) and so on.
+
+    Note, :yvars:`confargs` and :yvars:`compiler` are empty here and are the defaults for the base
+    version of *ucx* that we build. When we build multiple versions of *ucx* we have to set these
+    variables differently depending on the *ucx* version specific requirements, so these 
+    will be overwritten in respective set version files. 
 
 .. _sets:
 
@@ -236,7 +239,8 @@ needed software and its logical grouping.
 
 Any given set has 2 files: a set file and a corresponding versions file. 
 The naming schema is simple but both file names in the set need to be consistent.
-Sometimes we use a year the software was released or the year we installed,
+For simplicity and ease of tracking we use ``set-NAME.yaml`` and ``versions-NAME.yaml``. 
+Sometimes as a *NAME* we use a year the software was released or the year we installed,
 sometimes specific versions names.  For example (from different admixes):
 
   +---------------------+--------------------------+--------------------------------------+
