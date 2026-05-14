@@ -78,25 +78,25 @@ A helpful aliases  can be defined to start the container and provide a prompt.
 
  .. code-block:: bash
 
-    alias startcontainer='sudo singularity exec --bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse,${HOME}/import:import:ro --containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
+    alias startcontainer='sudo singularity exec
+	--bind=/opt/data/opt:/data/opt:ro,/dev/fuse:/dev/fuse,${HOME}/import:/import:ro
+	--containall --overlay ${MYOVERLAY} ${BASECONTAINER} /bin/bash -il'
 
 Practical Modifications after first boot
 ----------------------------------------
 
 If you have followed the above to build and start the container, it's useful to add some files to
-to ``${HOME}/import`` directory on the physical system and modify some yum repo defintions.
+to ``${HOME}/import`` directory on the physical system and modify some yum repo definitions.
 
 There are a number of items that we routinely want available when operating withing the container's file
 system space. The usual mode is to create, on the physical system, the directory ``${HOME}/import``.
 Inspect the alias above, and you will see that the contents of this directory or made available to every container
 started. 
 
-Copy/create the following in this "import" directory
+Copy/create the following in this ``HOME/import`` directory
 
 1. A ``.gitconfig`` for the container's root user (when a container starts you are a root user), that identifies you
-   for git commits.
-
-   A modified ``.gitconfig`` should reflect the real name of the person who might commit changes
+   for git commits. Modify it to reflect the real name and email of the person who might commit changes:
 
    .. code-block:: bash
 
@@ -107,6 +107,9 @@ Copy/create the following in this "import" directory
       email = panteater@uci.edu
 
 2. The developers private ssh-key (used for committing git changes) as ``id_<username>``.
+
+   .. important:: | NONE of these keys should be added as **Deploy keys** to any admixes repositories.
+                  | The deploy keys are not protected by a passphrase and can be a security risk. 
 
 3. A simple, very trivial  shell script that starts ssh-agent. This can be named anything you
    desire, simply source the script each time you start the container.  A name like
