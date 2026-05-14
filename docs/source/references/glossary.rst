@@ -14,7 +14,7 @@ This page includes a number of terms that we use in our documentation.
      a loose collection of  software related by science of applicability
      Currently we define the following categories:
 
-     - AI LEARNING
+     - AI-LEARNING
      - BIOTOOLS
      - CHEMISTRY
      - COMPILERS
