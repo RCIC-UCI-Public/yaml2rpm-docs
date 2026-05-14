@@ -17,10 +17,119 @@ Here we describe in details what they are.
    funcitonality, we keep all the initial *ruamel.yaml*  rules and naming conventions 
    intact and we do not change its API. 
 
+.. _admix_top_level:
+
+At the top level
+----------------
+
+``.ADMIXNAME.metadata``
+  The file naming schema is *.ADMIXNAME-metadata* where `ADMIXNAME` is the admix top-level directory
+  (and the admix git repository name).
+
+  This file provides information about the packages' distribution sources that are used
+  for the builds. All sources are stored in a publicly-accessible S3-bucket. Source tarballs
+  are added manually and then the admix metadata file is updated with a new SHA1 signature.  
+  When the command :command:`make download` is executed at the top level directory, the files
+  named in the metadata file are downloaded. Over the years, we have encountered source 
+  tarballs that become unavailable (or in extreme cases, changed by the original authors without updating versions).
+  This "cache" of source tarballs stored in an S3-compatible bucket freezes at the point-in-time 
+  when a particular software source was added to the admix.
+
+  The metadata file is ASCII and the format is as follows (one line per source
+  distribution, partial listing here):
+
+    .. code-block:: text
+
+       73d2447b5550e734f794b42ab7831349f993f0ff  sources/cmake-3.12.3.tar.gz 1tBH7jb4jynI8e6bMA05Cl2a4Q4AwNygS
+       b55d925ef2c28da4ef154a8b2e157951caf81125  sources/scons-3.1.1.tar.gz
+
+  The first field is the SHA1 sum checksum  of the distro file made with :command:`sha1sum`,
+  the second field provides destination directory and the downloaded file name. 
+
+  .. note::
+     You will see some lines in the metadata files with a third field. These were important when data was
+     stored in Google Drive instead of S3.  They remain for posterity, but are not used.
+
+``Makefile``
+  This is usually a very small standard file that includes one of the top
+  level Makefiles:
+
+  .. code-block:: make
+
+     # Copyright (c) 2000 - 2019 The Regents of the University of California.
+     # All rights reserved.
+     # This includes the Generic toplevel Makefile - most admixes should
+     # be able to use this.
+
+     include $(YAML2RPM_HOME)/sys/Makefile.toplevel
+
+  The included ``Makefile.toplevel`` is provided by the `yaml2rpm` RPM
+  and has all standard build-related targets suitable for nearly all of the admixes. This is one
+  example of "unavoidable code replication".
+
+``README.md``
+  Text file describing the admix and sometimes a few specific notes 
+  to explain the building.
+
+``.auto-changelog``
+  A standard template to automatically create CHANGELOG.md file.
+  
+``.git/``
+  Standard git repository directory for all the metadata.
+  
+``.gitignore``
+  Files that specify to git  what not to track.
+  
+``.rpms.ADMIXNAME``
+  The file naming schema is *.rpms.ADMIXNAME* where `ADMIXNAME` is the admix name (top-level directory).
+  This is a text file recording the sizes of built RPMs for the admix (partial
+  listing for gcc-admix):
+  
+    .. code-block:: bash
+    
+      92381715        gcc_11.2.0-11.2.0-2.x86_64.rpm
+      209354          gcc_11.2.0-annobin-10.54-2.x86_64.rpm
+      3246969         gcc_11.2.0-binutils-2.37-3.x86_64.rpm
+      3179054         gcc_11.2.0-binutils-bootstrap-2.37-3.x86_64.rpm
+      480445          gcc_11.2.0-gmp-6.2.1-2.x86_64.rpm
+      8087            gcc_11.2.0-module-11.2.0-4.x86_64.rpm
+      126123940       gcc_15.2.0-15.2.0-2.x86_64.rpm
+      321763          gcc_15.2.0-annobin-12.98-2.x86_64.rpm
+      7167773         gcc_15.2.0-binutils-2.45-3.x86_64.rpm
+      7084432         gcc_15.2.0-binutils-bootstrap-2.45-3.x86_64.rpm
+      427349          gcc_15.2.0-gmp-6.3.0-2.x86_64.rpm
+      8092            gcc_15.2.0-module-15.2.0-4.x86_64.rpm
+  
+  The file is initially generated via running at the top-level admix repo:
+
+    .. parsed-literal::
+       :command:`make -s admixdb > .rpms.ADMIXNAME` 
+    
+  This db file needs to be updated when addmix RPMS change:
+
+    * new RPMS are added
+    * some builds are done anew
+    * old RPMS are removed
+  
+``CHANGELOG.md``
+  A text file that is generated via running a command (provided by the nodejs
+  RPM) at the admix top-level directory.:
+
+    .. parsed-literal::
+       :command:`auto-changelog`
+  
+  This update is usually doen when we do big changes form one OS relase to
+  another or when there was a major change in the templates or yaml files. 
+
+.. _admix_yamlspecs:
+
+In yamlspecs/
+-------------
+
 .. _packages_yaml:
 
 packages.yaml
--------------
+~~~~~~~~~~~~~
 
 **Usage:**
   This file is required for every admix (except *admixbuilder*).
@@ -155,7 +264,7 @@ packages.yaml
 .. _versions_yaml:
 
 versions.yaml
--------------
+~~~~~~~~~~~~~
 
 **Usage**
   This file is required for every admix (except *admixbuilder*).
@@ -228,7 +337,7 @@ versions.yaml
 .. _sets:
 
 Set files
----------
+~~~~~~~~~
 
 The concepts of sets is very straightforward - a set of packages RPMs that are related to one another
 and should be built together.  Fundamentally, these are versions of software
@@ -330,5 +439,3 @@ sometimes specific versions names.  For example (from different admixes):
         ... 
         - "2024"
         - "2026"
-
-TODO
