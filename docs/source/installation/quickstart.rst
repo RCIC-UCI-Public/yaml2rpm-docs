@@ -9,6 +9,8 @@ Yaml2rpm is best built directly from the git repository.  Part of that build pro
 that can be installed on other machines. On a reasonable system with good network connectivity (or locally-mirrored
 repositories) it takes roughly 2 minutes to set up a system to build RPMS using yaml2rpm.
 
+.. _building_yaml2rpm:
+
 Building Yaml2rpm
 -----------------
 
@@ -50,6 +52,8 @@ scripts that were added by RPMs, then do the following:
       :command:`. /etc/profile.d/yaml2rpm.sh`
 
 Any subsequent container start from the same overlay will do sourcing automatically. 
+
+.. _building_first_rpm:
 
 First RPM Build 
 ---------------
