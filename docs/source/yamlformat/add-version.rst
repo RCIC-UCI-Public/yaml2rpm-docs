@@ -29,9 +29,8 @@ Vcftools is only referenced in the base set. One can use ``gen-definitions.py`` 
 as follows
 
   .. parsed-literal::
-
      :command:`gen-definitions.py --query=vendor_source  vcftools.yaml`
-     https://github.com/vcftools/vcftools/archive/v0.1.16.tar.gz
+     \https://github.com/vcftools/vcftools/archive/v0.1.16.tar.gz
 
 Open a browser and visit the git repository and see if there is an additional release.
 
@@ -95,19 +94,19 @@ the updated ``versions-2025.yaml`` file.
   .. parsed-literal::
 
      :command:`gen-definitions.py --versions=versions-2025.yaml --query=vendor_source  vcftools.yaml`
-     https://github.com/vcftools/vcftools/archive/v0.1.17.tar.gz
+     \https://github.com/vcftools/vcftools/archive/v0.1.17.tar.gz
 
 Verify that this a good web reference and then **download the source tarball**. 
 
   .. parsed-literal::
 
      :command:`make -s SET=2025 PKG=vcftools download`
-      --2026-05-12 10:59:12--  https://github.com/vcftools/vcftools/archive/v0.1.17.tar.gz
+      --2026-05-12 10:59:12--  \https://github.com/vcftools/vcftools/archive/v0.1.17.tar.gz
       Resolving github.com (github.com)... 140.82.116.4
       Connecting to github.com (github.com)|140.82.116.4|:443... connected.
       HTTP request sent, awaiting response... 302 Found
-      Location: https://codeload.github.com/vcftools/vcftools/tar.gz/refs/tags/v0.1.17 [following]
-      --2026-05-12 10:59:13--  https://codeload.github.com/vcftools/vcftools/tar.gz/refs/tags/v0.1.17
+      Location: \https://codeload.github.com/vcftools/vcftools/tar.gz/refs/tags/v0.1.17 [following]
+      --2026-05-12 10:59:13--  \https://codeload.github.com/vcftools/vcftools/tar.gz/refs/tags/v0.1.17
       Resolving codeload.github.com (codeload.github.com)... 140.82.116.10
       Connecting to codeload.github.com (codeload.github.com)|140.82.116.10|:443... connected.
       HTTP request sent, awaiting response... 200 OK
@@ -156,15 +155,15 @@ All commands below are done from the admix top-level directory.
 
 **2. Create the sha1sum**
 
-  Downloading all files in an admix references the ``<admix-name>.metadata`` file. 
-  To add the ha1sum of the latest tarball to the admix metadata file:
+  Downloading all source distribution files to the ``sources/`` in the admix references the ``<admix-name>.metadata`` file. 
+  To add the sha1sum of the latest tarball to the admix metadata file:
 
     .. parsed-literal::
        :command:`sha1sum sources/vcftools-0.1.17.tar.gz >> .biotools-admix.metadata`
 
 **3. Update the admix rpmdb**
 
-  To add the info about new RPMS to the existing admix rpmdb file:
+  To add the info about new RPMS to the existing admix RPM database file:
 
     .. parsed-literal::
        :command:`make -s admixdb`
