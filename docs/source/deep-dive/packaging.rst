@@ -4,7 +4,7 @@ Packaging
 =========
 
 This section is a deep dive into packaging. It's presented so that when things "go wrong", one has a fighting chance
-to understand and unwind the process of how a package is made. A ``<pkg>.yaml`` file in the ``yamlspecs`` 
+to understand and unwind btibb process of how a package is made. A ``<pkg>.yaml`` file in the ``yamlspecs`` 
 subdirectory of an admix is a very terse listing of what makes a particular package. Its contents revolve around:
 
   1. The name of the package
@@ -159,3 +159,103 @@ multiple departments at a research university.
 file + source tarball to RPM.
 
 .. |rpmb| replace:: :command:`rpmbuild`
+
+Key Makefiles
+-------------
+
+There are several generic/templated Makefiles that have different functions
+
+.. _dd_makefiles:
+
+  1. `Software Compilation <https://raw.githubusercontent.com/RCIC-UCI-Public/yaml2rpm/refs/heads/master/yamlspecs/builder/Makefile>`_  (yaml2rpm)
+  2. `Spec File Generation <https://raw.githubusercontent.com/RCIC-UCI-Public/yaml2rpm/refs/heads/master/core-tiny/src/devel/devel/etc/Rules-linux-centos.mk>`_ (rocks-devel)
+  3. `yamlspecs Makefile <https://raw.githubusercontent.com/RCIC-UCI-Public/yaml2rpm/refs/heads/master/yamlspecs/Makefile>`_ (yamlrpm)
+
+.. note::
+   * These are listed in the reverse order in which they are called when building a package. 
+   * They are listed in order of what a package developer really needs to know.
+
+Indeed, item 1 above is the most important as this is where the compilation and installation of software occurs.
+This is where the specifics of  "how to build a particular" piece of software defined in the yamlfile is 
+ultimately executed.
+
+The following are the key build and install snippets from the Software Compilation makefile
+
+.. parsed-literal::
+
+    # Usual build case:
+    #        The SRC tarball (which is most often the downloaded tar source, unchanged)
+    #        1. unpack the tarball
+    #        2. change into the source directory then
+    #             a. apply patches
+    #             b. apply any changes prior to configure step
+    #             c. configure the package
+    #             d. build the software
+    # Unusual build case:
+    #        1. There is no src tarball (often just some files that need installing and packaging)
+    #        2. Same as above (but definitions should override steps)
+    :blue:`build:`
+    	- $(CAT-COMPRESS) $(SRC_TARBALL) |  $(UNTAR)
+    	(							\\
+    		module purge; 					\\
+    		if [ "$(MODULES)" !=  "" ]; then module $(AUTOMODULE) load $(MODULES); fi;	\\
+    		[ $(DO_CD) == True ] && cd $(SRC_DIR);    	\\
+    		$(PATCH_METHOD) $(PATCH_ARGS) < ../$(PATCH_FILE);  		\\
+    		$(PRECONFIGURE);				\\
+    		$(CONFIGURE) $(CONFIGURE_ARGS);  		\\
+    		$(PKGMAKE) $(BUILDTARGET) ;			\\
+    		module purge; 					\\
+    	)
+    
+    :blue:`install::`
+    	(							\\
+    		module purge; 					\\
+    		if [ "$(MODULES)" !=  "" ]; then module $(AUTOMODULE) load $(MODULES); fi;	\\
+    		[ $(DO_CD) == True ] && cd $(SRC_DIR);		\\
+    		if [ ! -d $(ROOT)/$(PKGROOT) ]; then mkdir -p $(ROOT)/$(PKGROOT); fi; \\
+    		if [ "$(MAKEINSTALL)" == "" ]; then		\\
+    			$(MAKE) prefix=$(ROOT)$(PKGROOT) $(INSTALLTARGET);	\\
+    		else 						\\
+    			$(CUSTOM_MAKEINSTALL);				\\
+    		fi;						\\
+    		if [ "$(MODULENAME)" != "" -a "$(MODULESPATH)" != "" ]; then		\\
+    			mkdir -p $(ROOT)/$(MODULESPATH);     				\\
+    			$(INSTALL) -m 644 $(MODFILE_DIR)/modulefile $(ROOT)/$(MODULESPATH)/$(MODULENAME);  	\\
+    		fi;								\\
+    		if [ "$(INSTALLEXTRA)" != "" ]; then $(CUSTOM_INSTALLEXTRA); fi; \\
+    		module purge; 					\\
+    	)
+    
+* The generated spec file executes the **build** target in this Makefile when |rpmb| is exectuting
+  the ``%build`` stanza of the generate spec files
+
+* The generated spec file executes the **install** target in this Makefile when |rpmb| is executing the
+  ``%install`` stanza of the generated spec file
+
+It's instructive to look at the ``build`` target in describe in plain english the usual steps:
+
+ 1. It extracts (untar/unzip) the source tarball of the software (``src_tarball`` in the yamlfile)
+ 2. Purges all modules and then loads any modules required for compilation (``build.modules`` in the yamlfile)
+ 3. Changes into the directory extracted in step 1, unless told not to (``no_src_dir: True`` in the yamlfile)
+ 4. Applies any patches (``build.patchfile`` in the yamlfile)
+ 5. Configures the software (``build.configure`` and ``build.configure_args`` in the yamlfile)
+ 6. Compiles the software (``build.pkgmake`` and ``build.target`` in the yamlfile)
+ 7. Purges all modules
+
+This is the same ordering of "macro" steps the every package build undergoes. There are *defaults* for 
+every key in the yamlfile that covers the most common cases (including: configure is ``./configure``,
+no patchfile, no modules, pkgmake is ``make``)
+
+Likewise, the install can be examined in the same detail, but is left as an exercise.
+
+Role of gen-definitions.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:command:`gen-definitions.py` creates the file ``Definitions.mk`` in the  temporary build directory
+(:ref:`Item 3 <dd_makefiles>`).  
+
+.. important:: 
+   ``Definitions.mk`` defines the variables that are used *verbatim* in the  
+   :ref:`Software Compilation <dd_makefiles>` Makefile.
+
+
