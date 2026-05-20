@@ -43,7 +43,7 @@ At the top level
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Standard files and directories present in every admix as described in
-:ref:`what files are in yamlspecs <admixrepo_files_yamlspecs>`.
+:ref:`admix top level files <admix_top_level>`.
 
 .. _perl_admix_files_yamlspecs:
 
