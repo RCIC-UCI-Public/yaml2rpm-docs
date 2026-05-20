@@ -40,6 +40,7 @@
     color: #0061FF !important;
     /* background-color: #ffffff !important;  white background */
     /*border: 1px solid #e1e4e5 !important; */
+}
 
 /* for text */
 .underline {
@@ -59,4 +60,25 @@
 /* add a bit of padding after the image. Otherwise
    regular text is too close to the image bottom */
 img.addpadding {padding: 0.5em;}
+
+
+/* ==================== */
+/* ==== body links ==== */
+/* ==================== */
+
+/* all body links, not in the sidebar */
+.rst-content a {
+    color: var(--bluelight) !important;
+    text-decoration: underline !important;
+}
+
+/* hover state for body links */
+.rst-content a:hover {
+    color: #0000FF !important;
+}
+
+/* for every link hover in the documentation */
+a:hover {
+    text-decoration: underline; /* Optional: adds an underline on hover */
+}
 
