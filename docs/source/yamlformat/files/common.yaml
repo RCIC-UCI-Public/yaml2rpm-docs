@@ -1,0 +1,14 @@
+# Common definitions for foundation packages
+!include rcic-package.yaml
+---
+- versions: !include versions.yaml
+  release: "1"
+  build:
+    configure: ./configure --prefix={{root}}
+    configure_args:
+    modules:
+    target:
+  install:
+    makeinstall: $(MAKE) DESTDIR=$(ROOT) install
+  files:
+    -  "{{root}}"
