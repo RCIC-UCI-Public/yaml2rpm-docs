@@ -180,6 +180,8 @@ packages.yaml
     is empty. This will be the only variable that will need to be uniquely
     defined for each specific set. 
 
+.. _special_constructs:
+
 **Special constructs**
   There are two special constructs that we use when we need to do something
   different depending on the  variables values comparison.
