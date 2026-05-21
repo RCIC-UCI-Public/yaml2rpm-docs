@@ -17,16 +17,15 @@ Locate the Current Source
 -------------------------
 
 In the biotools admix, there are several sets. To determine which set(s) the software is currently referenced,
-simply ``grep`` all the set files.
+simply ``grep`` all the set files:
 
   .. parsed-literal::
-
      :command:`grep vcftools set*`
      set-base.yaml:  - vcftools
      set-base.yaml:  - vcftools-module
 
 Vcftools is only referenced in the base set. One can use ``gen-definitions.py`` to query the vendor source
-as follows
+as follows:
 
   .. parsed-literal::
      :command:`gen-definitions.py --query=vendor_source  vcftools.yaml`
@@ -89,14 +88,14 @@ Verify Changes
 --------------
 
 Now check that the updated vendor source resolves properly. Use ``gen-definitions.py``, but with
-the updated ``versions-2025.yaml`` file.
+the updated ``versions-2025.yaml`` file:
 
   .. parsed-literal::
 
      :command:`gen-definitions.py --versions=versions-2025.yaml --query=vendor_source  vcftools.yaml`
      \https://github.com/vcftools/vcftools/archive/v0.1.17.tar.gz
 
-Verify that this a good web reference and then **download the source tarball**. 
+Verify that this a good web reference and then **download the source tarball**:
 
   .. parsed-literal::
 
@@ -143,47 +142,43 @@ If everything works, memorialize all of the above into git.
 All commands below are done from the admix top-level directory. 
 
 **1. Upload the latest tarball into S3**
-
   To upload to S3 (for future builds), you must have *write* permissions on the remote S3 bucket. Place the tarball
   in the same location as all of the other biotools-admix tarballs. Rclone is a convenient way to do this.
-
   :red:`If and only if in RCIC and your rclone credentials are setup` the simplest way to upload:
 
-    .. parsed-literal::
-       :command:`cd sources
-       rclone --config=/import/rclone.conf copy .  aws:admix-sources/biotools-admix`
+  .. parsed-literal::
+     :command:`cd sources
+     rclone --config=/import/rclone.conf copy .  aws:admix-sources/biotools-admix`
 
 **2. Create the sha1sum**
-
   Downloading all source distribution files to the ``sources/`` in the admix references the ``<admix-name>.metadata`` file. 
   To add the sha1sum of the latest tarball to the admix metadata file:
 
-    .. parsed-literal::
-       :command:`sha1sum sources/vcftools-0.1.17.tar.gz >> .biotools-admix.metadata`
+  .. parsed-literal::
+     :command:`sha1sum sources/vcftools-0.1.17.tar.gz >> .biotools-admix.metadata`
 
 **3. Update the admix rpmdb**
-
   To add the info about new RPMS to the existing admix RPM database file:
 
-    .. parsed-literal::
-       :command:`make -s admixdb`
+  .. parsed-literal::
+     :command:`make -s admixdb`
 
   From the stdout get 2 lines for newly created vcftools RPMs and add them to
   the ``.rpms.biotools-admix`` file. Alternatively overwrite the file:
 
-    .. parsed-literal::
-       :command:`make -s admixdb > .rpms.biotools-admix`
+  .. parsed-literal::
+     :command:`make -s admixdb > .rpms.biotools-admix`
 
 **4. Commit changes to git**
-  There were changes in 4 files. 
+  There were changes in 4 files.:
 
-    .. parsed-literal::
-       :command:`git add .biotools-admix.metadata
-       git add .rpms.biotools-admix
-       git add yamlspecs/set-2025.yaml
-       git add yamlspecs/versions-2025.yaml
-       git commit
-       git push`
+  .. parsed-literal::
+     :command:`git add .biotools-admix.metadata
+     git add .rpms.biotools-admix
+     git add yamlspecs/set-2025.yaml
+     git add yamlspecs/versions-2025.yaml
+     git commit
+     git push`
 
 Other Verification
 ------------------
@@ -195,12 +190,12 @@ just the version.
   Look at the vcftools RPMS and see if their sizes seem rational. In this example, the later version is
   slightly larger than the original. Likely, the build is fine.
 
-    .. parsed-literal::
-       :command:`ls -l RPMS/x86_64/vcftools*`
-       -rw-r--r--. 1 root root 424527 May  8 03:56 RPMS/x86_64/vcftools_0.1.16-0.1.16-2.x86_64.rpm
-       -rw-r--r--. 1 root root   7681 May  8 03:55 RPMS/x86_64/vcftools_0.1.16-module-0.1.16-2.x86_64.rpm
-       -rw-r--r--. 1 root root 446793 May 12 11:03 RPMS/x86_64/vcftools_0.1.17-0.1.17-2.x86_64.rpm
-       -rw-r--r--. 1 root root   7683 May 12 11:03 RPMS/x86_64/vcftools_0.1.17-module-0.1.17-2.x86_64.rpm
+  .. parsed-literal::
+     :command:`ls -l RPMS/x86_64/vcftools*`
+     -rw-r--r--. 1 root root 424527 May  8 03:56 RPMS/x86_64/vcftools_0.1.16-0.1.16-2.x86_64.rpm
+     -rw-r--r--. 1 root root   7681 May  8 03:55 RPMS/x86_64/vcftools_0.1.16-module-0.1.16-2.x86_64.rpm
+     -rw-r--r--. 1 root root 446793 May 12 11:03 RPMS/x86_64/vcftools_0.1.17-0.1.17-2.x86_64.rpm
+     -rw-r--r--. 1 root root   7683 May 12 11:03 RPMS/x86_64/vcftools_0.1.17-module-0.1.17-2.x86_64.rpm
 
 **Check Manifest**
   This additional version is now part of the manifest for the biotools-admix
