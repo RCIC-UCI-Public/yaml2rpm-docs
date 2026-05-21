@@ -26,35 +26,64 @@ Highlighting a few flags that a developer of yaml-formatted package file would u
 
 **--versions**
   Shorthand notation **-V**.
-  This flag is needed when using **--query** or **--module** flags.
-  It tells the script to parse named versions file in place of ``versions.yaml``. For example, if a yaml file
-  has an :yvars:`!include versions.yaml` statement, the file named here will be included instead.
-  As some examples, refer to the :ref:`gcc admix layout <ov_gcc_admix>` for the files and layout of the admix.
+  This flag is needed when using **--query** or **--module** flags on  a yaml
+  file in a specific set.
+  This flag  tells the script to parse named versions file in place of regular ``versions.yaml``.
+  For example, if a yaml file has an :yvars:`!include versions.yaml` statement, the file named
+  here will be included instead.  As some examples, refer to the :ref:`gcc admix layout <ov_gcc_admix>`
+  for the files and layout of the admix.
 
 **--query**
   Shorthand notation **-q**.
-  For any key in the yaml file, print the final evaluation of the variable:
+  For any key in the yaml file, print the final evaluation of the variable.
+  Need to provide **--versions** flag if checking for a specific set.
 
-  .. parsed-literal::
-     :blue:`gen-definitions.py -q gcc versions-gcc8.yaml`
-     8.4.0
-     :blue:`gen-definitions.py --query=annobin versions-gcc8.yaml`
-     10.54
-     :blue:`gen-definitions.py -V versions-gcc15.yaml --query=gcc_version gcc.yaml`
-     15.2.0
-     :blue:`gen-definitions.py -V versions-gcc11.yaml --query=gcc_version gcc.yaml`
-     1.2.0
-     :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=gcc_version gcc.yaml`
-     8.4.0
-     :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=pkgname gmp.yaml`
-     gcc_8.4.0-gmp
-     :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=pkgname gmp.yaml`
-     gcc_11.2.0-gmp
+  What is *gcc* version used for set *gcc8* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py -q gcc versions-gcc8.yaml`
+       8.4.0
+
+  What is *annobin* version used for set *gcc8* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py --query=annobin versions-gcc8.yaml`
+       10.54
+
+  What is *gcc_version* in ``gcc.yaml`` for set *gcc15* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py -V versions-gcc15.yaml --query=gcc_version gcc.yaml`
+       15.2.0
+
+  What is *gcc_version* in ``gcc.yaml`` for set *gcc11* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py -V versions-gcc11.yaml --query=gcc_version gcc.yaml`
+       11.2.0
+
+  What is *gcc_version* in ``gcc.yaml`` for set *gcc8* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=gcc_version gcc.yaml`
+       8.4.0
+
+  What is resulting RPM name for package *gmp* for set *gcc8* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py --versions=versions-gcc8.yaml --query=pkgname gmp.yaml`
+       gcc_8.4.0-gmp
+
+  What is resulting RPM name for package *gmp* for set *gcc11* ?
+
+    .. parsed-literal::
+       :blue:`gen-definitions.py --versions=versions-gcc11.yaml --query=pkgname gmp.yaml`
+       gcc_11.2.0-gmp
 
   .. note::
      Notice the naming of the gmp packages when ``pkgname`` is the query argument.  This is standard
      prefixing (e.g. gcc_8.4.0) to label the gmp package relative to the compiler it was built with.
-     Both of the gmp packages above can be installed on an end system without conflict
+     Both of the gmp packages above can be installed on an end system without conflict.
 
 **--module**
   Shorthand notation **-m**. 
