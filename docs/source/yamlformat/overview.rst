@@ -13,13 +13,6 @@ Here we describe the general structure and the common files and directories.
 Almost all admixes follow the same layout structure described in this section.
 Specific info for more complex builds can be found in the *COMPLEX ADMIXES*.
 
-.. raw:: html
-
-   <style> .blue {color:mediumblue} </style>
-
-.. role:: blue
-
-
 .. _ov_gcc_admix:
 
 .. _admixrepo_structure:
@@ -31,48 +24,22 @@ Here we show the admix structure on a real example of **gcc-admix**.
 This admix is key to many other software packages that require specific versions of gcc.
 
 After cloning of the admix git repo the directory structure is
-
-.. code-block:: console
-
-   git clone https://github.com/RCIC-UCI-Public/gcc-admix.git
+  .. parsed-literal::
+     :command:`git clone https://github.com/RCIC-UCI-Public/gcc-admix.git`
 
 After cloning the git repo, the directory structure is:
 
-|  **gcc-admix/**
-|      .gcc-admix.metadata
-|      .rpms.gcc-admix
-|      **.git/**
-|      .gitignore
-|      CHANGELOG.md
-|      Makefile
-|      README.md
-|      **yamlspecs/**
-|             Makefile
-|             annobin-gcc15.yaml
-|             annobin.yaml
-|             binutils-bootstrap.yaml
-|             binutils.yaml
-|             common.yaml
-|             gcc-module.yaml
-|             gcc-versions.yaml
-|             gcc.yaml
-|             gmp.yaml
-|             isl.yaml
-|             libiconv-1.16.patch
-|             libiconv.yaml
-|             mpc.yaml
-|             mpfr.yaml
-|             packages.yaml
-|             set-gcc11.yaml
-|             set-gcc15.yaml
-|             set-gcc6.yaml
-|             set-gcc8.yaml
-|             versions-gcc11.yaml
-|             versions-gcc15.yaml
-|             versions-gcc6.yaml
-|             versions-gcc8.yaml
-|             versions.yaml
-
+.. parsed-literal:: 
+   **gcc-admix/**
+     .auto-changelog      .git        .rpms.gcc-admix  Makefile   yamlspecs
+     .gcc-admix.metadata  .gitignore  CHANGELOG.md     README.md  
+     **yamlspecs/**
+        Makefile                gcc-module.yaml     libiconv.yaml  set-gcc6.yaml       versions-gcc8.yaml
+        annobin-gcc15.yaml      gcc-versions.yaml   mpc.yaml       set-gcc8.yaml       versions.yaml
+        annobin.yaml            gcc.yaml            mpfr.yaml      table
+        binutils-bootstrap.yaml gmp.yaml            packages.yaml  versions-gcc11.yaml
+        binutils.yaml           isl.yaml            set-gcc11.yaml versions-gcc15.yaml
+        common.yaml             libiconv-1.16.patch set-gcc15.yaml versions-gcc6.yaml
 
 .. _admixrepo_files:
 
@@ -192,10 +159,11 @@ Files in yamlspecs/
 ~~~~~~~~~~~~~~~~~~~
 
 This directory has specific packages yaml files that are used for creating RPMs.
+All files with extensions ``.yaml`` are in Yaml format.
 The first three files must always be present in any admix with these exact names:
 
-``packages.yaml`` (required) 
-  Yaml format, describes specifics of this admix build.
+``packages.yaml`` 
+  Required. Describes specifics of this admix build.
 
   .. literalinclude:: files/gcc-admix-packages.yaml
       :language: yaml
@@ -219,16 +187,13 @@ The first three files must always be present in any admix with these exact names
     installation of these RPMs.
   - :yvars:`sets` - lists the :ref:`logical sets<ov_sets>` of related packages that are built (and installed) together. This
     admix defines 4 sets.
+  - :yvars:`!ifeq`
+    See :ref:`special_constructs` for the syntax explanation.
+    In this case, if *os_release* defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
+    other os release will add the *gcc-gdb-plugin* system package.
 
-  .. note::
-     | What does :yvars:`!ifeq "{{site.os_release}},9,,gcc-gdb-plugin"` mean?
-     | This is a simple, *if-else* construct to compare two variables and choose the outcome 
-     | based on the comparison result as :yvars:`"var1, var2, outcome-if-true, outcome-if-false"`.
-     | In this case, if os_release defined in ``site.yaml`` is 9, no additional system package is added prior to building gcc. Every
-       other os release will add the *gcc-gdb-plugin* system package.
-
-``versions.yaml`` (required)
-  Yaml format, usually contains packages names and versions.
+``versions.yaml``
+  Required. Usually contains packages names and versions.
   
   .. literalinclude:: files/versions.yaml
      :language: yaml
@@ -241,8 +206,8 @@ The first three files must always be present in any admix with these exact names
      This ``versions.yaml`` does not define the version of gcc. In this admix, the version of gcc is 
      defined in corresponding ``versions-gcc<n>.yaml`` files.
   
-``Makefile`` (required)
-  This is usually a very small standard file that includes one of the top level Makefiles:
+``Makefile``
+  Required. This is usually a very small standard file that includes one of the top level Makefiles:
   
   .. code-block:: make
   
@@ -255,9 +220,6 @@ The first three files must always be present in any admix with these exact names
 
 .. _ov_gcc:
 .. _ov_gcc_module:
-
-Other files
-^^^^^^^^^^^
 
 ``gcc.yaml``
   This file describes how to build a GNU GCC gcc compiler package that includes all
@@ -340,7 +302,7 @@ Layout after build
 
 After the build commands repository structure changes and includes:
 
-  **BUILD/  RPMS/  SOURCES/  SPECS/  SRPMS/**
+  ``BUILD/  RPMS/  SOURCES/  SPECS/  SRPMS/``
 
 These are standard directories created during the :command:`rpmbuild` command. The
 command is run via a Makefile target and all prerequisites directory structure
@@ -350,17 +312,15 @@ In addition, when installing RPMS locally on a development machine for a
 verification and testing the following directories are created at the top-level of the admix repo
 to hold the local yum repository with created RPMS:
 
-  **cache/  localrepo/  yum.conf  yum.repos.d/**
+  ``cache/  localrepo/  yum.conf  yum.repos.d/``
 
 These  files and directories provide a local to admix yum repository from
 which built RPMS can be installed.
 
 To create a local admix yum repo at the top admix level:
-
   .. parsed-literal:: 
      :command:`make clean createlocalrepo`
 
 To install all built RPMs for the admix:
-
   .. parsed-literal:: 
      :command:`make install-admix`
