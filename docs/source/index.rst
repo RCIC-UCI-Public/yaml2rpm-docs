@@ -6,7 +6,7 @@ YAML2RPM Documentation
    This project is under active development.
 
 .. warning::
-   The documentaion pages are currently a template
+   The documentation pages are currently a template
 
 .. toctree::
    :glob:

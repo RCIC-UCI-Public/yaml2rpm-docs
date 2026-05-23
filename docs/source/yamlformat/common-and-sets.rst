@@ -14,7 +14,7 @@ Here we describe in details what they are.
 .. note:: All yaml files are in yaml format and in our custom parser
    we use standard *Python ruamel.yaml* library for parsing these files. 
    While we added a few extensions to our :ref:`parser <gen-definitions>`  to enable desired
-   funcitonality, we keep all the initial *ruamel.yaml*  rules and naming conventions 
+   functionality, we keep all the initial *ruamel.yaml*  rules and naming conventions 
    intact and we do not change its API. 
 
 .. _admix_top_level:
@@ -118,7 +118,7 @@ At the top level
     .. parsed-literal::
        :command:`auto-changelog`
   
-  This update is usually doen when we do big changes form one OS relase to
+  This update is usually done when we do big changes form one OS release to
   another or when there was a major change in the templates or yaml files. 
 
 .. _admix_yamlspecs:
@@ -300,7 +300,7 @@ versions.yaml
 
   .. note:: Sometimes key-values pairs are not sufficient, in these cases we use *dictionary* values.
 
-  A few examples of dictionary variables from different ``verions.yaml`` files:
+  A few examples of dictionary variables from different ``versions.yaml`` files:
 
   - From `biotools-admix repository <https://github.com/RCIC-UCI-Public/biotools-admix/>`_.
     Specify a compiler and its version:

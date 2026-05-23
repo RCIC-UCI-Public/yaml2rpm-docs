@@ -70,12 +70,12 @@ This page includes a number of terms that we use in our documentation.
      whole expression is val1 otherwise the result is val2`.
 
    yaml variable include 
-     An extension to the standard yaml processing. Used to includd
+     An extension to the standard yaml processing. Used to include
      the contents of another yaml file into one variable: :yvars:`site: !include name.yaml`
 
      Then the included file variables can be accessed via their names as :yvars:`{{site.VarName}}`.
 
    yaml2rpm home
-      Top level directory wher all support files for YAMKL2RPM build are
+      Top level directory where all support files for YAML2RPM build are
       installed. Currently set to **/opt/rcic**.
 

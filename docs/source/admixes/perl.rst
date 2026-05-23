@@ -167,7 +167,7 @@ create circular references during the build.
     specified in the included package yaml file (if exists there).
     We can increase the release when some changes are done to the yaml file
     so that when a new RPM is created the release is updated. This allows old and new RPMs
-    releases to be present in the yum repo without a conflict and yum will use the latest availalbe for
+    releases to be present in the yum repo without a conflict and yum will use the latest available for
     the installation or for the update when requested.
 
 .. _perl_admix_makefile:

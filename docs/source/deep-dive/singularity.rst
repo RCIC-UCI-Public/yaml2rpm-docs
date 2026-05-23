@@ -88,7 +88,7 @@ Practical Modifications after first boot
 If you have followed the above to build and start the container, it's useful to add some files to
 to ``${HOME}/import`` directory on the physical system and modify some yum repo definitions.
 
-There are a number of items that we routinely want available when operating withing the container's file
+There are a number of items that we routinely want available when operating within the container's file
 system space. The usual mode is to create, on the physical system, the directory ``${HOME}/import``.
 Inspect the alias above, and you will see that the contents of this directory or made available to every container
 started. 

@@ -299,7 +299,7 @@ Both paths are set in a few files in this admix ``yamlspecs/``.
   Provides module setup files defining where to look for modules, what
   commands to execute for user shell, what additional module paths are handled by
   these scripts and their location.  RPM installs environment scripts in 
-  ``/etcc/profile.d/`` and files in  ``/opt/rcic/Modules``.
+  ``/etc/profile.d/`` and files in  ``/opt/rcic/Modules``.
 
 **rcic-module-support**
   Provides support and common code for generated environment modules

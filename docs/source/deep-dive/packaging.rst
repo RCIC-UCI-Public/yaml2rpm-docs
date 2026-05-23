@@ -24,7 +24,7 @@ A ``<pkg>.yaml`` for software that follows this pattern needs only specify the c
 source tarball for code and directory for final installation.
 
 .. tip::
-   Yaml2rpm uses several "transformations" to create a directory infrastucture and rpm spec file so that |rpmb|
+   Yaml2rpm uses several "transformations" to create a directory infrastructure and rpm spec file so that |rpmb|
    can successfully create the final rpm package
 
 The next sections provide some detail of the transformations and how the build process shows up on the file system.
@@ -226,7 +226,7 @@ The following are the key build and install snippets from the Software Compilati
     		module purge; 					\\
     	)
     
-* The generated spec file executes the **build** target in this Makefile when |rpmb| is exectuting
+* The generated spec file executes the **build** target in this Makefile when |rpmb| is executing
   the ``%build`` stanza of the generate spec files
 
 * The generated spec file executes the **install** target in this Makefile when |rpmb| is executing the

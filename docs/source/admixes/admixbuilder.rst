@@ -85,7 +85,7 @@ Files
      No dependencies found
 
 
-  For ``trf`` package, theere are dependencies and this all dependent packages
+  For ``trf`` package, there are dependencies and this all dependent packages
   that will require a rebuilt are listed:
 
   .. code-block:: bash

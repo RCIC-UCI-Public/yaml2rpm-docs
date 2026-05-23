@@ -116,7 +116,7 @@ create circular references during the build.
   Most variables are standard and are described in :red:`TODO ref`.
   The specific variables are as follows:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
+  - include statements specify template files to include when parsing this yaml file.
     :red:`TODO add reference`
 
   - :yvars:`tarsources`: specifies a combined sources file to use when
@@ -140,11 +140,11 @@ create circular references during the build.
 
   The variables are:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
+  - include statements specify template files to include when parsing this yaml file.
 
     - :yvars:`!include python.yaml` -  specifies a package file to include when parsing this file.
       Each package module file always includes the package yaml file to get needed package definitions.
-    - :yvars:`!include rcic-module.yaml` - specifies a tempalte to include when parsing this file.
+    - :yvars:`!include rcic-module.yaml` - specifies a template to include when parsing this file.
       The ``rcic-module.yaml`` is a default template file that defines generic variables for most module files.
 
       :red:`TODO add reference to this file and describe it in full`
@@ -182,7 +182,7 @@ as an argument**, for example:
   .. literalinclude:: files/R4-admix-common.yaml
      :language: yaml
 
-  Here we define all the common varialbes that are reused for every package
+  Here we define all the common variables that are reused for every package
   and others that can be overwritten (notably :yvars:`requires`) in a given package yaml file when needed.
 
 | ``rstudio.yaml`` 
@@ -462,8 +462,8 @@ to the existing set for R 4.5.2.
    as was found by :command:`deps.R`). 
 
    Check these PKG names in the ``set-452.yaml``. All but two new modules names  are
-   present. These means we already have yaml files and source distibutions for the
-   modules from the previous execution of initialy building set for this R version.
+   present. These means we already have yaml files and source distributions for the
+   modules from the previous execution of initially building set for this R version.
 
 #. The next step is to create ``buildorder`` file: 
 
@@ -717,7 +717,7 @@ to the existing set for R 4.5.2.
 
    
    Here, the first ocmmand created a **local** yum repo for this admix 
-   and the seond installs RPM from this local repo.
+   and the second installs RPM from this local repo.
 
    In a similar fashion build and install the second new module:
 
@@ -815,7 +815,7 @@ As an example we show how we built a set for R v.4.5.2.
       :command:`module load R/4.5.2
       R`
 
-   Note, there is a new direcotry ``00STAGE452`` created in ``yamlspecs/``. 
+   Note, there is a new directory ``00STAGE452`` created in ``yamlspecs/``. 
    This is specific to builds for this set. A separation into build directories
    allows us to build sets in parallel and do not overwrite yaml files for
    different sets and to avoid other temporary files creation collosions.
@@ -844,12 +844,12 @@ As an example we show how we built a set for R v.4.5.2.
 
    A few files are generated:
 
-     - ``buildorder`` lists in what ordert order packages should be made in relation to each other.
+     - ``buildorder`` lists in what order packages should be made in relation to each other.
      - ``outversions.yaml`` lists the versions for the packages.
      -  yaml files for all packages.
 
-   .. note::  When ``depend.py`` is run it will check for the presense of
-      *NAME.yaml.apend* files and append them to the created NAME.yaml files. 
+   .. note::  When ``depend.py`` is run it will check for the presence of
+      *NAME.yaml.append* files and append them to the created NAME.yaml files. 
       The *append* files are already known (from previous versions builds)
       additions to the build process for the respective yaml package file.
 
@@ -910,7 +910,7 @@ As an example we show how we built a set for R v.4.5.2.
    .. note:: We don't need to rebuild already build packages, so temporarily one
       can comment out entries for :yvars:`bootstrap0` in the set file.
       This will give a bit of a speedup as building R itself takes long time. 
-      Remember to uncomment after the buidl is done.
+      Remember to uncomment after the build is done.
 
    The build will echo on the stdout commands and their outputs.
    It will build and install RPMS for modules **in the order listed listed in the set file**.
@@ -927,7 +927,7 @@ As an example we show how we built a set for R v.4.5.2.
    - update ``s2.yaml`` file to include dependency on *abseil-cpp*.
    - update ``set-452.yaml`` and ``versions-452.yaml``  files to include *abseil-cpp*
 
-   .. warning:: Rerun the build RPMs untill all are built. 
+   .. warning:: Rerun the build RPMs until all are built. 
       This may take a few iterations for a new set. 
 
    If there are no errors from RPM installation, the package dependencies are

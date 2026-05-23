@@ -109,12 +109,12 @@ Most of the variables in this file are standard
   Most variables are standard and are described in :red:`TODO ref`.
   The specific variables are as follows:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
-    These templates define common variables that are neeed in all builds and
-    using the include directive simplifies the comon code reuse and minimizes
+  - include statements specify template files to include when parsing this yaml file.
+    These templates define common variables that are needed in all builds and
+    using the include directive simplifies the common code reuse and minimizes
     the overall code footprint.
 
-    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` tempalte
+    - :yvars:`!include rcic-package.yaml` -  include ``rcic-package.yaml`` template
       file that defines defaults for the variables used during the build.
 
       :red:`TODO add reference to this file and describe it in full`
@@ -124,8 +124,8 @@ Most of the variables in this file are standard
 
       :red:`TODO add reference to this file and describe it in full`
   - :yvars:`family_version`, :yvars:`major_version`,
-    :yvars:`unique_opts` - are set from values defined in corresonding versions file. 
-    They define values specific to a given Pytohn version used for a build.
+    :yvars:`unique_opts` - are set from values defined in corresponding versions file. 
+    They define values specific to a given Python version used for a build.
 
   - :yvars:`rpmAutoReqProv` - here we overwrite what is defined as a default
     in the included ``rpm.yaml`` file. Set to **no** means there will be no
@@ -149,11 +149,11 @@ Most of the variables in this file are standard
 
   The variables are:
 
-  - include statements specify tempalte files to include when parsing this yaml file.
+  - include statements specify template files to include when parsing this yaml file.
 
     - :yvars:`!include python.yaml` -  specifies a package file to include when parsing this file.
       Each package module file always includes the package yaml file to get needed package definitions.
-    - :yvars:`!include rcic-module.yaml` - specifies a tempalte to include when parsing this file.
+    - :yvars:`!include rcic-module.yaml` - specifies a template to include when parsing this file.
       The ``rcic-module.yaml`` is a default template file that defines generic variables for most module files.
 
       :red:`TODO add reference to this file and describe it in full`
@@ -183,7 +183,7 @@ Most of the variables in this file are standard
   .. literalinclude:: files/python-admix-common.yaml
       :language: yaml
 
-  Here we define all the common varialbes that are reused for every package
+  Here we define all the common variables that are reused for every package
 
   - :yvars:`buildtype`  - a value is defined for each version of Python in its
     versions file.  Depending on what is in versions file, either
@@ -195,7 +195,7 @@ Most of the variables in this file are standard
   - :yvars:`install_setup`: build a package using ``python ./setup.py install --root ...``
     (for Python versions up to 3.10.2).
 
-  - :yvars:`pymod_requires` - an empty settting. This provodes a flexible way
+  - :yvars:`pymod_requires` - an empty setting. This provides a flexible way
     to override in a specific yaml file if needed.
 
   - :yvars:`build` and :yvars:`install` define build and install commands to be used.

@@ -14,7 +14,7 @@ count (e.g., R).
 runparallel
 ~~~~~~~~~~~
 
-The ``runparallel`` python script can excute multiple processes in parallel while prefixing the standard output of
+The ``runparallel`` python script can execute multiple processes in parallel while prefixing the standard output of
 each process. The admixbuilder git repository contains a script called ``superbuild.sh`` that will clone, build,
 and install admixes in a specific order.  It builds the admixes in groups where the admixes in each group
 can be built simultaneously. The groups are then in built in order. Superbuild.sh is fast (but not necessarily
