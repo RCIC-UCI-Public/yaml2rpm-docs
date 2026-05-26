@@ -1,7 +1,7 @@
 .. _admix_common:
 
-Admix Common Files and Sets
-===========================
+Admix Standard Files and Sets
+=============================
 
 **Table of contents:**
 
