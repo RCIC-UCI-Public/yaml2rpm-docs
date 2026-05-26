@@ -167,7 +167,7 @@ For the above ``ucx.yaml`` the ``ucx-module.yaml`` is:
       A special construct. Used as is.
       This single line allows to inherit all the variables from the included
       file and tell to use what is defined under the ``*ModuleCompiler`` anchor.
-      This is for the module built with compiler specs, for example a module
+      This is used for the modules built with compiler specs, for example a module
       ``ucx/1.12.0/gcc.system`` tells us that ucx software version 1.12.0 was
       compiled with the OS-installed GCC compiler.
     :yvars:`<<: *ModuleCompilerMpi` 
@@ -192,7 +192,7 @@ For the above ``ucx.yaml`` the ``ucx-module.yaml`` is:
   :yvars:`category`
     Defines a logical category name to assign this module to.
 
-A very terse example for ``bioconda-module.yaml``
+A very terse example for a simple module file ``bioconda-module.yaml``
 from `bioconda-admix repository <https://github.com/RCIC-UCI-Public/bioconda-admix/>`_:
 
   .. code-block:: yaml
@@ -204,7 +204,7 @@ from `bioconda-admix repository <https://github.com/RCIC-UCI-Public/bioconda-adm
        category: LANGUAGES
 
   For this, all definitions are taken from the included files. Only a couple
-  of needed variables are defined here.
+  of required variables are defined here.
 
 .. _category:
 
@@ -216,7 +216,7 @@ They correspond to the paths we we install RCIC-defined software environment mod
 
 Their names  will be added to the :tt:`RCICMODULEPATH`
 environment variable which is then added to :tt:`MODULEPATH`. 
-When the modules RPMs are installed user automatically have access to them all.
+When the modules RPMs are installed users automatically have access to them all.
 
 We define categories in ``rcicmodulespath`` file that is installed by ``yaml2rpm`` RPM.
 The names can be either groups of common tools (compilers) or software for a
@@ -244,8 +244,11 @@ Common files
 ------------
 
 In any admix there can be software packages that share some build or install
-options. Instead of rewriting these for multiple files we create so called
-common files and then include them into package yaml files. 
+options. Instead of rewriting these for multiple files we create 
+common files and then include them into package yaml files. The naming
+convention is ``common.yaml``  but it can vary depending on what makes
+logical sense for a set of files that would include it in the specific admix
+(for example ``pycommon.yaml`` in *chemistry-admix*).
 
 For example, in  `buildtools-admix repository <https://github.com/RCIC-UCI-Public/buildtools-admix/>`_
 we create ``common.yaml`` and then include it in respective packages files
@@ -254,7 +257,7 @@ where needed. The contents of this ``common.yaml``:
   .. literalinclude:: files/common.yaml
      :language: yaml
 
-The ``curl.yaml`` then can use the above definitions if it include this file:
+The ``curl.yaml`` then can use the above definitions when it includes this file:
 
   .. literalinclude:: files/curl.yaml
      :language: yaml
