@@ -25,6 +25,7 @@ YAML2RPM Documentation
 
    installation/requirements
    installation/quickstart
+   installation/next
 
 .. toctree::
    :maxdepth: 1
