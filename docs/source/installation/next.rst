@@ -18,7 +18,7 @@ For step by step build:
       :command:`cd /export/repositories
       git clone https://github.com/RCIC-UCI-Public/admixbuilder`
 
-2. If working on a newer OS will have to clone and build admixes one by one
+2. Will have to clone and build admixes one by one
    in order described in ``admixbuidler/buildorder``. At this point already have
    *yaml2rpm* built, the next admix is *buildtools-admix*:
 
@@ -28,9 +28,9 @@ For step by step build:
        cd buildtools-admix
        make buildall &> out &`
 
-   Check the output and resulting RPMs. If there are errors need to figure
-   out what RPM had problems and apply fixes, then uninstall empty or bad RPMs
-   (see list of built RPMS in ``RPMS/``)
+   Check the output and resulting RPMs. If there are errors, need to figure
+   out what RPMs had problems and waht they are and apply fixes. Then uninstall
+   empty or bad RPMs (see list of built RPMS in ``RPMS/``)
    and restart the *buildall* target anew until all RPMs are build and valid. 
 
 3. Install the admix RPMs, at the top level of the repo do:
@@ -39,4 +39,3 @@ For step by step build:
        :command:`make install-admix YES=-y`
 
 4.  Proceed with building the next admix.
-
