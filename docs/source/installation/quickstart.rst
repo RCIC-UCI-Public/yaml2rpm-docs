@@ -122,12 +122,20 @@ that happen. The first is adding via ``yum`` OS-supplied packages that are requi
         - nothing provides curl_7.81.0 needed by curl_7.81.0-module-7.81.0-1.x86_64 from @commandline
       (try to add '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
 
-#. Create local repo.
+#. Install created RPMs
 
-   All admixes have a *createlocalrepo* make target when executed from the top-level of the admix. 
+   **Create local yum repo**
+
+   All admixes have a *createlocalrepo* make target when executed from the top-level of the admix.:
+
+   .. parsed-literal::
+      :command:`make clean`
+      :command:`make createlocalrepo`
+
+   **Install RPMs**
+
    This can followed by a yum install. When both the curl and the curl-module
    RPMs are available in a local (to this admix) yum repository, the dependency will be resolved:
 
    .. parsed-literal::
-      :command:`make createlocalrepo
-      yum -c yum.conf install curl_7.81.0-module`
+      :command:`yum -c yum.conf install curl_7.81.0-module`
