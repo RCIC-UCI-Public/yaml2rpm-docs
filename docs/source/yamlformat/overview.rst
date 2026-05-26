@@ -7,7 +7,8 @@ General layout
    :local:
 
 
-All admix repositories are stored in our public github on https://github.com/RCIC-UCI-Public
+All admix repositories are stored in our public github on https://github.com/RCIC-UCI-Public.
+See the :ref:`available admixes list <repolist>`.
 
 Here we describe the general structure and the common files and directories.
 Almost all admixes follow the same layout structure described in this section.

@@ -64,5 +64,6 @@ YAML2RPM Documentation
    :numbered:
    :caption: Reference
 
+   references/repo-list
    references/glossary
    references/changelog
