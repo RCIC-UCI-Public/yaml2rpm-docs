@@ -1,5 +1,6 @@
 # Common definitions for foundation packages
 !include rcic-package.yaml
+!include rpm.yaml
 ---
 - versions: !include versions.yaml
   release: "1"

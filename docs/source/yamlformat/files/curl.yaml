@@ -1,5 +1,4 @@
 !include common.yaml
-!include rpm.yaml
 ---
 - package: curl
   name: curl
