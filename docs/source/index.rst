@@ -50,6 +50,7 @@ YAML2RPM Documentation
    admixes/perl
    admixes/python
    admixes/R4
+   admixes/protected
 
 .. toctree::
    :maxdepth: 1
