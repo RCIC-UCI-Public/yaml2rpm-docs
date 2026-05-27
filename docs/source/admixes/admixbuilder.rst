@@ -1,7 +1,7 @@
 .. _admixbuilder:
 
-Admixbuilder
-=============
+admixbuilder-admix
+==================
 
 High-level builder for UCI Admix collection.
 

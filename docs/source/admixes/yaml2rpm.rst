@@ -1,6 +1,6 @@
 .. _yaml2rpm:
 
-YAML2RPM
+yaml2rpm
 ========
 
 .. contents::

@@ -1,7 +1,7 @@
 .. _R4_admix:
 
-R4
-===
+R4-admix
+========
 
 **Table of contents:**
 

@@ -1,7 +1,7 @@
 .. _perl_admix:
 
-Perl
-=====
+perl-admix
+==========
 
 **Table of contents:**
 

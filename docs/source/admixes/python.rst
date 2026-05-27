@@ -1,7 +1,7 @@
 .. _python_admix:
 
-Python
-======
+python-admix
+============
 
 **Table of contents:**
 
