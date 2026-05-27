@@ -156,6 +156,7 @@ from the resulting RPMS.
   In order to use it  the following is added to the ``qe.yaml``:
 
     .. code-block:: yaml
+
        addfile:
           - filter-requires-{{name}}.sh
 
