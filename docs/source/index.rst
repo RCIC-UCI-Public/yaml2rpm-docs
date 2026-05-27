@@ -44,6 +44,7 @@ YAML2RPM Documentation
    :numbered:
    :caption: Complex Admixes
 
+   admixes/intro
    admixes/yaml2rpm
    admixes/admixbuilder
    admixes/gcc
