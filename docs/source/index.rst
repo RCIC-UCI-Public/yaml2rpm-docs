@@ -35,7 +35,7 @@ YAML2RPM Documentation
    yamlformat/overview
    yamlformat/yaml-package
    yamlformat/common-and-sets
-   yamlformat/rpm-packaging-directives
+   yamlformat/include-templates
    yamlformat/add-version
    yamlformat/gen-definitions
 
