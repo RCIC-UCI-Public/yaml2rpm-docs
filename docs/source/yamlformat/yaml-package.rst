@@ -46,6 +46,7 @@ Some variable here are standard for all, others are software specific.
       - Specific common files defined for an admix.
         These common files in turn would include ``rcic-packages.yaml``.
       - ``rpm.yaml`` a template that defines variables for RPM specs. 
+        See :ref:`rpm.yaml` for details.
 
   :yvars:`package`
     A short package name description. Very short usually one-two words. 
@@ -69,7 +70,7 @@ Some variable here are standard for all, others are software specific.
     
   :yvars:`versions`
     Include statement specifies what versions file to include when parsing.
-    Once included the variables defined there become available via :yvars:`versions.VarName`.
+    Once included the variables defined there become available via :yvars:`{{versions.VarName}}`.
 
   :yvars:`version`
     The version of the package. 
@@ -85,14 +86,13 @@ Some variable here are standard for all, others are software specific.
   :yvars:`compiler_version`
     Defines a compiler version to use.
   :yvars:`description`
-    A description that is passed  into the RPM and into the module file (if
-    module is present). 
+    A description that is passed  into the RPM and into the environment module file (if present). 
   :yvars:`shortdescription`
     Similar to :yvars:`description` but more concise. 
-    If absent then :yvars:`description` is used.
+    If absent then :yvars:`description` is used by default.
   :yvars:`addfile`
     If present, defines  what additional files are needed for the build. Sometimes these
-    are patches or filter scripts. They all must exists at the same directory
+    are patches or filter scripts. They must exists at the same directory
     level as the package yaml file.
   :yvars:`build`
     A dictionary variable  that defines build specifics via its key-value pairs.  
@@ -112,15 +112,15 @@ Some variable here are standard for all, others are software specific.
 
 **Specific  variables**
   These variables define setting that are specific to a single  software package.
-  It defines special cases for the configure, compile and install or anything
-  else that is needed during these steps. This in a way an extension to the
+  They define special cases for the configure, compile and install or anything
+  else that is needed during these steps. This is an extension to the
   standard variables. For the ``ucx.yaml`` above:
   
   :yvars:`add_config_args`
     Defines specific configuration options only for specific *ucx* versions. 
   :yvars:`opts`
     Gets set to the value of above variable only for certain *ucx* versions.
-    Then when used in :yvars:`build.configure_args` it is either empty for
+    Then when used in :yvars:`{{build.configure_args}}` it is either empty for
     some versions and set to :yvars:`add_config_args` for others.
 
   Additional simple or dictionary variables  can be added as needed.
@@ -136,7 +136,21 @@ We use package module yaml files to create them.
 The file naming convention is inherited from the package yaml file name,
 usually: ``SWNAME-module.yaml``
 
-For the above ``ucx.yaml`` the ``ucx-module.yaml`` is:
+An example for a very simple module file ``bioconda-module.yaml``
+from `bioconda-admix repository <https://github.com/RCIC-UCI-Public/bioconda-admix/>`_:
+
+  .. code-block:: yaml
+
+     !include bioconda.yaml
+     !include rcic-module.yaml
+     ---
+     - package: bioconda module
+       category: LANGUAGES
+
+  For this, all definitions are taken from the included files. Only a couple
+  of required variables are defined here.
+
+A more complex example the ``ucx-module.yaml`` (works with the above ``ucx.yaml``):
 
   .. literalinclude:: files/ucx-module.yaml
      :language: yaml
@@ -189,54 +203,36 @@ For the above ``ucx.yaml`` the ``ucx-module.yaml`` is:
       set with :command:`setenv`` when the module is loaded. Some software
       requires very specific names set. 
 
+  .. _category:
+
   :yvars:`category`
     Defines a logical category name to assign this module to.
+    Categories are s imply logical groups we assign software to. 
+    They correspond to the paths we we install RCIC-defined software environment modules.
 
-A very terse example for a simple module file ``bioconda-module.yaml``
-from `bioconda-admix repository <https://github.com/RCIC-UCI-Public/bioconda-admix/>`_:
+    Their names  will be added to the :tt:`RCICMODULEPATH`
+    environment variable which is then added to :tt:`MODULEPATH`. 
+    When the modules RPMs are installed users automatically have access to them all.
 
-  .. code-block:: yaml
+    We define categories in ``rcicmodulespath`` file that is installed by ``yaml2rpm`` RPM.
+    The names can be either groups of common tools (compilers) or software for a
+    specific discipline (physics).  Currently, the categories are:
 
-     !include bioconda.yaml
-     !include rcic-module.yaml
-     ---
-     - package: bioconda module
-       category: LANGUAGES
+      +-------------------+-------------+-----------+
+      | AI-LEARNING       | EARTHSCI    | LANGUAGES |
+      +-------------------+-------------+-----------+
+      | BIOTOOLS          | ENGINEERING | LIBRARIES |
+      +-------------------+-------------+-----------+
+      | CHEMISTRY         | GENOMICS    | PHYSICS   |
+      +-------------------+-------------+-----------+
+      | COMPILERS         | IMAGING     | STATISTICS|
+      +-------------------+-------------+-----------+
+      | $HOME/modulefiles |             | TOOLS     |
+      +-------------------+-------------+-----------+
 
-  For this, all definitions are taken from the included files. Only a couple
-  of required variables are defined here.
-
-.. _category:
-
-CATEGORY
-^^^^^^^^
-
-Categories are s imply logical groups we assign software to. 
-They correspond to the paths we we install RCIC-defined software environment modules.
-
-Their names  will be added to the :tt:`RCICMODULEPATH`
-environment variable which is then added to :tt:`MODULEPATH`. 
-When the modules RPMs are installed users automatically have access to them all.
-
-We define categories in ``rcicmodulespath`` file that is installed by ``yaml2rpm`` RPM.
-The names can be either groups of common tools (compilers) or software for a
-specific discipline (physics).  Currently, the categories are:
-
-  +-------------------+-------------+-----------+
-  | AI-LEARNING       | EARTHSCI    | LANGUAGES |
-  +-------------------+-------------+-----------+
-  | BIOTOOLS          | ENGINEERING | LIBRARIES |
-  +-------------------+-------------+-----------+
-  | CHEMISTRY         | GENOMICS    | PHYSICS   |
-  +-------------------+-------------+-----------+
-  | COMPILERS         | IMAGING     | STATISTICS|
-  +-------------------+-------------+-----------+
-  | $HOME/modulefiles |             | TOOLS     |
-  +-------------------+-------------+-----------+
-
-A special category in above listing is :tt:`$HOME/modulefiles`. It provides our users
-with the ability to install their own modules in ``$HOME/modulefiles/`` directory if desired.
-We do not assign any of our build modules to it.
+    A special category in above listing is :tt:`$HOME/modulefiles`. It provides our users
+    with the ability to install their own modules in ``$HOME/modulefiles/`` directory if desired.
+    We do not assign any of our build modules to it.
 
 .. _package_common:
 
