@@ -134,7 +134,7 @@ Package module file
 Many software packages need to have environment modules to be useful.
 We use package module yaml files to create them. 
 The file naming convention is inherited from the package yaml file name,
-usually: ``SWNAME-module.yaml``
+usually: ``SWNAME-module.yaml``. All module yaml files need to include :ref:`rcic-module.yaml`.
 
 An example for a very simple module file ``bioconda-module.yaml``
 from `bioconda-admix repository <https://github.com/RCIC-UCI-Public/bioconda-admix/>`_:
@@ -174,24 +174,13 @@ A more complex example the ``ucx-module.yaml`` (works with the above ``ucx.yaml`
   :yvars:`module`
     Defines variables to use for the module. Most come from the included
     ``rcic-module.yaml`` file as defaults and  can be overwritten.
+    There are a few special variables that are defined in ``rcic-module.yaml``
+    file, see :ref:`module definition <module_definition>` for their meaning:
 
-    There are a few to mention here:
+        * :yvars:`<<: *Module` 
+        * :yvars:`<<: *ModuleCompiler` 
+        * :yvars:`<<: *ModuleCompilerMpi` 
 
-    :yvars:`<<: *ModuleCompiler` 
-      A special construct. Used as is.
-      This single line allows to inherit all the variables from the included
-      file and tell to use what is defined under the ``*ModuleCompiler`` anchor.
-      This is used for the modules built with compiler specs, for example a module
-      ``ucx/1.12.0/gcc.system`` tells us that ucx software version 1.12.0 was
-      compiled with the OS-installed GCC compiler.
-    :yvars:`<<: *ModuleCompilerMpi` 
-      A special construct. Used as is.
-      Similar to above, this single line would allows to inherit all the
-      variables from the included file and tell to use what is defined under the
-      ``*ModuleCompilerMpi`` anchor. This is for the software that is compiled
-      with a specific compiler and a specific MPI, for example 
-      ``qe/7.1/gcc.11.2.0-openmpi.4.1.2`` module is for Quantum Espresso
-      version 7.1 compiled with GCC v.11.2.0 and OpenMPI v.4.1.2.
     :yvars:`prepend_path`
       Defines what PATHS this module overrides for :tt:`PATH`,
       :tt:`LD_LIBRARY_PATH``, :tt:`PKG_CONFIG_PATH` or :tt:`MANPATH`. 
@@ -200,7 +189,7 @@ A more complex example the ``ucx-module.yaml`` (works with the above ``ucx.yaml`
       `yaml2rpm repository <https://github.com/RCIC-UCI-Public/yaml2rpm/>`_.
     :yvars:`setenv`
       In a similar way,  this variable lists environment variables that are
-      set with :command:`setenv`` when the module is loaded. Some software
+      set with :command:`setenv` when the module is loaded. Some software
       requires very specific names set. 
 
   .. _category:
