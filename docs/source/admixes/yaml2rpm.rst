@@ -19,7 +19,7 @@ Building
 --------
 
 | Make sure your :ref:`requirements` are met.
-| Do :ref:`build yaml2rpm <building_yaml2rpm>` as described in Quickstart.
+| Do build as described in :ref:`Quickstart <building_yaml2rpm>`.
 
 
 .. _yaml2rpm_files:
@@ -108,14 +108,14 @@ In yamlspecs/
 ``versions.yaml``
   Defines versions of the built RPMs. Need to update respective version when a
   yaml file for the RPM changes (``rcic-modulepath.yaml``,
-  ``rcic-module-support.yaml, `yaml2rpm``).
+  ``rcic-module-support.yaml``, ``yaml2rpm``).
 
 ``yaml2rpm.sh``
   Configuration script to set environment variables for building RPMS. Is
-  installed in ``/etc/profile.d`` as a part of *yaml2rpm** RPM.
+  installed in ``/etc/profile.d`` as a part of *yaml2rpm* RPM.
 
 ``yaml2rpm.yaml``
-  Defines how to build **yaml2rpm** RPM and what to include in it.
+  Defines how to build *yaml2rpm* RPM and what to include in it.
 
 **Direectories and their files**
 
@@ -136,9 +136,10 @@ In yamlspecs/
   that may be used by the users. 
   The  ``rcicmodulespath`` describes paths where to look for created
   modules.  As we loosely assign modules into categories, we install module
-  files into specific category path for easier navigation with the **module**
-  commands output.  The categories include a location in the **$HOME** where users
-  can add their own created modules. Current categories are described in :term:`categories`.
+  files into specific category path for easier navigation with the :command:`module`
+  commands output.  The categories include a location in the :tt:`$HOME` where users
+  can add their own created modules. Current categories are described in
+  :ref:`category`.
 
 ``bin/``
   A directory that contains the code used for building RPMs
@@ -241,7 +242,9 @@ In yamlspecs/
          !include rcic-module.yaml
 
     If multiple yaml files are included this one must be the last.
-    See examples in any admix in yaml modules files ``<PKGNAME>-module.yaml``.
+    See examples of use in any admix in yaml modules files ``<PKGNAME>-module.yaml``.
+
+    See implementation details in :ref:`rcic-module.yaml`.
 
   ``rcic-package.yaml``
     This file defines defaults for the variables used in the packages yaml files.
@@ -258,12 +261,14 @@ In yamlspecs/
   ``rpm.yaml``
     This file defines RPM specifications that need to be included in generated
     RPM spec files.  The variables defined there can be accessed in specific
-    packages yaml files via their names.To use, place the following line 
+    packages yaml files via their names. To use, place the following line 
     at the top of the yaml file usually after the ``!include rcic-package.yaml``:
 
       .. code-block:: yaml
 
          !include rpm.yaml
+   
+    See implementation details in :ref:`rpm.yaml`.
 
 ``site/``
    Yaml files that provide information about commonly used (for creating other packages) 
