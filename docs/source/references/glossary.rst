@@ -11,25 +11,8 @@ This page includes a number of terms that we use in our documentation.
 
    categories
      Categories are paths where we install software modules. A category is 
-     a loose collection of  software related by science of applicability
-     Currently we define the following categories:
-
-     - AI-LEARNING
-     - BIOTOOLS
-     - CHEMISTRY
-     - COMPILERS
-     - EARTHSCI
-     - ENGINEERING
-     - GENOMICS
-     - IMAGING
-     - LANGUAGES
-     - LIBRARIES
-     - PHYSICS
-     - STATISTICS
-     - TOOLS
-     - $HOME/modulefiles
-
-     The last item allows users to install their own modules in ``$HOME/modulefiles/``.
+     a loose collection of  software related by science of applicability.
+     See more in :ref:`category`.
 
    DNF
      is the major version of YUM, a package manager for RPM-based Linux distributions.
