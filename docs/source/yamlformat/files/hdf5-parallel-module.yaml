@@ -1,0 +1,12 @@
+!include hdf5-parallel.yaml
+!include rcic-module.yaml
+---
+- package: hdf5 parallel module
+  category: TOOLS
+  module:
+    <<: *ModuleCompilerMpi
+    setenv:
+      - *Setenv
+      - HDF5_HOME {{root}}
+    prereq:
+      - "{{build.base_modules}}"
