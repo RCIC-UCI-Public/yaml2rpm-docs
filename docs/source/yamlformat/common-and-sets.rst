@@ -1,7 +1,7 @@
 .. _admix_common:
 
-Admix Standard Files and Sets
-=============================
+Common Files and Sets
+=====================
 
 **Table of contents:**
 
@@ -126,6 +126,16 @@ At the top level
 In yamlspecs/
 -------------
 
+Each software package that needs to be build has a corresponding package
+yaml file and often environment module yaml file. There are a few other
+scenarios, possible combinations are:
+
+  - package and module files 
+  - only module file 
+  - only package file 
+
+See their description in :ref:`yamlpkg`.
+
 .. _packages_yaml:
 
 packages.yaml
@@ -203,7 +213,7 @@ packages.yaml
      other OS release will add the *gcc-gdb-plugin* system package.
 
   #. :yvars:`!eval` - this construct can compare two variables for a few other
-     conditions (==, <, <=, >,  >=). The 
+     conditions (:tt:`==, <, <=, >,  >=`). The 
      :yvars:`!eval "outcome-if-true if var1 COMPARES var2 else outcome-if-false"` means
 
        .. code-block:: text
@@ -216,6 +226,20 @@ packages.yaml
      For example, a line :yvars:`!eval "'antlr-tool' if {{site.os_release}} >= 9 else ''"`
      in `fileformats-admix repository <https://github.com/RCIC-UCI-Public/fileformats-admix/>`_
      in ``packages.yaml`` file evaluates to *antlr-tool* if the OS is 9 or later, and is empty otherwise.
+
+  #. :yvars:`!OScmp` - this construct is specifically for evaluation 
+     of a current OS version. The comparison operators are :tt:`<, <=, >, >=, ==`
+     and it has true/false outcomes e.g. The :yvars:`!OScmp "coperator, var,  outcome-if-true, outcome-if-false"` means:
+
+      .. code-block:: text
+
+         if <OS version> <comparison operator> var:
+             expression evaluates to outcome-if-true
+         else:
+             expression evaluates to outcome-if-false*
+
+     For example, a line :yvars:`version: !OScmp "<, 10, 'rocky9-', 'rocky10+'"`
+     would evaluate to *rocky-9* if the OS is  Rocky 9.7  or earlier and to *rocks-10+* otherwise.
 
   #. :yvars:`!include` - another special construct allows an extension (in our parser) to load
      additional files and parse their entries. 
