@@ -7,7 +7,7 @@ This page includes a number of terms that we use in our documentation.
 
    admix
      is a loosely related collection of software packages built for a specific 
-     discipline, for example chemistry, compilers, etc.
+     discipline (for example chemistry) or a specific pirpose (compilers).
 
    categories
      Categories are paths where we install software modules. A category is 
