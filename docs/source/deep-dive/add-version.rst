@@ -1,20 +1,56 @@
 
-.. _add_version:
+.. _add_software:
 
-Add a New Version of Software
-=============================
+How to Add Software
+===================
 
 **Table of contents:**
 
 .. contents::
    :local:
 
+.. _add_new_software:
+
+New software
+------------
+
+To add a new software need to follow a simple outline:
+
+**Add a software package yaml file**. 
+  The easier way is use another software existing file as a template and
+  modify as needed.
+
+**Add software module yaml file**.
+  Use existing module files as a template and modify. 
+
+**Update set and version files**.
+  | for an existing set
+  |   add new package and module yaml file names to the desired set file
+  |   add software info to versions file associated with that set.
+
+  | for a new set
+  |   create a new set file
+  |   create a new corresponding versions file
+  |   add this new set to the ``packages.yaml`` file.
+
+The rest of the steps are a regular build  and verification and they are 
+explained in details below in adding a new version of the existing software
+section.
+
+.. _add_new_version:
+
+New version of existing software
+--------------------------------
+
+A very simple example of adding a new version of existing software.
+
 It is common that an updated version of software is required.  As an example, we'll look
 at `vcftools <https://github.com/vcftools/vcftools/>`_ in the biotools-admix. The baseline
 version is "0.1.16" (released in 2018) while the latest is "0.1.17" (released in 2025). 
+It's build method didn't change, just the version. 
 
 Locate the Current Source
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the biotools admix, there are several sets. To determine which set(s) the software is currently referenced,
 simply ``grep`` all the set files:
@@ -34,10 +70,10 @@ as follows:
 Open a browser and visit the git repository and see if there is an additional release.
 
 Add the Information to Existing Set
------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are numerous sets already existing in the 
-:ref: `biotools-admix repository <https://github.com/RCIC-UCI-Public/biotools-admix/>`_.
+`biotools-admix repository <https://github.com/RCIC-UCI-Public/biotools-admix/>`_.
 Since vcftools is only defined in the base set, it's simplest to add to an existing set.
 For this example, extending set *2025* makes sense. The contents of ``set-2025.yaml`` are:
 
@@ -85,7 +121,7 @@ You also need to modify the ``versions-2025.yaml`` to include the updated vcftoo
   See :ref:`details <versions_yaml>` for file format. 
 
 Verify Changes
---------------
+~~~~~~~~~~~~~~
 
 Now check that the updated vendor source resolves properly. Use ``gen-definitions.py``, but with
 the updated ``versions-2025.yaml`` file:
@@ -116,27 +152,26 @@ Verify that this a good web reference and then **download the source tarball**:
 
       2026-05-12 10:59:13 (2.03 MB/s) - '/export/repositories/biotools-admix/sources/vcftools-0.1.17.tar.gz' saved [247685]
 
-Build
------
+Build and install
+~~~~~~~~~~~~~~~~~
 
-It's time to build the package and module:
+**Build**
+  It's time to build the package and module:
 
   .. parsed-literal::
      :command:`make SET=2025 vcftools.pkg vcftools-module.pkg`
 
-Install
--------
 
-Once the RPMs are built need to install to verify that there are no unresolved dependencies.
-From the ``yamlspecs/`` directory:
+**Install**
+  Once the RPMs are built need to install to verify that there are no unresolved dependencies.
+  From the ``yamlspecs/`` directory:
 
   .. parsed-literal::
      :command:`make -C .. clean createlocalrepo 
      yum -c ../yum.conf install vcftools_0.1.17  vcftools_0.1.17-module`
 
-
 Make it reproducible
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 If everything works, memorialize all of the above into git.
 All commands below are done from the admix top-level directory. 
@@ -152,7 +187,7 @@ All commands below are done from the admix top-level directory.
 
 **2. Create the sha1sum**
   Downloading all source distribution files to the ``sources/`` in the admix references the ``<admix-name>.metadata`` file. 
-  To add the sha1sum of the latest tarball to the admix metadata file:
+  To add the SHA checksum of the latest tarball to the admix metadata file:
 
   .. parsed-literal::
      :command:`sha1sum sources/vcftools-0.1.17.tar.gz >> .biotools-admix.metadata`
@@ -181,10 +216,7 @@ All commands below are done from the admix top-level directory.
      git push`
 
 Other Verification
-------------------
-
-This was a very simple example of adding a new version of existing software. It's build method didn't change,
-just the version. 
+~~~~~~~~~~~~~~~~~~
 
 **Check RPMS**
   Look at the vcftools RPMS and see if their sizes seem rational. In this example, the later version is
@@ -206,5 +238,3 @@ just the version.
      vcftools_0.1.16-module
      vcftools_0.1.17
      vcftools_0.1.17-module
-
-

@@ -36,7 +36,6 @@ YAML2RPM Documentation
    yamlformat/yaml-package
    yamlformat/common-and-sets
    yamlformat/include-templates
-   yamlformat/add-version
    yamlformat/gen-definitions
 
 .. toctree::
@@ -61,6 +60,7 @@ YAML2RPM Documentation
    deep-dive/packaging
    deep-dive/singularity
    deep-dive/parallel
+   deep-dive/add-version
 
 .. toctree::
    :maxdepth: 1
