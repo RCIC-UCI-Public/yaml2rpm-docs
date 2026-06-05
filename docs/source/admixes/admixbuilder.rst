@@ -1,7 +1,7 @@
 .. _admixbuilder:
 
-admixbuilder-admix
-==================
+admixbuilder
+============
 
 **Table of contents:**
 
