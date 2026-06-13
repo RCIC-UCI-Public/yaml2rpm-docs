@@ -116,12 +116,12 @@ A file .readthedocs.yaml  is updated per https://blog.readthedocs.com/migrate-co
 
 1. Received email from RTD about need to update webhook integration:
 
-   Previously, manually configured webhooks from integrations did not have a secret attached to them.
-   In order to improve security, we have deployed an update so that all new integrations will be created
-   with a secret, and we are deprecating old integrations without a secret. You must migrate your
+   Previously, manually configured webhooks from integration did not have a secret attached to them.
+   In order to improve security, we have deployed an update so that all new integration will be created
+   with a secret, and we are deprecating old integration without a secret. You must migrate your
    integration by January 31, 2024, when they will stop working without a secret.
 
-   We are contacting you because you have at least one integration that does not have a secret set. These integrations are:
+   We are contacting you because you have at least one integration that does not have a secret set. These integration are:
 
    https://readthedocs.org/dashboard/yaml2rpm/integrations/238314/
 
@@ -170,3 +170,27 @@ in the git fetch command.
 
 To fix, in Admin->Advanced settings  change the *Default branch*  from
 "--------" to "main", and save. The next build is successful
+
+Search
+------
+
+Modern Read the Docs added Search Addon where it  automatically injects this features framework (known as Read the Docs Addons)
+into unpinned, modern builds. It replaces the old, full-page Sphinx
+search.html layout with an in-page modal where  a "popup window" emerges right
+inside the documentation page when you click the search bar.
+
+For our configuration which does not work as of now.
+Perhaps sphinx and dependencies need to be pinned to the specific versions to fix.
+A search for this failure suggested to use
+
+- sphinx==7.3.7
+- sphinx-rtd-theme==2.0.0
+- sphinxcontrib-jquery==4.1
+
+Currently, to turn off the Popup and Go Back to Classic Search for the traditional Sphinx layout
+disable it through dashboard:
+
+- Log into Read the Docs Dashboard (using github account)
+- Navigate to Project Settings > Addons
+- Toggle the Search Addon to Disabled.
+- Rebuild your project (trigger on the console or push a new commit).
