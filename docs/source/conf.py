@@ -29,6 +29,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
     'sphinx_rtd_theme',
+    'sphinxcontrib.jquery',
 ]
 
 intersphinx_mapping = {
