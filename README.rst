@@ -9,6 +9,13 @@ The resulting website served at RTD  server as
 - https://yaml2rpm.readthedocs.io
 - https://yaml2rpm.rtfd.io  (equivalent shorthand notation)
 
+The web server (at RTD)
+
+- https://app.readthedocs.org/projects/yaml2rpm/
+  
+  From the main page can login or see the builds logs via *Builds* tab 
+  or  https://app.readthedocs.org/projects/yaml2rpm/builds/
+
 Building HTML locally for testing
 ---------------------------------
 
