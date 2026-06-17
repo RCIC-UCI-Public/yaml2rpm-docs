@@ -29,24 +29,28 @@ An example ``ucx.yaml`` from `buildlibs-admix repository <https://github.com/RCI
 
 Some variable here are standard for all, others are software specific.
 
-**Standard variables**
-  These variables must be present in each package yaml file unless indicated otherwise.
+**Standard includes**
+  The include statement specifies template files to include when parsing a yaml file.
+  These include statements  must be present in each package yaml file unless indicated otherwise.
+  The included files define common variables that are needed in all builds and
+  using the include directive simplifies the common code reuse and minimizes
+  the overall code footprint.
 
   :yvars:`!include rcic-package.yaml`
-    The  include statement specifies template files to include when parsing this yaml file.
-
-    These included files  define common variables that are needed in all builds and
-    using the include directive simplifies the common code reuse and minimizes
-    the overall code footprint.
-
-    Here, a ``rcic-package.yaml`` is a standard template file that defines
+    Required. This is a standard template file that defines
     defaults for the variables used during the build. This is the most common
-    template included in the packages yaml files. Other files to include can be:
+    template included in the packages yaml files.
 
-      - Specific common files defined for an admix.
-        These common files in turn would include ``rcic-packages.yaml``.
-      - ``rpm.yaml`` a template that defines variables for RPM specs. 
-        See :ref:`rpm.yaml` for details.
+  :yvars:`!include rpm.yaml`
+    Required. Another standard  template that defines variables for RPM specs.
+    See :ref:`rpm.yaml` for details.
+
+  In some admixes we create so called common files that provide many settings
+  for many packages in that admix. In such cases these common files
+  need to include both statements above.  See details in :ref:`package_common`.
+
+**Standard variables**
+  These variables must be present in each package yaml file unless indicated otherwise.
 
   :yvars:`package`
     A short package name description. Very short usually one-two words. 
@@ -117,10 +121,10 @@ Some variable here are standard for all, others are software specific.
   standard variables. For the ``ucx.yaml`` above:
   
   :yvars:`add_config_args`
-    Defines specific configuration options only for specific *ucx* versions. 
+    Defines specific configuration options.
   :yvars:`opts`
     Gets set to the value of above variable only for certain *ucx* versions.
-    Then when used in :yvars:`{{build.configure_args}}` it is either empty for
+    Then when used in :yvars:`configure_args` it is either empty for
     some versions and set to :yvars:`add_config_args` for others.
 
   Additional simple or dictionary variables  can be added as needed.
