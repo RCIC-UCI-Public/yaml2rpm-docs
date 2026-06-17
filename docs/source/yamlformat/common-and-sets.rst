@@ -1,7 +1,7 @@
 .. _admix_common:
 
-Common Files and Sets
-=====================
+Typical Files and Sets
+======================
 
 **Table of contents:**
 
@@ -241,12 +241,45 @@ packages.yaml
      For example, a line :yvars:`version: !OScmp "<, 10, 'rocky9-', 'rocky10+'"`
      would evaluate to *rocky-9* if the OS is  Rocky 9.7  or earlier and to *rocks-10+* otherwise.
 
+
   #. :yvars:`!include` - another special construct allows an extension (in our parser) to load
      additional files and parse their entries. 
 
      A line  **!include site.yaml** means that at the read time of
-     ``packages.yaml`` the default system ``site.yaml`` file will be included
-     for parsing and any variables defined there will be available as :yvars:`site.VARNAME`.
+     ``versions.yaml`` the default system ``site.yaml`` file will be included
+     for parsing and any variables defined there.
+
+  The :yvars:`!eval`, :yvars:`!ifeq` and :yvars:`!OScmp` usage has
+  limitations: 
+
+     - use in simple variables 
+
+       .. code-block:: yaml
+
+          autogen: !OScmp "<, 10, ./autogen.sh, autoupdate"
+
+     - use in dictionary variables as a value for a simple variable in a list, for example
+	   this definition of *bind* is valid:
+
+       .. code-block:: yaml
+
+          install:
+            bind: !OScmp ">=,9,bindfs,mount --bind"
+            makeinstall: >
+              mkdir -p $(ROOT)/{{root}};
+              mkdir -p {{root}};
+              {{install.bind}} $(ROOT)/{{root}} {{root}}
+
+     - can not be used as a value of a nested list item in a dictionary.
+       This construct will give an error (last line):
+
+       .. code-block:: yaml
+
+          install:
+            makeinstall: >
+              mkdir -p $(ROOT)/{{root}};
+              mkdir -p {{root}};
+              !OScmp ">=,9,bindfs,mount --bind" $(ROOT)/{{root}} {{root}}
 
 **Set-related variables**
   In addition to the standard :yvars:`sets` variable there are a few set-related ones.
